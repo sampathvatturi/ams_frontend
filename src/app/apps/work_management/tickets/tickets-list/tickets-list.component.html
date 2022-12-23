@@ -1,0 +1,140 @@
+<div>
+    <div class="page-header">
+        <div class="row align-items-md-center">
+            <div class="col-md-6">
+                <div class="media m-v-10">
+                    <i nz-icon nzType="file" nzTheme="twotone" class="header-icon"></i>&nbsp;
+                    <div class="media-body m-l-15 header-border">
+                        <h6 class="mb-0 header-label">{{data.tckt_ctgry_nm}} Assigned Tickets</h6>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="tpfilter-card">
+        <div nz-row [nzGutter]="24" class="tpcrdheight">
+            <div nz-col [nzSpan]="8">
+                <div class="state">
+                    <span class="top_lbls">State</span>:
+                    <span>{{usrdtls.ste_nm}}</span>
+                </div>
+            </div>
+            <div nz-col [nzSpan]="8" class="tpbrdrs">
+                <div class="district">
+                    <span class="top_lbls">District</span>:
+                    <span>{{usrdtls.dstrt_nm}}</span>
+                </div>
+            </div>
+            <div nz-col [nzSpan]="8">
+                <div class="mandal">
+                    <span class="top_lbls">Mandal</span> :
+                    <span>{{usrdtls.mndl_nm}}</span>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+
+
+    <ds-loading *ngIf="loader"></ds-loading>
+    <div class="filter-card slwmftouploadform">
+
+        <div class="aprvalTabs">
+            <nz-tabset nzType="card" (nzSelectChange)="tabchange($event)">
+                <nz-tab nzTitle="Pending Approvals">
+                    <div id="data-grid-demo" class="slryGnrtn">
+                        <dx-data-grid id="gridContainer" [dataSource]="bnfcrydtls" [showBorders]="true"
+                            (onEditorPreparing)="overrideOnValueChanged($event)"
+                            (onSelectionChanged)="selectionChanged($event)" style="max-width: 100% !important; width: 100% !important">
+                            <dxo-paging [pageSize]="10"></dxo-paging>
+                            <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 25, 50, 100]"
+                                [showInfo]="true">
+                            </dxo-pager>
+                            <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+                            <dxo-filter-panel [visible]="false"></dxo-filter-panel>
+                            <dxo-editing mode="cell" [allowUpdating]="false" [allowAdding]="false"
+                                [allowDeleting]="false">
+                            </dxo-editing>
+                            <dxo-selection mode="multiple"></dxo-selection>
+                            <dxi-column *ngFor="let f of columnDefs" [visible]="f.visible" [dataField]="f.field"
+                                [caption]="f.headerName" [width]="f.width" [alignment]="f.alignment"
+                                [allowResizing]="true" [allowFiltering]="f.filter" [allowHeaderFiltering]="f.filter">
+                            </dxi-column>
+                            <dxi-column [showInColumnChooser]="false" type="buttons" [width]="100" caption="Timeline"
+                                cellTemplate="timelineTemplate">
+                                <div *dxTemplate="let data of 'timelineTemplate'">
+                                    <div class="cursor-pointer tblEdtBtn" (click)="shwTmelineDtls(data)">
+                                        Timeline
+                                    </div>
+                                </div>
+                            </dxi-column>
+                        </dx-data-grid>
+                    </div>
+
+                    <div class="centertxt">
+                        <button nz-button nzType="primary" style="margin-top: 20px; margin-bottom: 20px;"
+                            (click)="aprovefto()" [disabled]="disblesubmit==true"
+                            *ngIf="slctdGnrtSlryLst && slctdGnrtSlryLst.length > 0">Approve
+                            Beneficiary</button>
+                        <button nz-button nzType="primary"
+                            style="margin-top: 20px; margin-bottom: 20px; margin-left:10px"
+                            [disabled]="disblesubmit==true" *ngIf="slctdGnrtSlryLst && slctdGnrtSlryLst.length > 0"
+                            nzDanger (click)="rejectAprval()">Reject</button>
+                    </div>
+
+                </nz-tab>
+                <nz-tab nzTitle="Recently Approved">
+                    <div id="data-grid-demo" class="slryGnrtn">
+                        <dx-data-grid id="gridContainer" [dataSource]="bnfcrydtls" [showBorders]="true">
+                            <dxo-paging [pageSize]="10"></dxo-paging>
+                            <dxo-pager [showPageSizeSelector]="true" [allowedPageSizes]="[10, 25, 50, 100]"
+                                [showInfo]="true">
+                            </dxo-pager>
+                            <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+                            <dxo-filter-panel [visible]="false"></dxo-filter-panel>
+                            <dxi-column *ngFor="let f of columnDefs" [visible]="f.visible" [dataField]="f.field"
+                                [caption]="f.headerName" [width]="f.width" [alignment]="f.alignment"
+                                [allowResizing]="true" [allowFiltering]="f.filter" [allowHeaderFiltering]="f.filter">
+                            </dxi-column>
+                            <dxi-column [showInColumnChooser]="false" type="buttons" [width]="100" caption="Timeline"
+                                cellTemplate="timelineTemplate">
+                                <div *dxTemplate="let data of 'timelineTemplate'">
+                                    <div class="cursor-pointer tblEdtBtn" (click)="shwTmelineDtls(data)">
+                                        Timeline
+                                    </div>
+                                </div>
+                            </dxi-column>
+                        </dx-data-grid>
+                    </div>
+
+                </nz-tab>
+            </nz-tabset>
+        </div>
+
+    </div>
+</div>
+<nz-drawer [nzBodyStyle]="{ height: 'calc(100% - 55px)', overflow: 'auto', 'padding-bottom': '53px' }"
+    [nzMaskClosable]="false" [nzWidth]="500" [nzVisible]="shwSidebarTimeline" nzTitle="Timeline"
+    (nzOnClose)="closeSideBar()">
+    <app-benificiaries-timeline [bnfcryId]="selectedbnfcry_id" *ngIf="selectedbnfcry_id"></app-benificiaries-timeline>
+
+</nz-drawer>
+
+<nz-modal [(nzVisible)]="isVisible" [nzTitle]="modalTitle" [nzContent]="modalContent" [nzFooter]="modalFooter"
+    (nzOnCancel)="cancel()">
+    <ng-template #modalTitle>The Ticket is getting closed upon rejecting please confirm Ticket No:
+        {{selectedItemKeys[0].fto_tckt_id}}</ng-template>
+
+    <ng-template #modalContent>
+        <p>Comment reason for Rejection</p>
+        <div><input nz-input placeholder="Basic usage" [(ngModel)]="desc_tx" /></div>
+
+    </ng-template>
+
+    <ng-template #modalFooter>
+
+        <button nz-button nzType="default" (click)="cancel()">Cancel</button>
+        <button nz-button nzType="primary" class="modelReject" (click)="delete()">Reject</button>
+    </ng-template>
+</nz-modal>

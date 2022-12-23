@@ -1,0 +1,19 @@
+<div class="page-header">
+    <div class="row align-items-md-center">
+      <div class="col-md-6">
+        <div class="media m-v-10">
+          <i nz-icon [nzType]="ticon" nzTheme="twotone" class="header-icon"></i>&nbsp;
+          <div class="media-body m-l-15 header-border">
+            <h6 class="mb-0 header-label">{{title}}</h6>
+            <span class="text-gray font-size-13">{{sbtitle}}</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6" *ngIf="bckbtn=='true'">
+        <div class="text-md-right m-v-10">
+          <button nz-button  nzType="default"   (click)="goBack()" ><i nz-icon nzType="left"></i> Go back</button>
+        </div>
+      </div>
+
+    </div>
+  </div>

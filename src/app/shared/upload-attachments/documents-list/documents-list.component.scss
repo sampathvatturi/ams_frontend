@@ -1,0 +1,144 @@
+.strp {
+    background: #8080801c;
+    padding: 5px;
+    padding-left: 10px;
+    font-weight: 600;
+    text-transform: uppercase;
+    text-align: left;
+  }
+  
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    border: solid 1px #cacccf;
+  
+    .lbx {
+      width: 30%;
+    }
+  }
+  
+  tr {
+    height: 28px;
+    border-bottom: solid 1px #cacccf;
+  }
+  
+  tr:nth-child(even) {
+    /*class="bg-gray-50";*/
+    background: #e5e5e5;
+  }
+  
+  tr:nth-child(odd) {
+    /*    class="bg-white";*/
+    background: white;
+  }
+  
+  thead {
+    border-bottom: solid 1px #d7cdcd;
+  }
+  
+  .pg-head {
+    // height:400px;
+    width: 100%;
+    box-shadow: 0 7px 20px rgb(0 0 0 / 13%), 1px 2px 2px rgb(0 0 0 / 21%);
+  }
+  
+  .pg {
+    width: 100%;
+  
+    .tp-head {
+      box-shadow: 0 7px 20px rgb(0 0 0 / 13%), 1px 2px 2px rgb(0 0 0 / 21%);
+      padding: 10px;
+      font-weight: 600;
+    }
+  
+    .inx {
+      text-align: center;
+      color: black;
+      width: 35px;
+    }
+  
+    .hd {
+      padding: 10px;
+      width: 100%;
+      // box-shadow: 0 7px 20px rgb(0 0 0 / 13%), 1px 2px 2px rgb(0 0 0 / 21%);
+      border-top: solid 2px #80808054;
+      border-bottom: solid 3px grey;
+      font-weight: 600;
+    }
+  
+    .bdy {
+      padding: 10px;
+      background: white;
+      overflow: auto;
+    }
+  
+    .vl {
+      td {
+        border-right: solid 1px #cacccf;
+      }
+  
+      .hd {
+        border-bottom: 2px double black;
+        background: #b0b0b0;
+        text-align: center;
+      }
+  
+      .am {
+        text-align: right;
+      }
+  
+      .lb {
+        text-align: left;
+      }
+  
+      .dt {
+        text-align: center;
+      }
+  
+      .sm {
+        border-top: 3px double #170808;
+        height: 33px;
+        border-bottom: 3px double #170808;
+      }
+    }
+  }
+  
+  .gnrtDwnldBtn{
+    background-color: #27cf27 !important;
+    height: 27px !important;
+    min-height: 23px !important;
+    max-height: 24px !important;
+  }
+  
+  .upldBtn{
+    background-color: #2b58e7 !important;
+    height: 27px !important;
+    min-height: 23px !important;
+    max-height: 24px !important;
+  }
+  
+  .upldDwnldBtn{
+  background-color: #f44336 !important;
+  height: 27px !important;
+    min-height: 23px !important;
+    max-height: 24px !important;
+  }
+  
+  .clr-wht{
+    color: white !important;
+  }
+  
+  .expnsion{
+    cursor: pointer;
+  }
+  
+  .sb_table td{
+    width:20%;
+  }
+  .vndr_prfle_btn{
+    width: fit-content;
+    text-align: center;
+    margin-top: 3px;
+    margin-right: 3px;
+}
+  

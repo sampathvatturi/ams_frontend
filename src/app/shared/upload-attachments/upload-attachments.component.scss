@@ -1,0 +1,53 @@
+.frmfld {
+  width: 40vw;
+}
+
+.RmvBtn {
+  background: transparent;
+  border: none;
+  position: absolute;
+  color: #b92a41;
+  cursor: pointer;
+  font-size: 12px !important;
+  margin-top: -11px;
+  padding-left: -9px;
+  margin-left: 60px;
+}
+
+.imgTme {
+  font-size: 9px;
+}
+
+.imgUploadDiv {
+  border: 1px dotted #cecece;
+  background-color: #ffffff;
+  width: 77px;
+  height: 70px;
+  float: left;
+  margin: 4px;
+  border-radius: 10px;
+
+  input[type="file"] {
+    display: none;
+  }
+
+  img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
+}
+
+.atchTxt {
+  color: #1e293b;
+  letter-spacing: 0.5px;
+  font-weight: 500;
+}
+
+.file_nm {
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  font-size: 12px;
+  margin-top: 5px;
+}

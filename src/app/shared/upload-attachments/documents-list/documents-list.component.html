@@ -1,0 +1,168 @@
+<app-loading *ngIf="showLoading === true"></app-loading>
+<div class="inset-0 min-w-0 text-center overflow-auto print:overflow-visible p-5" cdkScrollable>
+    <div class="pg-body">
+        <div class="bdy">
+            <table class="vl">
+                <thead>
+                    <tr class="hd">
+                        <th class="inx">S.No</th>
+                        <th>Document Type</th>
+                        <th>Document Name</th>
+                        <th>Document Number</th>
+                        <!-- <th>Generate Document</th> -->
+                        <th>Uploaded Document</th>
+                        <th>Upload</th>
+                        <!-- <th>Show Previous</th> -->
+                    </tr>
+                </thead>
+                <tbody>
+
+                    <ng-container *ngFor="let f of dcmnts">
+                        <tr data-toggle="collapse" class="accordion-toggle">
+                            <td class="inx">{{f.sno}}</td>
+                            <td>{{f.dcmnt_type_nm}}</td>
+                            <td>{{f.dcmnt_nm}}</td>
+                            <td>{{f.dcmnt_nu}}</td>
+                            <td>
+                                <button nz-button nzType="primary" class="col-md-12" *ngIf="f.upld_dcmnt_url_tx"
+                                    (click)="downloadPDF(f.upld_dcmnt_url_tx)">
+                                    <span class="mr-1 clr-wht">Download</span>
+                                </button>
+                            </td>
+                            <td>
+                                <nz-spin nzSimple *ngIf="shwSpinner"></nz-spin>
+                                <button nz-button nzType="primary" class="col-md-12" (click)="openUploadDocuments(f)"
+                                    *ngIf="f.sgn_upld_in && !shwSpinner">
+                                    <span class=" mr-1 clr-wht">Upload</span>
+                                </button>
+                            </td>
+                            <td>
+                                <div *ngIf="!f.shwSubTbl && f.prvs_dcmnts.length" class="expnsion"
+                                    (click)="f.shwSubTbl = !f.shwSubTbl"><span nz-icon nzType="down-circle"
+                                        nzTheme="outline"></span>
+                                </div>
+
+
+                                <div *ngIf="f.shwSubTbl" class="expnsion" (click)="f.shwSubTbl = !f.shwSubTbl"><span
+                                        nz-icon nzType="up-circle" nzTheme="outline"></span>
+
+                                </div>
+                            </td>
+                        </tr>
+
+                        <tr *ngIf="f.shwSubTbl">
+                            <td colspan="8" style=" padding:0px;">
+                                <table class="table table-striped sb_table">
+                                    <tbody>
+                                        <tr data-toggle="collapse" class="accordion-toggle"
+                                            *ngFor="let s of f.prvs_dcmnts">
+                                            <td class="inx">{{s.sno}}</td>
+                                            <td>{{s.dcmnt_type_nm}}</td>
+                                            <td>{{s.dcmnt_nm}}</td>
+                                            <td>{{s.dcmnt_nu}}</td>
+                                            <td>
+                                                <button class="ml-5 gnrtDwnldBtn"
+                                                    *ngIf="s.gntd_in && s.gnrtd_dcmnt_url_tx"
+                                                    (click)="downloadPDF(s.gnrtd_dcmnt_url_tx)">
+                                                    <span class="ml-2 mr-1 clr-wht">Download</span>
+                                                </button>
+                                            </td>
+                                            <td>
+                                                <button class="upldDwnldBtn" *ngIf="s.upld_dcmnt_url_tx"
+                                                    (click)="downloadPDF(s.upld_dcmnt_url_tx)">
+                                                    <span class="ml-2 mr-1 clr-wht">Download</span>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>
+
+                    </ng-container>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+
+
+    <nz-modal [(nzVisible)]="regeneratevisible" [nzOkLoading]="isOkLoading" (nzOnCancel)="handleCancel()"
+        (nzOnOk)="shwDscrptn()">
+        <ng-container *nzModalContent>
+            <div>Are you sure want to regenerate this document ?</div>
+        </ng-container>
+    </nz-modal>
+
+    <nz-modal [(nzVisible)]="confirmvisible" (nzOnCancel)="handleCancel()" (nzOnOk)="generateDocument()"
+        [nzOkLoading]="isOkLoading">
+        <ng-container *nzModalContent>
+            <nz-form-item class="-ml-2">
+                <nz-form-label class="ds-label" nzFor="dscn_tx" [nzSpan]="24">Enter Document Description
+                </nz-form-label>
+                <nz-form-control nzHasFeedback [nzSpan]="24">
+                    <textarea rows="4" nz-input [(ngModel)]="dscn_tx" name="dscn_tx" type="text" nz-input></textarea>
+                </nz-form-control>
+            </nz-form-item>
+            <div class="ml-auto sm:ml-0">
+                <div class="-ml-2">
+                </div>
+                <div class="ml-auto sm:ml-0">
+                </div>
+            </div>
+        </ng-container>
+    </nz-modal>
+
+    <nz-modal [(nzVisible)]="uploadvisible" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()"
+        [nzOkLoading]="isOkLoading">
+        <h2>Enter Document Description</h2>
+        <nz-form-item class="ml-auto sm:ml-0">
+            <nz-form-label class="ds-label" nzFor="dscn_tx" [nzSpan]="24">Description </nz-form-label>
+            <nz-form-control nzHasFeedback [nzSpan]="24">
+                <textarea rows="4" nz-input [(ngModel)]="dscn_tx" name="dscn_tx" type="text" nz-input></textarea>
+            </nz-form-control>
+        </nz-form-item>
+        <div class="ml-auto sm:ml-0">
+            <div class="-ml-2">
+            </div>
+            <div class="ml-auto sm:ml-0">
+                <button nz-button nzType="primary" class="col m-5" (click)="uploadDocument()"> Submit</button>
+            </div>
+        </div>
+    </nz-modal>
+    <!-- <td>
+
+                                <button nz-button nzType="primary" class="vndr_prfle_btn" (click)="openDscrptn(f,0)"
+                                    *ngIf="f.gntd_in && !f.gnrtd_dcmnt_url_tx">
+                                    <span class=" mr-1 clr-wht">Generate</span>
+                                </button>
+
+                                <button nz-button nzType="primary" class="vndr_prfle_btn" (click)="openDscrptn(f,1)"
+                                    *ngIf="f.gntd_in && f.gnrtd_dcmnt_url_tx && f.alw_rgnte_in">
+                                    <span class="mr-1 clr-wht">Regenerate</span>
+                                </button>
+
+                                <button nz-button nzType="primary" class="vndr_prfle_btn"
+                                    (click)="downloadPDF(f.gnrtd_dcmnt_url_tx)"
+                                    *ngIf="f.gntd_in && f.gnrtd_dcmnt_url_tx">
+                                    <span class=" mr-1 clr-wht">Download</span>
+                                </button>
+                            </td> -->
+
+
+
+    <!-- <button nz-button nzType="primary" 
+                                    *ngIf="f.upld_dcmnt_url_tx">
+                                    <span class=" mr-1 clr-wht">Download </span>
+                                </button> -->
+
+
+
+
+
+    <!-- <button nz-button nzType="primary" class="col-md-12" class="upldBtn"
+                                    (click)="openUploadDocuments(f)"
+                                    *ngIf="!f.sgn_upld_in && !f.gntd_in && !f.upld_dcmnt_url_tx">
+                                    <span class="ml-2 mr-1 clr-wht">Upload</span>
+                                </button> -->

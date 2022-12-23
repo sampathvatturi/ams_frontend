@@ -1,0 +1,32 @@
+<div>
+    <div>
+        <div class="">Upload Attachment(s)</div>
+        <button nz-button nzType="primary" (click)="Close()" [tabIndex]="-1"> </button>
+    </div>
+    <div>
+        <input *ngIf="shwUpld" (change)="handleInputChange($event)" type='file' />
+        <div *ngFor="let stgImg of attachments; let k = index">
+            <div svgIcon="close" (click)="removeImg(stgImg)"></div>
+            <img *ngIf="stgImg.fl_type == 'image/jpeg' || stgImg.fl_type == 'image/jpg' || stgImg.fl_type == 'image/png'"
+                [src]="stgImg.base64" width="100" height="100">
+            <img *ngIf="!(stgImg.fl_type == 'image/jpeg' || stgImg.fl_type == 'image/jpg' || stgImg.fl_type == 'image/png' || stgImg.fl_type == 'application/pdf')"
+                src="assets/images/support/docx.png" width="100" height="100" />
+            <img *ngIf="stgImg.fl_type == 'application/pdf'" src="assets/images/support/pdf.png" width="100"
+                height="100" />
+            <p>{{stgImg.fl_name}}</p>
+        </div>
+        <div style="margin-top:15px">
+            <h2>Description </h2>
+            <textarea type="text" nz-input [(ngModel)]="dscn_tx"></textarea>
+        </div>
+        <div class="row" style="margin-top: 10px;">
+            <div class="col-md-6">
+            </div>
+            <div class="col-md-6">
+                <button nz-button nzType="primary" [disabled]="!attachments.length" (click)="upload()">Upload</button>
+                <button nz-button nzType="default" (click)="Close()" style="margin-left: 20px;">Cancel</button>
+            </div>
+        </div>
+
+    </div>
+</div>
