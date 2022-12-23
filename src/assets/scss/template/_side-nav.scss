@@ -4,7 +4,7 @@
     width: $side-nav-width;
     background-color: $white;
     border-right: 1px solid $border-color;
-    height: 100%;
+    height: 90%;
     z-index: $zindex-navbar;
     overflow-y: auto;
     @include transition(all 0.2s ease); 
