@@ -1,34 +1,34 @@
 import { Component } from '@angular/core';
 import { ThemeConstantService } from '../../services/theme-constant.service';
-import { Router, RouterModule } from '@angular/router'; 
+import { Router, RouterModule } from '@angular/router';
 import { AppsService } from 'src/app/shared/services/apps.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { HeaderService } from 'src/app/shared/services/header.service';
-import { Observable  } from 'rxjs';
+import { Observable } from 'rxjs';
 @Component({
     selector: 'app-header',
     templateUrl: './header.component.html'
 })
 
-export class HeaderComponent{
+export class HeaderComponent {
 
-    searchVisible : boolean = false;
-    quickViewVisible : boolean = false;
-    isFolded : boolean;
-    isExpand : boolean;
+    searchVisible: boolean = false;
+    quickViewVisible: boolean = false;
+    isFolded: boolean;
+    isExpand: boolean;
     clntDtls: any;
     usrDtls: any;
-    setting={ header_title : "" }
-    data={"short_lbl":""}
+    setting = { header_title: "" }
+    data = { "short_lbl": "" }
     id: string;
     folder_id$: Observable<string>;
-    constructor( private themeService: ThemeConstantService, public router: Router,public apiSrv: AppsService, private notification: NzNotificationService
-                                     ,private headerService: HeaderService) {
+    constructor(private themeService: ThemeConstantService, public router: Router, public apiSrv: AppsService, private notification: NzNotificationService
+        , private headerService: HeaderService) {
         this.clntDtls = JSON.parse(localStorage.getItem('clients'));
         this.usrDtls = JSON.parse(localStorage.getItem('userdata'));
         // this.data.short_lbl = this.usrDtls.fst_nm.substring(0, 1)+this.usrDtls.lst_nm.substring(0, 1);
 
-        
+
         // this.changeHeader();
 
         // console.log("In HEADER ::"+headerService.headerTitle)
@@ -59,9 +59,9 @@ export class HeaderComponent{
         });
         this.themeService.isExpandChanges.subscribe(isExpand => this.isExpand = isExpand);
 
-        this.headerService.selectedHeaderTitle.subscribe(header =>  {
+        this.headerService.selectedHeaderTitle.subscribe(header => {
             this.setting.header_title = header;
-            console.log("------header selectedHeaderTitle change triggered ::"+header)
+            console.log("------header selectedHeaderTitle change triggered ::" + header)
         });
         // this._headerService._headerTitleChange.subscribe(value => {
         //     console.log("Value in setup ::"+value)
@@ -72,7 +72,7 @@ export class HeaderComponent{
 
     }
 
-    setHeading(){
+    setHeading() {
 
     }
     toggleFold() {
@@ -99,19 +99,21 @@ export class HeaderComponent{
         this.router.navigateByUrl('internal/pages/profile')
     }
     logout() {
-        console.log("logout")
-       
-        this.apiSrv.get("auth2/admin/logout")
-            .subscribe(res => {
-                if (res['status'] == 200) {
-                    localStorage.clear();
-                    this.router.navigateByUrl('internal');
-                } else {
-                    this.notification.create( 'error','',res["message"]);
-                   
-                 }
-            }, (err) => {
-            })
+        // this.apiSrv.get("auth2/admin/logout")
+        //     .subscribe(res => {
+        //         if (res['status'] == 200) {
+        //             localStorage.clear();
+        //             this.router.navigateByUrl('internal');
+        //         } else {
+        //             this.notification.create( 'error','',res["message"]);
+
+        //          }
+        //     }, (err) => {
+        //     })
+
+        localStorage.clear();
+        sessionStorage.clear();
+        this.router.navigateByUrl('/internal/auth');
 
     }
 
