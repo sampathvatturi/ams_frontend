@@ -25,7 +25,7 @@
         </ng-container> -->
         <ng-container *ngFor="let item of mainMenuItems">
             <li *ngIf="!item.children" nz-menu-item routerLink="/internal/ams/{{ item.path }}">
-              <span nz-icon><i class="{{ item.icon }}"></i></span>
+              <span nz-icon nzType="{{item.icon}}" nzTheme="outline"></span>
               <span>{{ item.title }}</span>
             </li>
             <li *ngIf="item.children" nz-submenu [nzTitle]="title">
@@ -35,13 +35,13 @@
                   routerLink="/internal/ams/{{ child.path }}"
                   *ngFor="let child of item.children"
                 >
-                  <span nz-icon><i class="{{ child.icon }}"></i></span>
+                  <!-- <span nz-icon><i class="{{ child.icon }}"></i></span> -->
                   <span>{{ child.title }}</span>
                 </li>
               </ul>
             </li>
             <ng-template #title>
-              <span nz-icon><i class="{{ item.icon }}"></i></span>
+              <span nz-icon nzType="{{item.icon}}" nzTheme="outline"></span>
               <span>{{ item.title }}</span>
             </ng-template>
           </ng-container>
