@@ -1,0 +1,249 @@
+<div class="page-header">
+    <div class="row align-items-md-center">
+        <div class="col-md-12">
+            <div class="media">
+                <div class="media-body m-l-15 header-border">
+                    <h6 class="mb-0 header-label">Work Wise Master</h6>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div>
+    <div nz-row class="gridTop" *ngIf="(permissions.slct_in==1)?true:false">
+        <div class="ds-card grid">
+            <dx-data-grid class="p-8" id="gridContainer" [wordWrapEnabled]="true" [dataSource]="rowData"
+                [remoteOperations]="false" [allowColumnReordering]="true" [rowAlternationEnabled]="true"
+                [allowColumnResizing]="true" [showColumnLines]="true" [showRowLines]="true" [showBorders]="true"
+                style="width:100%" (onToolbarPreparing)="(permissions.insrt_in==1)?onToolbarPreparing($event):false">
+                <dxo-paging [pageSize]="10"></dxo-paging>
+                <dxo-pager [visible]="true" [showPageSizeSelector]="true" [allowedPageSizes]="[10, 25, 50, 100]"
+                    [showInfo]="true"></dxo-pager>
+                <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+                <dxo-filter-panel [visible]="true"></dxo-filter-panel>
+                <dxo-header-filter [visible]="true"></dxo-header-filter>
+                <dxo-group-panel [visible]="true"></dxo-group-panel>
+                <dxo-grouping [autoExpandAll]="false"></dxo-grouping>
+                <dxo-column-chooser [enabled]="true" mode="select">
+                </dxo-column-chooser>
+                <dxo-export [enabled]="(permissions.exprt_in==1)?true:false" [allowExportSelectedData]="true"
+                    fileName="Change Log"></dxo-export>
+                <dxo-filter-row [visible]="true"></dxo-filter-row>
+                <dxi-column *ngFor="let f of columnDefs" [visible]="!f.hide" [dataField]="f.field"
+                    [caption]="f.headerName" [alignment]="f.alignment" [width]="f.width" [allowResizing]="true">
+                </dxi-column>
+                <dxi-column [showInColumnChooser]="false" [visible]="(permissions.updt_in==1)?true:false" type="button1"
+                    [width]="100" cellTemplate="viewTemplate">
+                    <div *dxTemplate="let data of 'viewTemplate'">
+                        <div class="tblEdtBtn" (click)="onView(data)">
+                            View
+                        </div>
+                    </div>
+                </dxi-column>
+                <dxi-column [showInColumnChooser]="false" type="button2" [width]="100" cellTemplate="EditTemplate">
+                    <div *dxTemplate="let data of 'EditTemplate'" (click)="openSideBarEdit('edit',data.data)">
+                        <div class="cursor-pointer tblEdtBtn">
+                            Edit
+                        </div>
+                    </div>
+                </dxi-column>
+
+                <dxi-column [showInColumnChooser]="false" [visible]="true" type="button3" [width]="150"
+                    cellTemplate="frmrTemplate">
+                    <div *dxTemplate="let data of 'frmrTemplate'">
+                        <div class="tblEdtBtn" (click)="getFarmerIDCard(data.data)">
+                            Farmer ID Card
+                        </div>
+
+                    </div>
+                </dxi-column>
+            </dx-data-grid>
+        </div>
+    </div>
+</div>
+
+
+<div>
+    <nz-drawer [nzBodyStyle]="{ height: 'calc(100% - 55px)', overflow: 'auto', 'padding-bottom': '53px' }"
+        [nzMaskClosable]="false" [nzWidth]="1050" [nzVisible]="settings.shw_sd_nv" [nzTitle]="data.sd_nv_hdng"
+        (nzOnClose)="closeSideBar()">
+        <ng-container *nzDrawerContent>
+            <div class="sdebarfilter-card mgnb-2 addbeneficiaryForm">
+                <form class="ds-master-form" nz-form [formGroup]="workWiseForm">
+                    
+                    <div class="row">
+                        <div class="col-md-12 ">
+                            <nz-form-item class="ds-item  ">
+                                <nz-form-label class="ds-label ww-label" nzRequired [nzSpan]="5" nzFor="prjct_nm">Work Name
+                                </nz-form-label>
+                                <nz-form-control [nzSpan]="19" nzDisableAutoTips nzErrorTip="Please Enter Work Name">
+                                    <input type="text" minlength="0" nz-input formControlName="prjct_nm" required />
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+                        <div class="col-md-12">
+                            <nz-form-item class="ds-item">
+                                <nz-form-label class="ds-label ww-label" [nzSpan]="5" nzFor="wn_nu">Work Number
+                                </nz-form-label>
+                                <nz-form-control [nzSpan]="6" nzDisableAutoTips nzErrorTip="Please Enter Work Number">
+                                    <input type="number" minlength="0" nz-input formControlName="wn_nu" />
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+                       
+                       
+                    </div> 
+                        <nz-divider nzOrientation="left" [nzText]="rmrk_text">
+                            <ng-template #rmrk_text>
+                                <span nz-icon nzType="edit" nzTheme="outline" class="dvdr-icn"></span>
+                                Remarks
+                            </ng-template>
+                        </nz-divider>
+                        <div class="row">
+                            <div class="col-md-12">
+                                <app-text-editor (getEdtrEntrTxt)="getEdtrEntrTxt($event)"></app-text-editor>
+                            </div>
+                        </div>
+                    
+                
+                    <nz-divider nzOrientation="left" [nzText]="amnt_text" class="pb-2">
+                        <ng-template #amnt_text>
+                            <span nz-icon nzType="credit-card" nzTheme="outline" class="dvdr-icn"></span>
+                            Ammount <span class="sub-lbl">in Rs.</span>
+                        </ng-template>
+                    </nz-divider>
+                    <div class="row mt-2">
+                        <div class="col-md-4">
+                            <nz-form-item class="ds-item">
+                                <nz-form-label class="ds-label" nzRequired [nzSpan]="24" nzFor="estmd_cst_at">Estimated cost in Rs.
+                                </nz-form-label>
+                                <nz-form-control nzDisableAutoTips nzErrorTip="Please Enter Estimated Cost">
+                                    <input type="number" minlength="0" nz-input formControlName="estmd_cst_at" required />
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+                        <div class="col-md-4">
+                            <nz-form-item class="ds-item">
+                                <nz-form-label class="ds-label" [nzSpan]="24" nzFor="wrk_ordr_cst_at">Work order cost in Rs.
+                                </nz-form-label>
+                                <nz-form-control nzDisableAutoTips nzErrorTip="Please Enter Work Order Cost">
+                                    <input type="number" minlength="0" nz-input formControlName="wrk_ordr_cst_at" />
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+                        <div class="col-md-4">
+                            <nz-form-item class="ds-item">
+                                <nz-form-label class="ds-label" [nzSpan]="24" nzFor="rlsd_at">Released Amount in Rs.
+                                </nz-form-label>
+                                <nz-form-control nzDisableAutoTips nzErrorTip="Please Enter Released Amount ">
+                                    <input type="number" minlength="0" nz-input formControlName="rlsd_at" />
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+                       
+                    </div>
+                   
+                   
+                
+                    <nz-divider nzOrientation="left" [nzText]="dates_text" class="pb-2">
+                        <ng-template #dates_text>
+                            <span nz-icon nzType="file-text" nzTheme="outline" class="dvdr-icn"></span>
+                            Work Dates
+                        </ng-template>
+                    </nz-divider>
+                    <div class="row mt-2">
+                        <div class="col-md-4"><nz-form-item class="ds-item">
+                            <nz-form-label [nzSpan]="24" nzRequired>Start Date</nz-form-label>
+                            <nz-form-control >
+                                <nz-date-picker formControlName="strt_dt"></nz-date-picker>
+                            </nz-form-control>
+                        </nz-form-item></div>
+                        <div class="col-md-4"><nz-form-item class="ds-item">
+                            <nz-form-label [nzSpan]="24" nzRequired>Planned end date</nz-form-label>
+                            <nz-form-control >
+                                <nz-date-picker formControlName="pln_end_dt"></nz-date-picker>
+                            </nz-form-control>
+                        </nz-form-item></div>
+                        <div class="col-md-4"> <nz-form-item class="ds-item">
+                            <nz-form-label [nzSpan]="24" nzRequired>Actual end date</nz-form-label>
+                            <nz-form-control >
+                                <nz-date-picker formControlName="actl_end_dt"></nz-date-picker>
+                            </nz-form-control>
+                        </nz-form-item></div>
+                    </div>
+                    <nz-divider nzOrientation="left" [nzText]="id_text" class="pb-2">
+                        <ng-template #id_text>
+                            <span nz-icon nzType="file-text" nzTheme="outline" class="dvdr-icn"></span>
+                            Work Details
+                        </ng-template>
+                    </nz-divider>
+                    <div class="row mt-2">
+                        <div class="col-md-4 mb-2"><nz-form-item class="ds-item">
+                            <nz-form-label class="ds-label" [nzSpan]="24" nzFor="prjct_stge_id">Project Status ID
+                            </nz-form-label>
+                            <nz-form-control nzDisableAutoTips nzErrorTip="Please Enter Project Status ID ">
+                                <input type="number" minlength="0" nz-input formControlName="prjct_stge_id" />
+                            </nz-form-control>
+                        </nz-form-item></div>
+                        <div class="col-md-4 mb-2"><nz-form-item class="ds-item">
+                            <nz-form-label class="ds-label" [nzSpan]="24" nzFor="prjct_type_id">Project type ID
+                            </nz-form-label>
+                            <nz-form-control nzDisableAutoTips nzErrorTip="Please Enter Project type ID ">
+                                <input type="number" minlength="0" nz-input formControlName="prjct_type_id" />
+                            </nz-form-control>
+                        </nz-form-item></div>
+                        <div class="col-md-4 mb-2"><nz-form-item class="ds-item">
+                            <nz-form-label class="ds-label" [nzSpan]="24" nzFor="mbk_nu">Mbook No
+                            </nz-form-label>
+                            <nz-form-control nzDisableAutoTips nzErrorTip="Please Enter Mbook No ">
+                                <input type="text" minlength="0" nz-input formControlName="mbk_nu" />
+                            </nz-form-control>
+                        </nz-form-item></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4"><nz-form-item class="ds-item">
+                            <nz-form-label class="ds-label" [nzSpan]="24" nzFor="dprmt_id">Department ID
+                            </nz-form-label>
+                            <nz-form-control nzDisableAutoTips nzErrorTip="Please Enter Department ID ">
+                                <input type="number" minlength="0" nz-input formControlName="dprmt_id" />
+                            </nz-form-control>
+                        </nz-form-item></div>
+                        <div class="col-md-4"><nz-form-item class="ds-item">
+                            <nz-form-label class="ds-label" [nzSpan]="24" nzFor="agncy_id">Agency ID
+                            </nz-form-label>
+                            <nz-form-control nzDisableAutoTips nzErrorTip="Please Enter Agency ID ">
+                                <input type="number" minlength="0" nz-input formControlName="agncy_id" />
+                            </nz-form-control>
+                        </nz-form-item></div>
+                        <div class="col-md-4"><nz-form-item class="ds-item">
+                            <nz-form-label class="ds-label" [nzSpan]="24" nzFor="wrd_id">Ward Identifier
+                            </nz-form-label>
+                            <nz-form-control nzDisableAutoTips nzErrorTip="Please Enter Ward Identifier ">
+                                <input type="number" minlength="0" nz-input formControlName="wrd_id" />
+                            </nz-form-control>
+                        </nz-form-item></div>
+                       
+                    </div>
+                    <div class="row mt-1">
+                        <div class="col-md-4">
+                            <nz-form-item class="ds-item">
+                                <nz-form-label class="ds-label" [nzSpan]="24" nzFor="cmpld_prcnt_ct">Percentage completed
+                                </nz-form-label>
+                                <nz-form-control nzDisableAutoTips nzErrorTip="Please Enter Percentage completed ">
+                                    <input type="number" minlength="0" nz-input formControlName="cmpld_prcnt_ct" />
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+                    </div>
+                    <nz-form-item nz-row >
+                        <nz-form-control [nzSpan]="24" [nzOffset]="20">
+                          <button nz-button nzType="primary">Submit</button>
+                        </nz-form-control>
+                      </nz-form-item>
+                </form>
+            </div>
+        </ng-container>
+    </nz-drawer>
+</div>

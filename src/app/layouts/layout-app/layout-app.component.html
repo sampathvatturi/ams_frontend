@@ -1,0 +1,25 @@
+
+<div class="common-layout {{ 'is-' + selectedHeaderColor }}" [ngClass]="{
+    'is-folded': isFolded,
+    'is-side-nav-dark' : isSideNavDark,
+    'is-expand' : isExpand
+  }">
+  <app-header></app-header>
+  <app-sidenav></app-sidenav>
+    <div class="page-container">
+      <div class="main-content">
+        <!-- <div class="row main-content-header">
+          <div class="col-lg-12 col-md-12">
+            <div>
+              <i nz-icon nzType="money-collect" nzTheme="twotone" class="header-icon"></i>&nbsp;<b
+                class="page-title">Charges Dashboard</b>
+            </div>
+          </div>
+        </div> -->
+        <!-- <app-loader></app-loader> -->
+        <router-outlet></router-outlet>
+
+      </div>
+      <app-footer></app-footer>
+    </div>
+  </div>

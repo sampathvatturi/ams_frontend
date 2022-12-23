@@ -1,0 +1,564 @@
+<div style="text-align:center">
+    <div nz-row [nzGutter]="8">
+      <div nz-col [nzSpan]="8">
+        <nz-card nzTitle="15">
+          <p>In proposals</p>
+        </nz-card>
+      </div>
+      <div nz-col [nzSpan]="8">
+        <nz-card nzTitle="9">
+          <p>GO Issued Pending Transfer</p>
+        </nz-card>
+      </div>
+      <div nz-col [nzSpan]="8">
+        <nz-card nzTitle="5">
+          <p>Handed Over</p>
+        </nz-card>
+      </div>
+    </div>
+  </div>
+<div class="ds-card grid">
+    <dx-data-grid class="p-8 flow" id="gridContainer" [wordWrapEnabled]="true" [dataSource]="rowData"
+        [remoteOperations]="false" [allowColumnReordering]="true" [rowAlternationEnabled]="true"
+        [allowColumnResizing]="true" [showColumnLines]="true" [showRowLines]="true" [showBorders]="true"
+        style="width:100%" (onToolbarPreparing)="(permissions.insrt_in==1)?onToolbarPreparing($event):false">
+        <dxo-paging [pageSize]="10"></dxo-paging>
+        <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+        <dxo-pager [visible]="true" [showPageSizeSelector]="true" [allowedPageSizes]="[10, 25, 50, 100]"
+            [showInfo]="true"></dxo-pager>
+        <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+        <dxo-filter-panel [visible]="true"></dxo-filter-panel>
+        <dxo-header-filter [visible]="true"></dxo-header-filter>
+        <dxo-group-panel [visible]="true"></dxo-group-panel>
+        <dxo-grouping [autoExpandAll]="false"></dxo-grouping>
+        <dxo-column-chooser [enabled]="true" mode="select">
+        </dxo-column-chooser>
+        <dxo-export [enabled]="(permissions.exprt_in==1)?true:false" [allowExportSelectedData]="true"
+            fileName="Change Log"></dxo-export>
+        <dxo-filter-row [visible]="true"></dxo-filter-row>
+        <dxi-column *ngFor="let f of columnDefs" [visible]="!f.hide" [dataField]="f.field"
+            [caption]="f.headerName" [alignment]="f.alignment" [width]="175" [allowResizing]="false">
+        </dxi-column>
+        <dxi-column [showInColumnChooser]="false" [visible]="(permissions.updt_in==1)?true:false" type="buttons"
+            [width]="100" cellTemplate="viewTemplate">
+            <div *dxTemplate="let data of 'viewTemplate'">
+                <div class="tblEdtBtn" (click)="openSideBarEdit('edit',data.data)">
+                    Edit Proposal
+                </div>
+            </div>
+        </dxi-column>
+        <dxi-column [showInColumnChooser]="false" type="button1" [width]="100" cellTemplate="EditTemplate">
+            <div *dxTemplate="let data of 'EditTemplate'" (click)="openSideBarEdit('go',$event)">
+                <div class="cursor-pointer tblEdtBtn">
+                    G.O details
+                </div>
+            </div>
+        </dxi-column>
+        <dxi-column [showInColumnChooser]="false" [visible]="true" type="button2" [width]="150"
+            cellTemplate="frmrTemplate">
+            <div *dxTemplate="let data of 'frmrTemplate'">
+                <div class="tblEdtBtn" (click)="openSideBarEdit('ho',$event)">
+                    HandOver
+                </div>
+            </div>
+        </dxi-column>
+    </dx-data-grid>
+</div>
+
+<nz-drawer
+      [nzBodyStyle]="{ overflow: 'auto' }"
+      [nzMaskClosable]="false"
+      [nzWidth]="1050"
+      [nzVisible]="showForm"
+      nzTitle="Proposal details"
+      (nzOnClose)="close()"
+    >
+    <div  *nzDrawerContent>
+    <nz-list >
+        <nz-list-item >
+            <span nz-typography><b>Road ID</b></span>
+            12
+        </nz-list-item>
+        <nz-list-item >
+            <span nz-typography><b>Road Number</b></span>
+            433
+        </nz-list-item>
+        <nz-list-item >
+            <span nz-typography><b>District</b></span>
+            Rajahmundry
+        </nz-list-item>
+        <nz-list-item >
+            <span nz-typography><b>Mandal</b></span>
+            Rajahmundry
+        </nz-list-item>
+    </nz-list>
+    <nz-collapse [nzExpandIconPosition]="expandIconPosition" nzAccordion >
+        <nz-collapse-panel
+            *ngFor="let panel of panels"
+            [nzHeader]="panel.name"
+            [nzActive]="panel.active"
+            [nzDisabled]="panel.disabled"
+        >
+            <form nz-form *ngIf="panel.name==='Proposal Details'" [formGroup]="validateForm" (ngSubmit)="submitForm()">
+              <div class="row">
+                <div class="col-md-4">
+                <nz-form-item>
+                    <nz-form-label [nzSpan]="24"  nzRequired>Date of proposal Initiation</nz-form-label>
+                    <nz-form-control>
+                        <nz-date-picker formControlName="datePicker"></nz-date-picker>
+                    </nz-form-control>
+                </nz-form-item>
+                </div>
+                <div class="col-md-4">
+                <nz-form-item>
+                    <nz-form-label [nzSpan]="24"  nzRequired>Proposal Initiated By Name of the person/Org/PR</nz-form-label>
+                    <nz-form-control>
+                        <nz-select  nzShowSearch nzAllowClear formControlName="prop_init_POPR">
+                            <nz-option *ngFor="let p of data.proposal_pers" [nzValue]="p" [nzLabel]="p"></nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+              </div>
+              <div class="col-md-4">
+                <nz-form-item>
+                    <nz-form-label [nzSpan]="24"   nzRequired>Proposal Initiated By Dept./PR/Govt.</nz-form-label>
+                    <nz-form-control>
+                        <nz-select  nzShowSearch nzAllowClear formControlName="prop_init_DPRG">
+                            <nz-option *ngFor="let p of data.proposal_dept" [nzValue]="p" [nzLabel]="p"></nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+              </div>
+              </div>
+              <div class="row">
+                <div class="col-md-4">
+                <nz-form-item>
+                    <nz-form-label [nzSpan]="24"  class="ds-label" nzRequired>District </nz-form-label>
+                    <nz-form-control>
+                        <nz-select  nzShowSearch nzAllowClear formControlName="district">
+                            <nz-option *ngFor="let d of data.districts" [nzValue]="d.nm" [nzLabel]="d.nm" selected="selected"></nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+                </div>
+                <div class="col-md-4">
+                <nz-form-item>
+                    <nz-form-label [nzSpan]="24"  class="ds-label" nzRequired>Mandal</nz-form-label>
+                    <nz-form-control>
+                        <nz-select  nzShowSearch nzAllowClear formControlName="mandal">
+                            <nz-option *ngFor="let m of data.mandals" [nzValue]="m.nm" [nzLabel]="m.nm"></nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+              </div>
+              <div class="col-md-4">
+                <nz-form-item>
+                    <nz-form-label
+                      [nzSpan]="24"
+                      nzFor="nameofroad"
+                      nzRequired
+                      class="ds-label"
+                    >
+                      <span>Name of the Road</span>
+                    </nz-form-label>
+                    <nz-form-control>
+                      <input nz-input id="nameofroad" formControlName="nameofroad" />
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+                </div>
+                <div class="row">
+                <div class="col-md-4">
+                  <nz-form-item>
+                    <nz-form-label
+                      [nzSpan]="24"
+                      nzFor="lengthofroad"
+                      nzRequired
+                      class="ds-label"
+                    >
+                      <span>Full or partial length proposed for transfer</span>
+                    </nz-form-label>
+                    <nz-form-control>
+                      <input nz-input id="lengthofroad" formControlName="lengthofroad" type="number"/>
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+                <div class="col-md-4">
+                  <nz-form-item>
+                    <nz-form-label
+                      [nzSpan]="24"
+                      nzFor="lengthofroadproposed"
+                      nzRequired
+                      class="ds-label"
+                    >
+                      <span>Propose transferred Length in Km</span>
+                    </nz-form-label>
+                    <nz-form-control>
+                      <input nz-input id="lengthofroadproposed" formControlName="lengthofroadproposed" type="number"/>
+                    </nz-form-control>
+                  </nz-form-item>
+                  </div>
+                  <div class="col-md-4">
+                  <nz-form-item>
+                    <nz-form-label [nzSpan]="24"  class="ds-label" nzRequired>Upload related Documents</nz-form-label>
+                    <nz-form-control>
+                        <nz-upload
+                            nzAction="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                            [nzHeaders]="{ authorization: 'authorization-text' }"
+                            (nzChange)="handleChange($event)"
+                            >
+                            <button nz-button>
+                                <span nz-icon nzType="upload"></span>
+                                Click to Upload
+                            </button>
+                            </nz-upload>
+                    </nz-form-control>
+                </nz-form-item>
+              </div>
+              </div>
+                <nz-form-item nz-row >
+                    <nz-form-control [nzSpan]="24" [nzOffset]="20">
+                      <button class="sb_btn" nz-button nzType="primary">Submit</button>
+                    </nz-form-control>
+                  </nz-form-item>
+            </form>
+            <form nz-form *ngIf="panel.name==='G.O Details'" [formGroup]="validateForm1" (ngSubmit)="submitForm1()">
+              <div class="row">
+                <div class="col-md-4">
+                <nz-form-item>
+                    <nz-form-label [nzSpan]="24" nzRequired class="ds-label">Year Of Order</nz-form-label>
+                    <nz-form-control>
+                        <nz-select nzShowSearch nzAllowClear  formControlName="yr_of_odr">
+                            <nz-option nzValue="2015" nzLabel="2015"></nz-option>
+                            <nz-option nzValue="2016" nzLabel="2016"></nz-option>
+                            <nz-option nzValue="2017" nzLabel="2017"></nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+                </div>
+                <div class="col-md-4">
+                <nz-form-item>
+                    <nz-form-label [nzSpan]="24" nzRequired class="ds-label">Date</nz-form-label>
+                    <nz-form-control>
+                        <nz-date-picker formControlName="datePicker1"></nz-date-picker>
+                    </nz-form-control>
+                </nz-form-item>
+              </div>
+              <div class="col-md-4">
+                <nz-form-item>
+                    <nz-form-label
+                      [nzSpan]="24"
+                      nzFor="trns_go_prcdngs_num"
+                      nzRequired
+                      class="ds-label"
+                    >
+                      <span>Transfer GO Proceedings Number</span>
+                    </nz-form-label>
+                    <nz-form-control>
+                      <input nz-input id="trns_go_prcdngs_num" formControlName="trns_go_prcdngs_num" />
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+                </div>
+                <div class="row">
+                <div class="col-md-4">
+                <nz-form-item>
+                    <nz-form-label [nzSpan]="24" class="ds-label" nzRequired>Name of the District</nz-form-label>
+                    <nz-form-control>
+                        <nz-select  nzShowSearch nzAllowClear formControlName="dist_name">
+                            <nz-option *ngFor="let d of data.districts" [nzValue]="d.nm" [nzLabel]="d.nm"></nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+              </div>
+              <div class="col-md-4">
+                <nz-form-item>
+                    <nz-form-label [nzSpan]="24" class="ds-label" nzRequired>Mandal</nz-form-label>
+                    <nz-form-control>
+                        <nz-select  nzShowSearch nzAllowClear formControlName="mandal_name">
+                            <nz-option *ngFor="let m of data.mandals" [nzValue]="m.nm" [nzLabel]="m.nm"></nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+              </div>
+              <div class="col-md-4">
+                <nz-form-item>
+                    <nz-form-label [nzSpan]="24" class="ds-label" nzRequired>Road ID</nz-form-label>
+                    <nz-form-control>
+                        <nz-select  formControlName="road_id">
+                            <nz-option nzValue="jack" nzLabel="Jack"></nz-option>
+                            <nz-option nzValue="lucy" nzLabel="Lucy"></nz-option>
+                            <nz-option nzValue="disabled" nzLabel="Disabled" ></nz-option>
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-md-4">
+                <nz-form-item>
+                    <nz-form-label
+                      [nzSpan]="24"
+                      nzFor="nameofroad1"
+                      nzRequired
+                    >
+                      <span>Name of the Road</span>
+                    </nz-form-label>
+                    <nz-form-control>
+                      <input nz-input id="nameofroad1" formControlName="nameofroad1" />
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+                <div class="col-md-4">
+                  <nz-form-item>
+                    <nz-form-label
+                      [nzSpan]="24"
+                      nzFor="lengthofroadproposedgo"
+                      nzRequired
+                    >
+                      <span>Propose transferred Length in Km as per G.O</span>
+                    </nz-form-label>
+                    <nz-form-control>
+                      <input nz-input id="lengthofroadproposedgp" formControlName="lengthofroadproposedgo" type="number"/>
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+                <div class="col-md-4">
+                  <nz-form-item>
+                    <nz-form-label [nzSpan]="24" nzRequired>Upload G.O copy</nz-form-label>
+                    <nz-form-control>
+                        <nz-upload
+                            nzAction="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                            [nzHeaders]="{ authorization: 'authorization-text' }"
+                            (nzChange)="handleChange($event)"
+                            >
+                            <button nz-button>
+                                <span nz-icon nzType="upload"></span>
+                                Click to Upload
+                            </button>
+                            </nz-upload>
+                    </nz-form-control>
+                </nz-form-item>
+              </div>
+              </div>
+                <nz-form-item nz-row >
+                    <nz-form-control [nzSpan]="24" [nzOffset]="20">
+                      <button class="sb_btn" nz-button nzType="primary">Submit</button>
+                    </nz-form-control>
+                  </nz-form-item>
+            </form>
+            <form nz-form *ngIf="panel.name==='HandOver Details'" [formGroup]="validateForm2" (ngSubmit)="submitForm2()">
+                <nz-form-item>
+                    <nz-form-label
+                      [nzSpan]="16"
+                      nzFor="actl_lgt_aspr_site"
+                      nzRequired
+                      class="pull_left"
+                    >
+                      <span>Actual Transferred length in Km as per site conditions</span>
+                    </nz-form-label>
+                    <nz-form-control [nzSpan]="8" >
+                      <input type="number" nz-input id="actl_lgt_aspr_site" formControlName="actl_lgt_aspr_site" />
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-divider nzOrientation="left" [nzText]="surf_text">
+                  <ng-template #surf_text>
+                      <span nz-icon nzType="form" nzTheme="outline" class="dvdr-icn"></span>
+                      Surface Details 
+                  </ng-template>
+              </nz-divider>
+              <div class="row">
+                <div class="col-md-4">
+                <nz-form-item>
+                    <nz-form-label
+                      [nzSpan]="24"
+                      nzFor="earthen"
+                      nzRequired
+                      class="ds-label"
+                    >
+                      <span>Earthen/Track</span>
+                    </nz-form-label>
+                    <nz-form-control>
+                      <input nz-input id="earthen" formControlName="earthen" />
+                    </nz-form-control>
+                  </nz-form-item>
+                </div>
+                <div class="col-md-4">
+                  <nz-form-item>
+                    <nz-form-label
+                      [nzSpan]="24"
+                      nzFor="gravel"
+                      nzRequired
+                      class="ds-label"
+                    >
+                      <span>Gravel</span>
+                    </nz-form-label>
+                    <nz-form-control>
+                      <input nz-input id="gravel" formControlName="gravel" />
+                    </nz-form-control>
+                    </nz-form-item>
+                  </div>
+                  <div class="col-md-4">
+                    <nz-form-item>
+                      <nz-form-label
+                        [nzSpan]="24"
+                        nzFor="wbm"
+                        nzRequired
+                        class="ds-label"
+                      >
+                        <span>WBM/WMM</span>
+                      </nz-form-label>
+                      <nz-form-control>
+                        <input nz-input id="wbm" formControlName="wbm" />
+                      </nz-form-control>
+                    </nz-form-item>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-md-4">
+                    <nz-form-item>
+                      <nz-form-label
+                        [nzSpan]="24"
+                        nzFor="bt"
+                        nzRequired
+                        class="ds-label"
+                      >
+                        <span>BT</span>
+                      </nz-form-label>
+                      <nz-form-control>
+                        <input nz-input id="bt" formControlName="bt" />
+                      </nz-form-control>
+                    </nz-form-item>
+                  </div>
+                  <div class="col-md-4">
+                    <nz-form-item>
+                      <nz-form-label
+                        [nzSpan]="24"
+                        nzFor="cc"
+                        nzRequired
+                        class="ds-label"
+                      >
+                        <span>CC</span>
+                      </nz-form-label>
+                      <nz-form-control>
+                        <input nz-input id="cc" formControlName="cc" />
+                      </nz-form-control>
+                    </nz-form-item>
+                  </div>
+                </div>
+                  <nz-divider nzOrientation="left" [nzText]="cd_text">
+                    <ng-template #cd_text>
+                        <span nz-icon nzType="form" nzTheme="outline" class="dvdr-icn"></span>
+                        CD Works 
+                    </ng-template>
+                </nz-divider>
+                <div class="row">
+                  <div class="col-md-3">
+                    <nz-form-item class="ds-item">
+                        <nz-form-label
+                          [nzSpan]="24"
+                          nzFor="num_of_pipeculvrts"
+                          nzRequired
+                          class="ds-label"
+                        >
+                          <span>No of pipe culverts</span>
+                        </nz-form-label>
+                        <nz-form-control >
+                          <input nz-input id="num_of_pipeculvrts" formControlName="num_of_pipeculvrts" type="number"/>
+                        </nz-form-control>
+                      </nz-form-item>
+                  </div>
+                  <div class="col-md-3">                    
+                    <nz-form-item>
+                      <nz-form-label
+                        [nzSpan]="24"
+                        nzFor="num_of_slabculvrts"
+                        nzRequired
+                        class="ds-label"
+                      >
+                        <span>No of Slab culverts</span>
+                      </nz-form-label>
+                      <nz-form-control>
+                        <input nz-input id="num_of_slabculvrts" formControlName="num_of_slabculvrts" type="number"/>
+                      </nz-form-control>
+                    </nz-form-item>
+                  </div>
+                  <div class="col-md-3"> 
+                    <nz-form-item>
+                      <nz-form-label
+                        [nzSpan]="24"
+                        nzFor="num_of_road_dams"
+                        nzRequired
+                        class="ds-label"
+                      >
+                        <span>No of Road Dams</span>
+                      </nz-form-label>
+                      <nz-form-control>
+                        <input nz-input id="num_of_road_dams" formControlName="num_of_road_dams" type="number"/>
+                      </nz-form-control>
+                    </nz-form-item>
+                  </div>
+                  <div class="col-md-3"> 
+                    <nz-form-item>
+                      <nz-form-label
+                        [nzSpan]="24"
+                        nzFor="num_of_brdgs"
+                        nzRequired
+                        class="ds-label"
+                      >
+                        <span>No of Bridges</span>
+                      </nz-form-label>
+                      <nz-form-control>
+                        <input nz-input id="num_of_brdgs" formControlName="num_of_brdgs" type="number"/>
+                      </nz-form-control>
+                    </nz-form-item>
+                  </div>
+                  </div>
+                  <div class="row">
+                    <div class="col-md-6">
+                      <nz-form-item>
+                          <nz-form-label class="pull_left" [nzSpan]="12" nzRequired>Date of Handing over</nz-form-label>
+                          <nz-form-control [nzSpan]="12">
+                              <nz-date-picker formControlName="datePicker2"></nz-date-picker>
+                          </nz-form-control>
+                      </nz-form-item>
+                    </div>
+                    <div class="col-md-6">
+                      <nz-form-item>
+                        <nz-form-label class="pull_left" [nzSpan]="12" nzRequired>HandOver Road Chart</nz-form-label>
+                        <nz-form-control [nzSpan]="12">
+                            <nz-upload
+                                nzAction="https://www.mocky.io/v2/5cc8019d300000980a055e76"
+                                [nzHeaders]="{ authorization: 'authorization-text' }"
+                                (nzChange)="handleChange($event)"
+                                >
+                                <button nz-button>
+                                    <span nz-icon nzType="upload"></span>
+                                    Click to Upload
+                                </button>
+                                </nz-upload>
+                        </nz-form-control>
+                      </nz-form-item>
+                    </div>
+                </div>
+                <nz-divider nzOrientation="left" [nzText]="rmrk_text">
+                  <ng-template #rmrk_text>
+                      <span nz-icon nzType="edit" nzTheme="outline" class="dvdr-icn"></span>
+                      Remarks
+                  </ng-template>
+              </nz-divider>
+              <div class="row">
+                  <div class="col-md-12">
+                      <app-text-editor (getEdtrEntrTxt)="getEdtrEntrTxt($event)"></app-text-editor>
+                  </div>
+              </div>
+                <nz-form-item nz-row>
+                    <nz-form-control [nzSpan]="24" [nzOffset]="20">
+                      <button class="sb_btn" nz-button nzType="primary">Submit</button>
+                    </nz-form-control>
+                  </nz-form-item>
+            </form>
+        </nz-collapse-panel>
+        </nz-collapse>
+    </div>
+</nz-drawer>
