@@ -1,0 +1,164 @@
+
+  
+
+  <div class="ds-card grid">
+    <dx-data-grid class="p-8 flow" id="gridContainer" [wordWrapEnabled]="true" [dataSource]="rowData"
+        [remoteOperations]="false" [allowColumnReordering]="true" [rowAlternationEnabled]="true"
+        [allowColumnResizing]="true" [showColumnLines]="true" [showRowLines]="true" [showBorders]="true"
+        style="width:100%" (onToolbarPreparing)="(permissions.insrt_in==1)?onToolbarPreparing($event):false" dataRowTemplate="dataRowTemplateName">
+        <dxo-paging [pageSize]="10" ></dxo-paging>
+        <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+        <dxo-pager [visible]="true" [showPageSizeSelector]="true" [allowedPageSizes]="[5,10, 25, 50, 100]"
+            [showInfo]="true"></dxo-pager>
+        <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+        <dxo-filter-panel [visible]="false"></dxo-filter-panel>
+        <dxo-header-filter [visible]="true"></dxo-header-filter>
+        <dxo-group-panel [visible]="true"></dxo-group-panel>
+        <dxo-grouping [autoExpandAll]="false"></dxo-grouping>
+        <dxo-column-chooser [enabled]="true" mode="select">
+        </dxo-column-chooser>
+        <dxo-export [enabled]="(permissions.exprt_in==1)?true:false" [allowExportSelectedData]="true"
+            fileName="Change Log"></dxo-export>
+        <dxo-filter-row [visible]="false"></dxo-filter-row>
+        <dxi-column *ngFor="let f of columnDefs" [visible]="true" 
+            [caption]="f.headerName" [width]=f.width [allowResizing]="false" format="f.format">
+        </dxi-column>
+
+        <ng-container *dxTemplate="let funds of 'dataRowTemplateName'; let i = index">
+            <tr >
+            <td>{{ i + 1 }}</td>
+            <td>{{ funds.data.fund_type }}</td>
+            <td>{{ funds.data.fund_description }}</td>
+            <td>{{ funds.data.transaction_mode }}</td>
+            <td>{{ funds.data.fund_value }}</td>
+            <td>{{ funds.data.fund_released_date | date : "dd-MM-YYYY"}}</td>
+            <td>
+                <div class="tblEdtBtn">
+                    <a nz-tooltip="Edit" (click)="edit('edit',funds.data)"><i class="fa-regular fa-pen-to-square"></i>Edit</a>
+                </div>
+            </td>
+            </tr>
+         </ng-container>
+
+    </dx-data-grid>
+</div>
+
+    
+  <nz-drawer
+    [nzBodyStyle]="{ overflow: 'auto' }"
+    [nzMaskClosable]="true"
+    [nzWidth]="720"
+    [nzVisible]="visible"
+    [nzTitle]="drawerTitle"
+    [nzFooter]="footerTpl"
+    (nzOnClose)="close()"
+    [nzClosable]="false"
+    [nzCloseIcon]="icon"
+    [nzExtra]="icon"
+  >
+  <ng-template #icon>
+    <i (click)="close()" class="fa-solid fa-circle-xmark"></i>
+  </ng-template>
+    <form class="drawer-form" nz-form *nzDrawerContent [formGroup]="fundsForm" class="drawer-form">
+      <div>
+        <nz-form-item>
+          <nz-form-label nz-col nzSpan="5" class="required"
+            >Fund Type</nz-form-label
+          >
+          <nz-select
+            formControlName="fund_type"
+            nz-col
+            nzSpan="10"
+            nzShowSearch
+          >
+            <nz-option nzValue="state" nzLabel="State"></nz-option>
+            <nz-option nzValue="central" nzLabel="Central"></nz-option>
+          </nz-select>
+        </nz-form-item>
+      </div>
+      <div>
+        <nz-form-item>
+          <nz-form-label class = "required" nz-col nzSpan="5">Fund Description</nz-form-label>
+          <nz-form-control nz-col nzSpan="10" [nzErrorTip]="error2">
+            <input
+              nz-input
+              formControlName="fund_description"
+              type="text"
+              nz-input
+              placeholder="Fund Description"
+            />
+            <ng-template #error2 let-control>
+              <ng-container *ngIf="control.hasError('required')"
+                >Please Enter Fund Description</ng-container
+              >
+              <ng-container *ngIf="control.hasError('maxlength')"
+                >Maxlength is 50 <br
+              /></ng-container>
+              <ng-container *ngIf="control.hasError('minlength')"
+                >Minlength is 10 <br
+              /></ng-container>
+              <ng-container *ngIf="control.hasError('pattern')"
+                >Please Enter Valid Fund Description</ng-container
+              >
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div>
+        <nz-form-item>
+          <nz-form-label nz-col nzSpan="5">Transaction Mode</nz-form-label>
+          <nz-form-control nz-col nzSpan="10" nzErrorTip="Please Select Transaction Mode">
+            <nz-select
+              formControlName="transaction_mode"
+              nzPlaceHolder="Transaction Mode"
+              nzShowSearch
+            >
+              <nz-option nzValue="banking" nzLabel="Banking"></nz-option>
+              <nz-option nzValue="cash" nzLabel="Cash"></nz-option>
+              <nz-option nzValue="cheque" nzLabel="Cheque"></nz-option>
+              <nz-option nzValue="card" nzLabel="Card"></nz-option>
+              <nz-option nzValue="upi" nzLabel="UPI"></nz-option>
+            </nz-select>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div>
+        <nz-form-item>
+          <nz-form-label class = "required" nz-col nzSpan="5">Amount</nz-form-label>
+          <nz-form-control nz-col nzSpan="10" nzErrorTip="Enter Amount">
+            <input
+              nz-input
+              formControlName="fund_value"
+              type="number"
+              nz-input
+              placeholder="Amount"
+            />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div>
+        <nz-form-item>
+          <nz-form-label class = "required" nz-col nzSpan="5">Date</nz-form-label>
+          <nz-form-control nz-col nzSpan="10" nzErrorTip="Enter Date">
+            <nz-date-picker  [nzFormat]="dateFormat" formControlName="fund_released_date"></nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+  
+    </form>
+  
+    <ng-template #footerTpl>
+      <div style="float: right">
+        <button nz-button style="margin-right: 8px" (click)="close()">
+          Cancel
+        </button>
+        <button nz-button *ngIf="submit" nzType="primary" (click)="onCreateSubmit()">
+          Submit
+        </button>
+        <button nz-button *ngIf="!submit && updateBtnDisable" nzType="primary" (click)="onUpdateSubmit()">
+          Update
+        </button>
+      </div>
+    </ng-template>
+  </nz-drawer>
+  

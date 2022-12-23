@@ -23,8 +23,8 @@
                 </ul>
             </li>
         </ng-container> -->
-        <ng-container *ngFor="let item of menuItems">
-            <li *ngIf="!item.children" nz-menu-item routerLink="{{ item.route }}">
+        <ng-container *ngFor="let item of mainMenuItems">
+            <li *ngIf="!item.children" nz-menu-item routerLink="/internal/ams/{{ item.path }}">
               <span nz-icon><i class="{{ item.icon }}"></i></span>
               <span>{{ item.title }}</span>
             </li>
@@ -32,7 +32,7 @@
               <ul>
                 <li
                   nz-menu-item
-                  routerLink="{{ child.route }}"
+                  routerLink="/internal/ams/{{ child.path }}"
                   *ngFor="let child of item.children"
                 >
                   <span nz-icon><i class="{{ child.icon }}"></i></span>

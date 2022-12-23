@@ -1,0 +1,180 @@
+<div class="ds-card grid">
+    <dx-data-grid class="p-8 flow" id="gridContainer" [wordWrapEnabled]="true" [dataSource]="tenders"
+        [remoteOperations]="false" [allowColumnReordering]="true" [rowAlternationEnabled]="true"
+        [allowColumnResizing]="true" [showColumnLines]="true" [showRowLines]="true" [showBorders]="true"
+        style="width:100%" (onToolbarPreparing)="(permissions.insrt_in==1)?onToolbarPreparing($event):false">
+        <dxo-paging [pageSize]="5"></dxo-paging>
+        <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+        <dxo-pager [visible]="true" [showPageSizeSelector]="true" [allowedPageSizes]="[5,10, 25, 50, 100]"
+            [showInfo]="true"></dxo-pager>
+        <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+        <dxo-filter-panel [visible]="true"></dxo-filter-panel>
+        <dxo-header-filter [visible]="true"></dxo-header-filter>
+        <dxo-group-panel [visible]="true"></dxo-group-panel>
+        <dxo-grouping [autoExpandAll]="false"></dxo-grouping>
+        <dxo-column-chooser [enabled]="true" mode="select">
+        </dxo-column-chooser>
+        <dxo-export [enabled]="(permissions.exprt_in==1)?true:false" [allowExportSelectedData]="true"
+            fileName="Change Log"></dxo-export>
+        <dxo-filter-row [visible]="true"></dxo-filter-row>
+        <dxi-column *ngFor="let f of columnDefs" [visible]="true" [dataField]="f.field"
+            [caption]="f.headerName" [alignment]="f.alignment" [width]="175" [allowResizing]="false">
+        </dxi-column>
+        <dxi-column [showInColumnChooser]="false" [visible]="(permissions.updt_in==1)?true:false" type="buttons"
+            [width]="100" cellTemplate="viewTemplate">
+            <div *dxTemplate="let data of 'viewTemplate'">
+                <div class="tblEdtBtn" (click)="edit('edit',data.data)">
+                    Edit Tender
+                </div>
+            </div>
+        </dxi-column>
+        <dxi-column [showInColumnChooser]="false" type="button1" [width]="100" cellTemplate="EditTemplate">
+            <div *dxTemplate="let data of 'EditTemplate'" (click)="edit('view',data.data)">
+                <div class="cursor-pointer tblEdtBtn">
+                    View Tender
+                </div>
+            </div>
+        </dxi-column>
+    </dx-data-grid>
+</div>
+<nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="true" [nzWidth]="720" [nzVisible]="visible"
+    [nzTitle]="drawerTitle" [nzFooter]="footerTpl" (nzOnClose)="close()" [nzClosable]="false" [nzCloseIcon]="icon"
+    [nzExtra]="icon">
+    <ng-template #icon>
+      <i (click)="close()" class="fa-solid fa-circle-xmark"></i>
+    </ng-template>
+    <form nz-form *nzDrawerContent [formGroup]="createTenderForm" class="drawer-form">
+
+      <div>
+        <nz-form-item>
+          <nz-form-label class="required" nz-col nzSpan="5">Title</nz-form-label>
+          <nz-form-control nz-col nzSpan="15" [nzErrorTip]="title1">
+            <input formControlName="title" nz-input placeholder="Enter Ticket Title" />
+            <ng-template #title1 let-control>
+              <ng-container *ngIf="control.hasError('pattern')">Please enter valid input</ng-container>
+              <ng-container *ngIf="control.hasError('required')">Please enter title</ng-container>
+            </ng-template>
+
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div>
+        <nz-form-item>
+          <nz-form-label class="required" nz-col nzSpan="5">Description</nz-form-label>
+          <nz-form-control nz-col nzSpan="15" [nzErrorTip]="description">
+            <textarea formControlName="description" nz-input rows="2"
+              placeholder="Enter Ticket Description"></textarea>
+            <ng-template #description let-control>
+              <ng-container *ngIf="control.hasError('required')">Please enter ticket description</ng-container>
+              <ng-container *ngIf="control.hasError('pattern')">Please enter valid input</ng-container>
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+
+
+      <div>
+        <nz-form-item>
+          <nz-form-label class="required" nz-col nzSpan="5">Works</nz-form-label>
+          <nz-form-control nzErrorTip="Please select a work">
+            <nz-select nz-col nzSpan="15" nzMode="multiple" formControlName="work_id" nzPlaceHolder="Select Works" nzShowSearch>
+              <!-- <nz-option *ngFor="let w of worksDetails" [nzLabel]="w.work_name" [nzValue]="w.work_id"></nz-option> -->
+              <nz-option nzLabel="Work1" nzValue="1"></nz-option>
+              <nz-option></nz-option>
+            </nz-select>
+          </nz-form-control> 
+        </nz-form-item>
+      </div>
+
+
+      <div>
+        <nz-form-item>
+          <nz-form-label class="required" nz-col nzSpan="5">Location</nz-form-label>
+          <nz-form-control nz-col nzSpan="15" [nzErrorTip]="location">
+            <textarea formControlName="location" nz-input rows="2" placeholder="Enter Your location"></textarea>
+            <ng-template #location let-control>
+              <ng-container *ngIf="control.hasError('required')">Please enter location</ng-container>
+              <ng-container *ngIf="control.hasError('pattern')">Please enter valid location</ng-container>
+            </ng-template>
+
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div nz-row>
+        <div nz-col nzSpan="12">
+          <nz-form-item>
+            <nz-form-label class="required" nz-col nzSpan="10">Tender Cost</nz-form-label>
+            <nz-form-control nz-col nzSpan="10" nzErrorTip="Please enter cost">
+              <input type="text" formControlName="tender_cost" nz-input placeholder="Enter Ticket Est. Cost" />
+            </nz-form-control>
+          </nz-form-item>
+        </div>
+        <div nz-col nzSpan="12">
+            <nz-form-item>
+              <nz-form-label class="required" nz-col nzSpan="7">Status</nz-form-label>
+              <nz-select formControlName="status" nz-col nzSpan="9" nzPlaceHolder="Status" nzShowSearch>
+                <nz-option nzValue="open" nzLabel="Open"></nz-option>
+                <nz-option nzValue="close" nzLabel="Close"></nz-option>
+                <nz-option nzValue="accept" nzLabel="Accept"></nz-option>
+                <nz-option nzValue="reject" nzLabel="Reject"></nz-option>
+              </nz-select>
+            </nz-form-item>
+          </div>
+      </div>
+
+      <div nz-row>
+        <div nz-col nzSpan="12">
+          <nz-form-item>
+            <nz-form-label class="required" nz-col nzSpan="10">Start Date</nz-form-label>
+            <nz-form-control nz-col nzSpan="10" nzErrorTip="Enter Start Date">
+              <nz-date-picker formControlName="start_date"></nz-date-picker>
+            </nz-form-control>
+          </nz-form-item>
+          </div>
+
+          <div nz-col nzSpan="12">
+            <nz-form-item>
+              <nz-form-label class="required" nz-col nzSpan="7">End Date</nz-form-label>
+              <nz-form-control nz-col nzSpan="9" nzErrorTip="Enter End Date">
+                <nz-date-picker formControlName="end_date"></nz-date-picker>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+      </div>
+
+
+      <div nz-row>
+        <div nz-col nzSpan="24">
+          <nz-form-label class="required" nz-col nzSpan="12">Attachments</nz-form-label>
+          <nz-upload
+            [nzAction] = uploadUrl
+            [nzRemove]="handleRemove"
+            [nzFileList]="files"
+              (nzChange)="handleChange($event)" nzMultiple="true">
+              <button nz-button>
+                <span nz-icon nzType="upload"></span>
+                Upload
+              </button>
+            </nz-upload>
+        </div>
+      </div>
+
+    </form>
+
+    <ng-template #footerTpl>
+      <div style="float: right">
+        <button nz-button style="margin-right: 8px" (click)="close()">
+          Cancel
+        </button>
+        <button nz-button *ngIf="submit" nzType="primary" (click)="onCreateSubmit()">
+          Submit
+        </button>
+        <button nz-button *ngIf="!submit && updateBtnDisable" nzType="primary" (click)="onUpdateSubmit()">
+          Update
+        </button>
+      </div>
+    </ng-template>
+  </nz-drawer>
