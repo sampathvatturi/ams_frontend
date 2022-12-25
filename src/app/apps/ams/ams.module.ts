@@ -45,6 +45,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ScrollingModule } from '@angular/cdk/scrolling';
 import { DxDataGridModule } from 'devextreme-angular';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { ThemeConstantService } from 'src/app/shared/services/theme-constant.service';
+import { NgChartjsModule } from 'ng-chartjs';
 
 
 const antdModule = [
@@ -101,6 +103,9 @@ const antdModule = [
     MastersModule,
     ...antdModule,
     DxDataGridModule,
-  ]
+    NgChartjsModule
+  ],
+  providers: [
+    ThemeConstantService,]
 })
 export class AmsModule { }

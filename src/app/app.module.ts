@@ -15,9 +15,7 @@ import { SharedModule } from './shared/shared.module';
 import { TemplateModule } from './shared/template/template.module';
 
 import { AuthGuardService } from './apps/auth/auth-guard_OLD.service';
-import { UserService } from './providers/user_OLD.service';
 import { AppsService } from './shared/services/apps.service';
-import { ApiService } from './providers/api_OLD.service';
 
 import { AppComponent } from './app.component';
 import { FullLayoutComponent } from './layouts/full-layout/full-layout.component';
@@ -48,7 +46,7 @@ registerLocaleData(en);
         KeyboardShortcutsModule.forRoot()
     ],
     providers: [
-        ApiService, AppsService, UserService, 
+        AppsService, 
         ThemeConstantService, 
         {
             provide: NZ_I18N,

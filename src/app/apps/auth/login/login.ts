@@ -1,13 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
-import { ApiService } from 'src/app/providers/api_OLD.service';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NotificationService } from 'src/app/shared/common/notification.service';
 import { Md5hashService } from 'src/app/shared/services/auth/md5hash.service';
 import { UserService } from 'src/app/shared/services/auth/user.service';
 import { GlobalConstants } from 'src/app/shared/common/global_constants';
-// import { UserService } from 'src/app/providers/user_OLD.service';
 
 @Component({
   selector: 'auth-login',
@@ -49,7 +47,6 @@ export class LoginComponent implements OnInit {
 
   constructor(
     public fb: FormBuilder, 
-    private apiS: ApiService, 
     private domSanitizer: DomSanitizer,
     private route: Router,
     private userService: UserService,
