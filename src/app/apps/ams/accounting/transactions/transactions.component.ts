@@ -40,10 +40,10 @@ export class TransactionsComponent implements OnInit {
   ) { }
 
   columnDefs = [
-    { headerName: 'Date', width: '100', filter: false },
-    { headerName: 'Particulars', width: '600' },
-    { headerName: 'Credit',field:'credit', format:"currency"},
-    { headerName: 'Debit',field:'debit' }
+    { headerName: 'Date', width: '100', filter: false, field: 'trsxcn_date', cellTemplate: 'dateTemplate' },
+    { headerName: 'Particulars', width: '600', field: 'particulars', cellTemplate: 'particularTemplate'},
+    { headerName: 'Credit',field:'credit', cellTemplate: 'creditTemplate'},
+    { headerName: 'Debit',field:'debit', cellTemplate: 'debitTemplate' }
   ]
 
   ngOnInit(): void {
@@ -79,11 +79,13 @@ export class TransactionsComponent implements OnInit {
       // if(res.length>0)
        this.rowData = res;
       //  this.transactions = res;
-       if(this.rowData.length > 0){
-        this.getsum();
-       }
+      //  if(this.rowData.length > 0){
+      //   this.getsum();
+      //  }
+
       
     })
+    
     
   }
 
@@ -117,13 +119,35 @@ export class TransactionsComponent implements OnInit {
   }
 
   getcreditTotal(){
-    return '0'+this.creditTotal;
+    this.getTransactions();
+    if(this.rowData.length > 0){
+      return '0'+this.creditTotal;
+    }
   }
 
   getdebitTotal(){
-    return '0'+this.debitTotal;
+    this.getTransactions();
+    if(this.rowData.length > 0){
+      return '0'+this.debitTotal;
+    }
   }
 
+
+  // calculateSelectedRow(options) {
+  //   console.log(options)
+  //   if (options.name === 'SelectedRowsSummary') {
+      // if (options.summaryProcess === 'start') {
+        // if(this.rowData.length > 0){
+        //   options.totalValue = this.rowData.length;
+        //  }
+        
+      // } else if (options.summaryProcess === 'calculate') {
+      //   if (options.component.isRowSelected(options.value.ID)) {
+      //     options.totalValue += options.value.SaleAmount;
+      //   }
+      // }
+  //   }
+  // }
 
  
   

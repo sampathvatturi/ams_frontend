@@ -1,190 +1,149 @@
+<div class="ds-card grid">
+  <form class="forms" [formGroup]="transactionsFilterForm" nz-row nzJustify="space-between" nzAlign="middle">
+    <nz-form-item nz-col nzSpan="4">
+      <nz-form-label>Start Date</nz-form-label>
+      <nz-form-control>
+        <nz-date-picker formControlName="start_date"></nz-date-picker>
+      </nz-form-control>
+    </nz-form-item>
 
- 
+    <nz-form-item nz-col nzSpan="4">
+      <nz-form-label>End Date</nz-form-label>
+      <nz-form-control>
+        <nz-date-picker formControlName="end_date"></nz-date-picker>
+      </nz-form-control>
+    </nz-form-item>
 
-    <div class="ds-card grid">
-      <form class="forms" [formGroup]="transactionsFilterForm" nz-row nzJustify="space-between" nzAlign="middle">
-        <nz-form-item nz-col nzSpan="4">
-          <nz-form-label>Start Date</nz-form-label>
-          <nz-form-control>
-            <nz-date-picker formControlName="start_date"></nz-date-picker>
-          </nz-form-control>
-        </nz-form-item>
+    <nz-form-item nz-col nzSpan="4">
+      <nz-form-label>Type</nz-form-label>
+      <nz-form-control nzErrorTip="Please Select Type">
+        <nz-select formControlName="type" nzPlaceHolder="Type" nzShowSearch>
+          <nz-option nzValue="%" nzLabel="All" nzSelected></nz-option>
+          <nz-option nzValue="debit" nzLabel="Debit"></nz-option>
+          <nz-option nzValue="credit" nzLabel="Credit"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
 
-        <nz-form-item nz-col nzSpan="4">
-          <nz-form-label>End Date</nz-form-label>
-          <nz-form-control>
-            <nz-date-picker formControlName="end_date"></nz-date-picker>
-          </nz-form-control>
-        </nz-form-item>
+    <nz-form-item nz-col nzSpan="4">
+      <nz-form-label>Account</nz-form-label>
+      <nz-form-control nzErrorTip="Please select account">
+        <nz-select formControlName="acc_head" nzPlaceHolder="Account" nzShowSearch>
+          <nz-option *ngFor="let a of accounts_info" nzValue="{{ a.id }}" nzLabel="{{ a.name }}"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
 
-        <nz-form-item nz-col nzSpan="4">
-          <nz-form-label>Type</nz-form-label>
-            <nz-form-control  nzErrorTip="Please Select Type">
-              <nz-select formControlName="type" nzPlaceHolder="Type" nzShowSearch>
-                <nz-option nzValue="%" nzLabel="All" nzSelected></nz-option>
-                <nz-option nzValue="debit" nzLabel="Debit"></nz-option>
-                <nz-option nzValue="credit" nzLabel="Credit"></nz-option>
-              </nz-select>
-            </nz-form-control>
-        </nz-form-item>
+    <button nz-button nzType="primary" (click)="getTransactions()" nz-col nzSpan="4">
+      Submit
+    </button>
+  </form>
+</div>
 
-        <nz-form-item nz-col nzSpan="4">
-          <nz-form-label>Account</nz-form-label>
-          <nz-form-control nzErrorTip="Please select account">
-            <nz-select formControlName="acc_head"  nzPlaceHolder="Account" nzShowSearch>
-              <nz-option *ngFor="let a of accounts_info" nzValue="{{ a.id }}"
-                nzLabel="{{ a.name }}"></nz-option>
-            </nz-select>
-          </nz-form-control>
-        </nz-form-item>
-
-        <button nz-button nzType="primary" (click)="getTransactions()" nz-col nzSpan="4">
-          Submit
-      </button>
-      </form>
-    </div>
-
-    <div class="ds-card grid">
-        <dx-data-grid class="p-8 flow" id="gridContainer" [wordWrapEnabled]="true" [dataSource]="rowData"
-            [remoteOperations]="false" [allowColumnReordering]="true" [rowAlternationEnabled]="true"
-            [allowColumnResizing]="true" [showColumnLines]="true" [showRowLines]="true" [showBorders]="true"
-            style="width:100%" (onToolbarPreparing)="(permissions.insrt_in==1)?onToolbarPreparing($event):false" dataRowTemplate="dataRowTemplateName">
-            <dxo-paging [pageSize]="5" ></dxo-paging>
-            <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
-            <dxo-pager [visible]="true" [showPageSizeSelector]="true" [allowedPageSizes]="[5,10, 25, 50, 100]"
-                [showInfo]="true"></dxo-pager>
-            <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
-            <dxo-filter-panel [visible]="false"></dxo-filter-panel>
-            <dxo-header-filter [visible]="true"></dxo-header-filter>
-            <dxo-group-panel [visible]="true"></dxo-group-panel>
-            <dxo-grouping [autoExpandAll]="false"></dxo-grouping>
-            <dxo-column-chooser [enabled]="true" mode="select">
-            </dxo-column-chooser>
-            <dxo-export [enabled]="(permissions.exprt_in==1)?true:false" [allowExportSelectedData]="true"
-                fileName="Change Log"></dxo-export>
-            <dxo-filter-row [visible]="false"></dxo-filter-row>
-            <dxi-column *ngFor="let f of columnDefs" [visible]="true" [dataField]="f.field"
-                [caption]="f.headerName" [width]=f.width [allowResizing]="false" format="f.format">
-            </dxi-column>
-
-
-            <ng-container *dxTemplate="let trnscx of 'dataRowTemplateName'">
-                <tr >
-                  <td>{{ trnscx.data.trsxcn_date  | date : "dd-MM-YYYY"}}</td>
-                  <td><b>{{ accountName[trnscx.data.ref_acc_head] }}</b><br><i>{{ trnscx.data.remarks }}</i></td>
-                <td class='creditColor' nzAlign="center"><div *ngIf="trnscx.data.type === 'credit'">{{ trnscx.data.amount   }}</div></td>
-                <td class='debitColor' nzAlign="center"><div *ngIf="trnscx.data.type === 'debit'">{{ trnscx.data.amount   }}</div></td>
-                </tr>
-                
-              </ng-container>
-              <dxo-summary>
-                <dxi-total-item
-                  column="credit"
-                  [customizeText]= "getcreditTotal"
-                >
-                </dxi-total-item>
-                <dxi-total-item
-                  column="debit"
-                  [customizeText]= "getdebitTotal"
-                >
-                </dxi-total-item>
-              </dxo-summary>
-              
-        </dx-data-grid>
-    </div>
-  
+<div class="ds-card grid">
+  <dx-data-grid class="p-8 flow" id="gridContainer" [wordWrapEnabled]="true" [dataSource]="rowData"
+    [remoteOperations]="false" [allowColumnReordering]="true" [rowAlternationEnabled]="true"
+    [allowColumnResizing]="true" [showColumnLines]="true" [showRowLines]="true" [showBorders]="true" style="width:100%"
+    (onToolbarPreparing)="(permissions.insrt_in==1)?onToolbarPreparing($event):false"
     
-  <nz-drawer
-    [nzBodyStyle]="{ overflow: 'auto' }"
-    [nzMaskClosable]="true"
-    [nzWidth]="600"
-    [nzVisible]="visible"
-    [nzTitle]="drawerTitle"
-    [nzFooter]="footerTpl"
-    (nzOnClose)="close()"
-    [nzClosable]="false"
-    [nzCloseIcon]="icon"
-    [nzExtra]="icon"
-  >
-    <ng-template #icon>
-      <i (click)="close()" class="fa-solid fa-circle-xmark"></i>
-    </ng-template>
-    <form
-      nz-form
-      *nzDrawerContent
-      [formGroup]="transactionsForm"
-      class="drawer-form"
     >
+    <dxo-paging [pageSize]="10"></dxo-paging>
+    <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+    <dxo-pager [visible]="true" [showPageSizeSelector]="true" [allowedPageSizes]="[5,10, 25, 50, 100]"
+      [showInfo]="true"></dxo-pager>
+    <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+    <dxo-filter-panel [visible]="false"></dxo-filter-panel>
+    <dxo-header-filter [visible]="true"></dxo-header-filter>
+    <dxo-group-panel [visible]="true"></dxo-group-panel>
+    <dxo-grouping [autoExpandAll]="false"></dxo-grouping>
+    <dxo-column-chooser [enabled]="true" mode="select">
+    </dxo-column-chooser>
+    <dxo-export [enabled]="(permissions.exprt_in==1)?true:false" [allowExportSelectedData]="true"
+      fileName="Change Log"></dxo-export>
+    <dxo-filter-row [visible]="false"></dxo-filter-row>
+    <dxi-column *ngFor="let f of columnDefs" [visible]="true" [dataField]="f.field" [caption]="f.headerName"
+      [width]=f.width [allowResizing]="false" format="f.format" [cellTemplate]="f.cellTemplate">
+    </dxi-column>
+
+    <div *dxTemplate="let d of 'dateTemplate'">
+      {{ d.data.trsxcn_date | date : "dd-MM-YYYY"}}
+    </div>
+    <div *dxTemplate="let d of 'particularTemplate'">
+      <b>{{ accountName[d.data.particulars.ref_acc_head] }}</b><br><i>{{ d.data.particulars.remarks }}</i>
+    </div>
+    <div *dxTemplate="let d of 'creditTemplate'">
+      <div class='creditColor text-center' >{{ d.data.credit }}</div>
+    </div>
+    <div *dxTemplate="let d of 'debitTemplate'">
+      <div class='debitColor text-center' >{{ d.data.debit }}</div>
+    </div>
+  
+    <dxo-summary>
+      <dxi-total-item alignment="center" column="debit" summaryType="sum" displayFormat="{0}"
+      valueFormat="currency">
+      </dxi-total-item> 
+      <dxi-total-item alignment="center" column="credit" summaryType="sum" displayFormat="{0}"
+      valueFormat="currency">
+      </dxi-total-item> 
+    </dxo-summary>
+
+  </dx-data-grid>
+</div>
+
+
+<nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="true" [nzWidth]="600" [nzVisible]="visible"
+  [nzTitle]="drawerTitle" [nzFooter]="footerTpl" (nzOnClose)="close()" [nzClosable]="false" [nzCloseIcon]="icon"
+  [nzExtra]="icon">
+  <ng-template #icon>
+    <i (click)="close()" class="fa-solid fa-circle-xmark"></i>
+  </ng-template>
+  <form nz-form *nzDrawerContent [formGroup]="transactionsForm" class="drawer-form">
     <div>
       <nz-form-item>
-        <nz-form-label nz-col nzSpan="10" class="required"
-          >From</nz-form-label
-        >
-        <nz-form-control nz-col nzSpan="12" nzErrorTip="Select From A/C" >
-          <nz-select
-          formControlName="acc_head"
-          nzPlaceHolder="From"
-          (ngModelChange)="fromTo()"
-          nzShowSearch>
-          <nz-option *ngFor="let a of acconts_heads" nzValue="{{ a.id }}"
-                nzLabel="{{ a.name }}"></nz-option>
-        </nz-select>
+        <nz-form-label nz-col nzSpan="10" class="required">From</nz-form-label>
+        <nz-form-control nz-col nzSpan="12" nzErrorTip="Select From A/C">
+          <nz-select formControlName="acc_head" nzPlaceHolder="From" (ngModelChange)="fromTo()" nzShowSearch>
+            <nz-option *ngFor="let a of acconts_heads" nzValue="{{ a.id }}" nzLabel="{{ a.name }}"></nz-option>
+          </nz-select>
         </nz-form-control>
       </nz-form-item>
-    </div> 
+    </div>
     <div>
       <nz-form-item>
-        <nz-form-label nz-col nzSpan="10" class="required"
-          >To</nz-form-label
-        >
+        <nz-form-label nz-col nzSpan="10" class="required">To</nz-form-label>
         <nz-form-control nz-col nzSpan="12" nzErrorTip="Select To A/C">
-          <nz-select
-          formControlName="ref_acc_head"
-          nzPlaceHolder="To"
-          nzShowSearch>
-          <nz-option *ngFor="let a of ref_acc_head" nzValue="{{ a.id }}"
-                nzLabel="{{ a.name }}"></nz-option>
-        </nz-select>
+          <nz-select formControlName="ref_acc_head" nzPlaceHolder="To" nzShowSearch>
+            <nz-option *ngFor="let a of ref_acc_head" nzValue="{{ a.id }}" nzLabel="{{ a.name }}"></nz-option>
+          </nz-select>
         </nz-form-control>
       </nz-form-item>
-    </div> 
-     
-      <div>
-        <nz-form-item>
-          <nz-form-label nz-col nzSpan="10" class="required"
-            >Amount</nz-form-label
-          >
-          <nz-form-control nz-col nzSpan="12" nzErrorTip="Please Enter Amount">
-            <input
-              nz-input
-              formControlName="amount"
-              type="number"
-              nz-input
-              placeholder="Please Enter Amount"
-            />
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-  
-      <div>
-        <nz-form-item>
-          <nz-form-label nz-col nzSpan="10" class="required">Transaction Mode</nz-form-label>
-          <nz-form-control nz-col nzSpan="12" nzErrorTip="Please Select Transaction Mode">
-            <nz-select
-              formControlName="mode"
-              nzPlaceHolder="Transaction Mode"
-              nzShowSearch>
-              <nz-option nzValue="banking" nzLabel="Banking"></nz-option>
-              <nz-option nzValue="cash" nzLabel="Cash"></nz-option>
-              <nz-option nzValue="cheque" nzLabel="Cheque"></nz-option>
-              <nz-option nzValue="card" nzLabel="Card"></nz-option>
-              <nz-option nzValue="upi" nzLabel="UPI"></nz-option>
-            </nz-select>
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-  
-      <!-- <div>
+    </div>
+
+    <div>
+      <nz-form-item>
+        <nz-form-label nz-col nzSpan="10" class="required">Amount</nz-form-label>
+        <nz-form-control nz-col nzSpan="12" nzErrorTip="Please Enter Amount">
+          <input nz-input formControlName="amount" type="number" nz-input placeholder="Please Enter Amount" />
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+    <div>
+      <nz-form-item>
+        <nz-form-label nz-col nzSpan="10" class="required">Transaction Mode</nz-form-label>
+        <nz-form-control nz-col nzSpan="12" nzErrorTip="Please Select Transaction Mode">
+          <nz-select formControlName="mode" nzPlaceHolder="Transaction Mode" nzShowSearch>
+            <nz-option nzValue="banking" nzLabel="Banking"></nz-option>
+            <nz-option nzValue="cash" nzLabel="Cash"></nz-option>
+            <nz-option nzValue="cheque" nzLabel="Cheque"></nz-option>
+            <nz-option nzValue="card" nzLabel="Card"></nz-option>
+            <nz-option nzValue="upi" nzLabel="UPI"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+
+    <!-- <div>
         <nz-form-item>
           <nz-form-label nz-col nzSpan="10" class="required">Transaction Type</nz-form-label>
           <nz-form-control nz-col nzSpan="12" nzErrorTip="Please Select Transaction Type">
@@ -200,34 +159,29 @@
           </nz-form-control>
         </nz-form-item>
       </div> -->
-  
-      <div>
-        <nz-form-item>
-          <nz-form-label nz-col nzSpan="10">Remarks (if any)</nz-form-label>
-          <nz-form-control nz-col nzSpan="12" >
-            <textarea
-              formControlName="remarks"
-              nz-input
-              rows="2"
-              placeholder="Remarks if any"
-            ></textarea>
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-    </form>
-  
-    <ng-template #footerTpl>
-      <div style="float: right">
-        <button nz-button style="margin-right: 8px" (click)="close()">
-          Cancel
-        </button>
-        <button nz-button *ngIf="submit" nzType="primary" (click)="onCreateSubmit()">
-          Submit
-        </button>
-        <button nz-button *ngIf="!submit && updateBtnDisable && (this.transactionsForm.get('category')?.value != 'Funds')" nzType="primary" (click)="onUpdateSubmit()">
-          Update
-        </button>
-      </div>
-    </ng-template>
-  </nz-drawer>
-  
+
+    <div>
+      <nz-form-item>
+        <nz-form-label nz-col nzSpan="10">Remarks (if any)</nz-form-label>
+        <nz-form-control nz-col nzSpan="12">
+          <textarea formControlName="remarks" nz-input rows="2" placeholder="Remarks if any"></textarea>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </form>
+
+  <ng-template #footerTpl>
+    <div style="float: right">
+      <button nz-button style="margin-right: 8px" (click)="close()">
+        Cancel
+      </button>
+      <button nz-button *ngIf="submit" nzType="primary" (click)="onCreateSubmit()">
+        Submit
+      </button>
+      <button nz-button *ngIf="!submit && updateBtnDisable && (this.transactionsForm.get('category')?.value != 'Funds')"
+        nzType="primary" (click)="onUpdateSubmit()">
+        Update
+      </button>
+    </div>
+  </ng-template>
+</nz-drawer>
