@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormGroup, FormBuilder, Validators } from '@angular/forms';
 // import { ApiService } from 'src/app/services/api.service';
@@ -9,6 +10,9 @@ import { FormArray, FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
 // import { NzMessageService } from 'ng-zorro-antd/message';
 import { Observable } from 'rxjs';
+import { InventoryItemsService } from 'src/app/shared/moduleservices/inventory-items.service';
+import { InvoicesService } from 'src/app/shared/moduleservices/invoices.service';
+import { VendorsService } from 'src/app/shared/moduleservices/vendors.service';
 import { environment } from 'src/environments/environment';
 // import { InventoryItemsService } from './../../../../services/inventory-items.service';
 
@@ -33,7 +37,7 @@ export class InvoicesComponent implements OnInit {
   user_data: any = [];
   searchText = '';
   tot: any;
-  updateBtnDisable:boolean = true;
+  updateBtnDisable: boolean = true;
 
   // globalConstants = GlobalConstants;
   inventoryDetailsArray: any = [];
@@ -45,43 +49,34 @@ export class InvoicesComponent implements OnInit {
   baseUrl = environment.apiUrl;
   uploadUrl = this.baseUrl + '/upload/uploadFiles';
   getUploadedFIlesUrl = this.baseUrl + '/upload/getUploadedFiles/';
-  invoiceId :any;
-  isLoading:boolean = true;
+  invoiceId: any;
+  isLoading: boolean = true;
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
-  
-  columnDefs = [{ headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false},
-                { headerName: 'Remarks', field: 'remarks', alignment: 'center'},
-                { headerName: 'Vendor', field: 'vendor_id', alignment: 'center'},
-                { headerName: 'Total Amount', field: 'amount', alignment: 'center'},
-                { headerName: 'Total Tax', field: 'tax', alignment: 'center'},
-                { headerName: 'Grand Total', field: 'grand_total', alignment: 'center'},
-                { headerName: 'Date', field: 'created_date', alignment: 'center'}];
+
+  columnDefs = [{ headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false },
+  { headerName: 'Remarks', field: 'remarks', alignment: 'center' },
+  { headerName: 'Vendor', field: 'vendor_name', alignment: 'center' },
+  { headerName: 'Total Amount', field: 'amount', alignment: 'center' },
+  { headerName: 'Total Tax', field: 'tax', alignment: 'center' },
+  { headerName: 'Grand Total', field: 'grand_total', alignment: 'center' },
+  { headerName: 'Date', field: 'created_date', alignment: 'center' }];
 
   constructor(
     private fb: FormBuilder,
     // private api: ApiService,
     // private notification: NotificationService,
-    // private invoice: InvoicesService,
-    // private tenders: TenderDetailsService,
-    // private vendors: VendorsService,
-    // private inventory: InventoryItemsService,
-    // private msg: NzMessageService
-  ) {}
+    private invoice: InvoicesService,
+    private datePipe: DatePipe,
+    private vendors: VendorsService,
+    private inventory: InventoryItemsService,
+    // private msg: NzMessageService,
+  ) { }
 
   ngOnInit(): void {
     this.invoiceFormValidators();
-    // this.departments.getDepartments().subscribe((res) => {
-    //   this.depts = res;
-    //   for (let x of this.depts) {
-    //     this.d_name[x.department_id] = x.department_name;
-    //   }
-    // });
+    // this.getInvoices();
+    this.getVendors();
 
-    // this.invoice.getInvoices().subscribe((res) => {
-    //   // this.invoice_info = res;
-    //   // this.isLoading = false;
-    // })
-    
     // this.tenders.getTenderDetails().subscribe(res => {
     //   this.tender_array = res;
     //   for (let x of this.tender_array) {
@@ -89,21 +84,40 @@ export class InvoicesComponent implements OnInit {
     //   }
     // });
 
-    // this.vendors.getVendors().subscribe((res) => {
-    //   this.vendor_array = res;
-    //   for (let x of this.vendor_array) {
-    //     this.v_name[x.vendor_id] = x.vendor_name;
-    //   }
-    // });
-    // this.inventory.getInventoryItems().subscribe(res => {
-    //   this.inventory_array = res;
-    //   this.updated_inventory = [...res];
-    // })
+   
+  
     this.user_data = sessionStorage.getItem('user_data');
     this.user_data = JSON.parse(this.user_data);
   }
+  getInvoices(): void {
+    this.invoice.getInvoices().subscribe((res) => {
+      this.invoice_info = res;
+      this.invoice_info.forEach((elem:any,index:any) => {
+        elem['vendor_name'] = this.v_name[elem.vendor_id];
+        elem['sno'] = index+1;
+        elem.created_date = this.datePipe.transform(elem.created_date,'dd-MM-YYYY');
+      })
+      console.log(this.invoice_info);
+      this.isLoading = false;
+    })
+  }
+  getVendors():void {
+     this.vendors.getVendors().subscribe((res) => {
+      this.vendor_array = res;
+      for (let x of this.vendor_array) {
+        this.v_name[x.vendor_id] = x.vendor_name;
+      }
+      this.getInvoices();
+    });
+  }
+  getInventory():void{
+      this.inventory.getInventoryItems().subscribe(res => {
+      this.inventory_array = res;
+      this.updated_inventory = [...res];
+    })
+  }
 
-  onToolbarPreparing(e:any) {
+  onToolbarPreparing(e: any) {
     e.toolbarOptions.items.unshift({
       location: 'after',
       widget: 'dxButton',
@@ -118,7 +132,7 @@ export class InvoicesComponent implements OnInit {
     });
   }
 
-  edit(type:any,data: any) {
+  edit(type: any, data: any) {
     this.submit = false;
     this.drawerTitle = 'Edit Invoice details';
     this.visible = true;
@@ -136,7 +150,7 @@ export class InvoicesComponent implements OnInit {
     this.invoiceForm.get('grand_total')?.setValue(data.grand_total);
     this.invoiceForm.get('updated_by')?.setValue(this.user_data.user_id);
     this.invoiceForm.get('inventory_details')?.patchValue(data.inventory_details);
-    if(data.attachments != null && data.attachments !=''){
+    if (data.attachments != null && data.attachments != '') {
       var fileNamesArray = data.attachments.split(',');
       if (fileNamesArray.length > 0) {
         fileNamesArray.forEach((element: any) => {
@@ -147,7 +161,7 @@ export class InvoicesComponent implements OnInit {
       }
     }
     this.updateBtnDisable = true;
-    if (type === 'view'){
+    if (type === 'view') {
       this.updateBtnDisable = false;
       this.drawerTitle = "View Tender"
     }
@@ -249,9 +263,9 @@ export class InvoicesComponent implements OnInit {
         this.fb.group({
           item: ['', [Validators.required]],
           quantity: [null, [Validators.required]],
-          uom: [null,[Validators.required]],
-          price: [null,[Validators.required]],
-          taxPercent: [null,[Validators.required]],
+          uom: [null, [Validators.required]],
+          price: [null, [Validators.required]],
+          taxPercent: [null, [Validators.required]],
           amt: [0],
           taxAmt: [0],
           total: [0],
@@ -264,18 +278,18 @@ export class InvoicesComponent implements OnInit {
       updated_by: [''],
     });
   }
-  itemRepeat(){
-    let itemArr:any = [];
+  itemRepeat() {
+    let itemArr: any = [];
     let result = false
-    this.inventory_details.value.forEach((elem:any) => {
+    this.inventory_details.value.forEach((elem: any) => {
       itemArr.push(elem.item);
     });
-    itemArr.forEach((elem:any) =>{
+    itemArr.forEach((elem: any) => {
       let count = 0;
-      for(let i = 0; i < itemArr.length;i++){
-        if(elem == itemArr[i]) {count++}
-        if(count>1) {
-          result = true; 
+      for (let i = 0; i < itemArr.length; i++) {
+        if (elem == itemArr[i]) { count++ }
+        if (count > 1) {
+          result = true;
           break;
         }
       }
@@ -295,17 +309,18 @@ export class InvoicesComponent implements OnInit {
   }
   addInvertory() {
     // if(this.itemRepeat()) return this.notification.createNotification('error', 'Duplicate Items');
-    if(this.inventory_details.valid){
-    this.inventory_details.push(this.fb.group({
-      item: ['', [Validators.required]],
-      quantity: [null, [Validators.required]],
-      uom: [null, [Validators.required]],
-      price: [null,[Validators.required]],
-      taxPercent: [null,[Validators.required]],
-      amt: [0],
-      taxAmt: [0],
-      total: [0],
-    }));} else {
+    if (this.inventory_details.valid) {
+      this.inventory_details.push(this.fb.group({
+        item: ['', [Validators.required]],
+        quantity: [null, [Validators.required]],
+        uom: [null, [Validators.required]],
+        price: [null, [Validators.required]],
+        taxPercent: [null, [Validators.required]],
+        amt: [0],
+        taxAmt: [0],
+        total: [0],
+      }));
+    } else {
       // this.notification.createNotification('error','Fill all the fields');
     }
   }
@@ -371,11 +386,11 @@ export class InvoicesComponent implements OnInit {
   //      this.inventory_details.patchValue(this.setindex(i, { taxPercent: singleArr[0].tax }));
   //    }
 
-    // this.updated_inventory.forEach((elem: any, index: any) => {
-    //   if (elem.item_id == item )  {
-    //     this.updated_inventory.splice(index, 1)
-    //   }
-    // });
+  // this.updated_inventory.forEach((elem: any, index: any) => {
+  //   if (elem.item_id == item )  {
+  //     this.updated_inventory.splice(index, 1)
+  //   }
+  // });
   // }
   setindex(i: any, data: any) {
     let arr = [];

@@ -23,6 +23,7 @@ import { LayoutAppComponent } from './layouts/layout-app/layout-app.component';
 import { NgChartjsModule } from 'ng-chartjs';
 import { ThemeConstantService } from './shared/services/theme-constant.service';
 import { TokenInterceptorInterceptor } from './shared/services/auth/token-interceptor.interceptor';
+import { NgAntdModule } from './shared/common/ng-antd.module';
 
 const ngZorroConfig: NzConfig = {
     message: { nzMaxStack: 1 }
@@ -43,7 +44,8 @@ registerLocaleData(en);
         SharedModule,
         NgChartjsModule,
         TemplateModule,
-        KeyboardShortcutsModule.forRoot()
+        KeyboardShortcutsModule.forRoot(),
+        NgAntdModule
     ],
     providers: [
         AppsService, 

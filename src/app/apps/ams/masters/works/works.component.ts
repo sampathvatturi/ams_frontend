@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NotificationService } from 'src/app/shared/common/notification.service';
+import { WorksService } from 'src/app/shared/moduleservices/works.service';
 
 @Component({
   selector: 'app-works',
@@ -29,8 +31,8 @@ export class WorksComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    // private notification:NotificationService,
-    // private workService:WorksService
+    private notification:NotificationService,
+    private workService:WorksService
     ) { }
 
     ngOnInit(): void {
@@ -56,20 +58,13 @@ export class WorksComponent implements OnInit {
     }
 
     getWorks():void{
-      // this.workService.getWorks().subscribe((res) =>{
-      //   this.works_info = res;
-      //   this.isLoading = false;
-
-      // });
-      this.works_info = [
-        {
-          sno:1,
-          work_name:'parks'
-        },{
-          sno:2,
-          work_name:'schools'
-        },
-      ]
+      this.workService.getWorks().subscribe((res) =>{
+        this.works_info = res;
+        this.works_info.forEach((elem:any,index:any)=>{
+          elem['sno']=index+1;
+        })
+        this.isLoading = false;
+      });
     }
 
     create(): void {
@@ -108,11 +103,11 @@ export class WorksComponent implements OnInit {
     
     onCreateSubmit() {
       if (this.workForm.valid){
-        // this.workService.createWorks(this.prepareWorksPayload(this.workForm.value)).subscribe((res)=>{
-        //     this.visible = false;
-        //     this.getWorks();
-        //     this.notification.createNotification("success", res?.message);
-        // });
+        this.workService.createWorks(this.prepareWorksPayload(this.workForm.value)).subscribe((res)=>{
+            this.visible = false;
+            this.getWorks();
+            this.notification.createNotification("success", res?.message);
+        });
       }
       else {
         console.log('invalid')
@@ -135,11 +130,11 @@ export class WorksComponent implements OnInit {
 
     onUpdateSubmit() {
       if (this.workForm.valid) {
-        // this.workService.updateWorks(this.workId, this.prepareUpdatePayload(this.workForm.value)).subscribe((res) => {
-        //   this.notification.createNotification(res.status,res.message);        
-        //   this.visible = false;
-        //   this.getWorks();
-        // });
+        this.workService.updateWorks(this.workId, this.prepareUpdatePayload(this.workForm.value)).subscribe((res) => {
+          this.notification.createNotification(res.status,res.message);        
+          this.visible = false;
+          this.getWorks();
+        });
       } else {
           console.log('invalid')
           Object.values(this.workForm.controls).forEach(control => {

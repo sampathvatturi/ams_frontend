@@ -2,8 +2,9 @@ import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 // import { NotificationService } from 'src/app/services/auth/notification.service';
 // import { GlobalConstants } from 'src/app/shared/global_constants';
-import { formatDate } from '@angular/common';
+import { DatePipe, formatDate } from '@angular/common';
 import { FundsService } from 'src/app/shared/moduleservices/funds.service';
+import { NotificationService } from 'src/app/shared/common/notification.service';
 
 @Component({
   selector: 'app-funds',
@@ -30,18 +31,18 @@ export class FundsComponent implements OnInit {
   constructor(
     @Inject(LOCALE_ID) private locale: string,
     private fb: FormBuilder,
-    // private notification: NotificationService,
+    private notification: NotificationService,
     private fundService: FundsService,
-
+    private datePipe: DatePipe
   ) { }
 
   columnDefs = [
-    { headerName: 'S.No.', width: '100' },
-    { headerName: 'Fund Type', width: '150' , filter: true},
-    { headerName: 'Fund Description', width: '300' , filter: true},
-    { headerName: 'Transaction Mode', width: '150' , filter: true},
-    { headerName: 'amount', width: '150' , filter: true},
-    { headerName: 'Date', width: '100' , filter: true},
+    { headerName: 'S.No.', width: '100',field:'sno', alignment:'left' },
+    { headerName: 'Fund Type', width: '150' ,field:'fund_type', filter: true},
+    { headerName: 'Fund Description', width: '300' , filter: true, field:'fund_description'},
+    { headerName: 'Transaction Mode', width: '150' , filter: true, field:'transaction_mode'},
+    { headerName: 'amount', width: '150' , filter: true, field:'fund_value'},
+    { headerName: 'Date', width: '100' , filter: true, field:'fund_released_date'},
   ]
 
 
@@ -72,6 +73,10 @@ export class FundsComponent implements OnInit {
     this.fundService.getFunds().subscribe((res) => {
       this.rowData = res;
       this.fund_info = res;
+      this.fund_info.forEach((elem:any,index:any)=>{
+        elem['sno']=index+1;
+        elem.fund_released_date = this.datePipe.transform(elem.fund_released_date,'dd-MM-YYYY');
+      })
       this.isLoading = false;
     })
   }
@@ -127,7 +132,7 @@ export class FundsComponent implements OnInit {
       this.fundService.createFund(this.prepareFundPayload(this.fundsForm.value)).subscribe((res) => {
         this.visible = false;
         this.getFunds();
-        // this.notification.createNotification("success", res?.message);
+        this.notification.createNotification("success", res?.message);
       });
     } else {
       Object.values(this.fundsForm.controls).forEach((control) => {
@@ -156,7 +161,7 @@ export class FundsComponent implements OnInit {
     if (this.fundsForm.valid) {
       this.fundsForm.value.fund_released_date = formatDate(this.fundsForm.value.fund_released_date, 'yyyy-MM-dd hh:mm:ss', this.locale);
       this.fundService.updateFund(this.fundId,this.prepareUpdatePayload(this.fundsForm.value)).subscribe((res) => {
-        // this.notification.createNotification("success", res?.message);
+        this.notification.createNotification("success", res?.message);
         this.visible = false;
         this.getFunds();
       });

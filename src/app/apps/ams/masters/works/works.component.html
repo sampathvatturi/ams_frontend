@@ -17,7 +17,7 @@
         <dxo-export [enabled]="(permissions.exprt_in==1)?true:false" [allowExportSelectedData]="true"
             fileName="Change Log"></dxo-export>
         <dxo-filter-row [visible]="true"></dxo-filter-row>
-        <dxi-column *ngFor="let f of columnDefs" [visible]="true" [dataField]="f.field"
+        <dxi-column *ngFor="let f of columnDefs;let i=index" [visible]="true" [dataField]="f.field"
             [caption]="f.headerName" [alignment]="f.alignment" [width]="175" [allowResizing]="false">
         </dxi-column>
         <dxi-column [showInColumnChooser]="false" [visible]="(permissions.updt_in==1)?true:false" type="buttons"

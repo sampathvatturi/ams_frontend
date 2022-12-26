@@ -1,10 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
-// import { ApiService } from 'src/app/services/api.service';
-// import { InventoryItemsService } from './../../../../services/inventory-items.service';
-// import { GlobalConstants } from 'src/app/shared/global_constants';
-// import { NotificationService } from 'src/app/services/auth/notification.service';
-// import { UomService } from 'src/app/services/uom.service';
+import { NotificationService } from 'src/app/shared/common/notification.service';
+import { InventoryItemsService } from 'src/app/shared/moduleservices/inventory-items.service';
+import { UomService } from 'src/app/shared/moduleservices/uom.service';
+
 
 
 @Component({
@@ -29,9 +28,9 @@ export class InventoryComponent implements OnInit {
   
   constructor(
     private fb: FormBuilder,
-    // private inventoryService: InventoryItemsService,
-    // private notificationService: NotificationService,
-    // private uomService: UomService,
+    private inventoryService: InventoryItemsService,
+    private notificationService: NotificationService,
+    private uomService: UomService,
     ) {}
 
   ngOnInit(): void {
@@ -68,16 +67,19 @@ export class InventoryComponent implements OnInit {
   ];
 
   getInventoryItems(): void {
-    // this.inventoryService.getInventoryItems().subscribe((res) => {
-    //    this.inventory_info = res;
-    //    this.isLoading = false ;
-    // });
+    this.inventoryService.getInventoryItems().subscribe((res) => {
+       this.inventory_info = res;
+       this.inventory_info.forEach((elem:any,index:any)=>{
+        elem['sno']=index+1;
+      })
+       this.isLoading = false ;
+    });
   }
 
   getUoms(): void {
-  //   this.uomService.getUoms().subscribe((res) => {
-  //     this.uomData = res;
-  //  });
+    this.uomService.getUoms().subscribe((res) => {
+      this.uomData = res;
+   });
   }
 
   create(): void {
@@ -101,11 +103,11 @@ export class InventoryComponent implements OnInit {
 
   onSubmit() {
     if (this.inventoryForm.valid){      
-      // this.inventoryService.createInventoryItem(this.prepareCreatePayload(this.inventoryForm.value)).subscribe((res) => {
-      //   this.visible = false;
-      //   this.getInventoryItems();
-      //   this.notificationService.createNotification('success', res?.message);
-      // });
+      this.inventoryService.createInventoryItem(this.prepareCreatePayload(this.inventoryForm.value)).subscribe((res) => {
+        this.visible = false;
+        this.getInventoryItems();
+        this.notificationService.createNotification('success', res?.message);
+      });
     }
     else {      
       Object.values(this.inventoryForm.controls).forEach(control => {
@@ -148,13 +150,13 @@ export class InventoryComponent implements OnInit {
 
   onUpdate() {
     if (this.inventoryForm.valid){
-      // this.inventoryService.updateInventoryItem(this.updateId,this.prepareUpdatePayload(this.inventoryForm.value)).subscribe(
-      //   (res) => {
-      //     this.visible = false;
-      //     this.getInventoryItems();
-      //     this.notificationService.createNotification('success', res?.message);
-      //   }
-      // )
+      this.inventoryService.updateInventoryItem(this.updateId,this.prepareUpdatePayload(this.inventoryForm.value)).subscribe(
+        (res) => {
+          this.visible = false;
+          this.getInventoryItems();
+          this.notificationService.createNotification('success', res?.message);
+        }
+      )
     } else {      
       Object.values(this.inventoryForm.controls).forEach(control => {
         if (control.invalid) {

@@ -135,6 +135,7 @@ export class SideNavComponent{
         // this.menuItems = this.mainMenuItems?.mainMenu;
         this.ApiService.getCall('/menu/getMenu').subscribe(res =>{
           this.mainMenuItems = res;
+          this.mainMenuItems[1].children.pop() //temporary
           console.log(this.mainMenuItems);
         })
         this.themeService.isMenuFoldedChanges.subscribe(isFolded => this.isFolded = isFolded);
