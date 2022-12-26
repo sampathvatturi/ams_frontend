@@ -19,6 +19,16 @@
   line-height: 1;
   content: "*";
 }
+.drawer-form nz-form-label {
+  text-align: left;
+}
+.space{
+  width:150px;
+}
+.fa-circle-xmark {
+  color: rgb(237, 61, 61);
+  font-size: x-large;
+}
 
 @tailwind base;
 @tailwind components;

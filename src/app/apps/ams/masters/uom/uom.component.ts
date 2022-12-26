@@ -38,7 +38,7 @@ export class UomComponent implements OnInit {
   
 
   columnDefs = [
-    { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false},
+    { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false ,width:'100'},
     { headerName: 'UOM Code', alignment: 'left', field: 'uom_code' },
     { headerName: 'UOM Name', alignment: 'left', field: 'uom_name' }];
   

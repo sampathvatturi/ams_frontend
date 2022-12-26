@@ -5,6 +5,7 @@ import { TenderDetailsService } from 'src/app/shared/moduleservices/tender-detai
 import { NotificationService } from 'src/app/shared/common/notification.service';
 import { WorksService } from 'src/app/shared/moduleservices/works.service';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { GlobalConstants } from 'src/app/shared/common/global_constants';
 // import { ApiService } from 'src/app/services/api.service';
 // import { NotificationService } from 'src/app/services/auth/notification.service';
 // import { WorksService } from 'src/app/services/works.service';
@@ -302,10 +303,10 @@ export class CreateTenderComponent implements OnInit {
   createTendorsFormValidators() {
     this.createTenderForm = this.fb.group({
       tender_id:[''],
-      description: [null, [Validators.required]],
-      title: [null, [Validators.required]],
+      description: [null, [Validators.required, Validators.pattern(GlobalConstants.addressRegex)]],
+      title: [null, [Validators.required, Validators.pattern(GlobalConstants.firstLastNameRegex)]],
       work_id: [[], [Validators.required]],
-      location: [null, [Validators.required]],
+      location: [null, [Validators.required, Validators.pattern(GlobalConstants.addressRegex)]],
       tender_cost: [null, [Validators.required]],
       status: ['open'],
       attachments: [''],

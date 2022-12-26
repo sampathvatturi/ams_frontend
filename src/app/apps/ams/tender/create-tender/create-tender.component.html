@@ -37,6 +37,7 @@
         </dxi-column>
     </dx-data-grid>
 </div>
+
 <nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="true" [nzWidth]="720" [nzVisible]="visible"
     [nzTitle]="drawerTitle" [nzFooter]="footerTpl" (nzOnClose)="close()" [nzClosable]="false" [nzCloseIcon]="icon"
     [nzExtra]="icon">
@@ -46,8 +47,8 @@
     <form nz-form *nzDrawerContent [formGroup]="createTenderForm" class="drawer-form">
 
       <div>
-        <nz-form-item>
-          <nz-form-label class="required" nz-col nzSpan="5">Title</nz-form-label>
+        <nz-form-item >
+          <nz-form-label class="required space" >Title</nz-form-label>
           <nz-form-control nz-col nzSpan="15" [nzErrorTip]="title1">
             <input formControlName="title" nz-input placeholder="Enter Ticket Title" />
             <ng-template #title1 let-control>
@@ -60,8 +61,8 @@
       </div>
 
       <div>
-        <nz-form-item>
-          <nz-form-label class="required" nz-col nzSpan="5">Description</nz-form-label>
+        <nz-form-item >
+          <nz-form-label class="required space" >Description</nz-form-label>
           <nz-form-control nz-col nzSpan="15" [nzErrorTip]="description">
             <textarea formControlName="description" nz-input rows="2"
               placeholder="Enter Ticket Description"></textarea>
@@ -77,9 +78,9 @@
 
       <div>
         <nz-form-item>
-          <nz-form-label class="required" nz-col nzSpan="5">Works</nz-form-label>
-          <nz-form-control nzErrorTip="Please select a work">
-            <nz-select nz-col nzSpan="15" nzMode="multiple" formControlName="work_id" nzPlaceHolder="Select Works" nzShowSearch>
+          <nz-form-label class="required space">Works</nz-form-label>
+          <nz-form-control nzErrorTip="Please select a work" nz-col nzSpan="15">
+            <nz-select  nzMode="multiple" formControlName="work_id" nzPlaceHolder="Select Works" nzShowSearch>
               <!-- <nz-option *ngFor="let w of worksDetails" [nzLabel]="w.work_name" [nzValue]="w.work_id"></nz-option> -->
               <nz-option nzLabel="Work1" nzValue="1"></nz-option>
               <nz-option></nz-option>
@@ -91,7 +92,7 @@
 
       <div>
         <nz-form-item>
-          <nz-form-label class="required" nz-col nzSpan="5">Location</nz-form-label>
+          <nz-form-label class="required space">Location</nz-form-label>
           <nz-form-control nz-col nzSpan="15" [nzErrorTip]="location">
             <textarea formControlName="location" nz-input rows="2" placeholder="Enter Your location"></textarea>
             <ng-template #location let-control>
@@ -106,7 +107,7 @@
       <div nz-row>
         <div nz-col nzSpan="12">
           <nz-form-item>
-            <nz-form-label class="required" nz-col nzSpan="10">Tender Cost</nz-form-label>
+            <nz-form-label class="required space">Tender Cost</nz-form-label>
             <nz-form-control nz-col nzSpan="10" nzErrorTip="Please enter cost">
               <input type="text" formControlName="tender_cost" nz-input placeholder="Enter Ticket Est. Cost" />
             </nz-form-control>
@@ -115,7 +116,7 @@
         <div nz-col nzSpan="12">
             <nz-form-item>
               <nz-form-label class="required" nz-col nzSpan="7">Status</nz-form-label>
-              <nz-select formControlName="status" nz-col nzSpan="9" nzPlaceHolder="Status" nzShowSearch>
+              <nz-select formControlName="status" nz-col nzSpan="8" nzPlaceHolder="Status" nzShowSearch>
                 <nz-option nzValue="open" nzLabel="Open"></nz-option>
                 <nz-option nzValue="close" nzLabel="Close"></nz-option>
                 <nz-option nzValue="accept" nzLabel="Accept"></nz-option>
@@ -128,7 +129,7 @@
       <div nz-row>
         <div nz-col nzSpan="12">
           <nz-form-item>
-            <nz-form-label class="required" nz-col nzSpan="10">Start Date</nz-form-label>
+            <nz-form-label class="required space">Start Date</nz-form-label>
             <nz-form-control nz-col nzSpan="10" nzErrorTip="Enter Start Date">
               <nz-date-picker formControlName="start_date"></nz-date-picker>
             </nz-form-control>
@@ -138,17 +139,16 @@
           <div nz-col nzSpan="12">
             <nz-form-item>
               <nz-form-label class="required" nz-col nzSpan="7">End Date</nz-form-label>
-              <nz-form-control nz-col nzSpan="9" nzErrorTip="Enter End Date">
+              <nz-form-control nz-col nzSpan="8" nzErrorTip="Enter End Date">
                 <nz-date-picker formControlName="end_date"></nz-date-picker>
               </nz-form-control>
             </nz-form-item>
           </div>
       </div>
 
-
       <div nz-row>
         <div nz-col nzSpan="24">
-          <nz-form-label class="required" nz-col nzSpan="12">Attachments</nz-form-label>
+          <nz-form-label class="required space" nz-col nzSpan="12">Attachments</nz-form-label>
           <nz-upload
             [nzAction] = uploadUrl
             [nzRemove]="handleRemove"
@@ -161,6 +161,7 @@
             </nz-upload>
         </div>
       </div>
+      
 
     </form>
 
