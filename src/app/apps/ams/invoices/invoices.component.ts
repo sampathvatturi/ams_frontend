@@ -1,20 +1,13 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { FormArray, FormGroup, FormBuilder, Validators } from '@angular/forms';
-// import { ApiService } from 'src/app/services/api.service';
-// import { InvoicesService } from 'src/app/services/invoices.service';
-// import { VendorsService } from 'src/app/services/vendors.service';
-// import { NotificationService } from './../../../../services/auth/notification.service';
-// import { GlobalConstants } from 'src/app/shared/global_constants';
-// import { TenderDetailsService } from 'src/app/services/tender-details.service';
 import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
-// import { NzMessageService } from 'ng-zorro-antd/message';
 import { Observable } from 'rxjs';
+import { NotificationService } from 'src/app/shared/common/notification.service';
 import { InventoryItemsService } from 'src/app/shared/moduleservices/inventory-items.service';
 import { InvoicesService } from 'src/app/shared/moduleservices/invoices.service';
 import { VendorsService } from 'src/app/shared/moduleservices/vendors.service';
 import { environment } from 'src/environments/environment';
-// import { InventoryItemsService } from './../../../../services/inventory-items.service';
 
 @Component({
   selector: 'app-invoices',
@@ -64,7 +57,7 @@ export class InvoicesComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     // private api: ApiService,
-    // private notification: NotificationService,
+    private notification: NotificationService,
     private invoice: InvoicesService,
     private datePipe: DatePipe,
     private vendors: VendorsService,
@@ -74,18 +67,7 @@ export class InvoicesComponent implements OnInit {
 
   ngOnInit(): void {
     this.invoiceFormValidators();
-    // this.getInvoices();
     this.getVendors();
-
-    // this.tenders.getTenderDetails().subscribe(res => {
-    //   this.tender_array = res;
-    //   for (let x of this.tender_array) {
-    //     this.t_name[x.id] = x.title;
-    //   }
-    // });
-
-   
-  
     this.user_data = sessionStorage.getItem('user_data');
     this.user_data = JSON.parse(this.user_data);
   }
@@ -192,7 +174,7 @@ export class InvoicesComponent implements OnInit {
     this.updated_inventory = [...this.inventory_array];
   }
   onSubmit() {
-    // if(this.itemRepeat()) return this.notification.createNotification('error', 'Duplicate Items');
+    if(this.itemRepeat()) return this.notification.createNotification('error', 'Duplicate Items');
     if (this.invoiceForm.valid) {
       // var fileNames: any[] = [];
       // this.files.forEach(element => {
@@ -222,7 +204,7 @@ export class InvoicesComponent implements OnInit {
     }
   }
   onUpdate() {
-    // if(this.itemRepeat()) return this.notification.createNotification('error', 'Duplicate Items');
+    if(this.itemRepeat()) return this.notification.createNotification('error', 'Duplicate Items');
     if (this.invoiceForm.valid) {
       // this.api
       //   .patchCall(
@@ -308,7 +290,7 @@ export class InvoicesComponent implements OnInit {
     return this.invoiceForm.get("inventory_details") as FormArray
   }
   addInvertory() {
-    // if(this.itemRepeat()) return this.notification.createNotification('error', 'Duplicate Items');
+    if(this.itemRepeat()) return this.notification.createNotification('error', 'Duplicate Items');
     if (this.inventory_details.valid) {
       this.inventory_details.push(this.fb.group({
         item: ['', [Validators.required]],
@@ -321,17 +303,10 @@ export class InvoicesComponent implements OnInit {
         total: [0],
       }));
     } else {
-      // this.notification.createNotification('error','Fill all the fields');
+      this.notification.createNotification('error','Fill all the fields');
     }
   }
   removeInventory(i: any) {
-    // let item = this.inventory_details.value[i].item;
-    // this.inventory_array.forEach((elem: any) => {
-    //   if (elem.item_id == item) {
-    //     this.updated_inventory.push(elem)
-    //   }
-    // });
-
     this.inventory_details.removeAt(i);
     let totalTax = 0;
     let totalAmt = 0;
