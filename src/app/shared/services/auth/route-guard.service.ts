@@ -17,16 +17,18 @@ export class RouteGuardService {
   ) { }
 
   canActivate(route: ActivatedRouteSnapshot): boolean {
-    let expectedRoleArray = route.data;
-    expectedRoleArray = expectedRoleArray['expectedRole'];
+    
+    // let expectedRoleArray = { expectedRole: ['admin','user'] }
+    let expectedRoleArray = ['admin','user','vendor','super_admin','super_user'];
 
     const token: any = localStorage.getItem('token');
     var tokenPayload: any;
     try{
       tokenPayload = jwt_decode(token);
-    } catch(err){
+      // console.log("==tokenPayload==",tokenPayload);
+    } catch(err) {
       localStorage.clear();
-      this.router.navigate(['/']);
+      this.router.navigate(['/']); 
     }
 
     let checkRole = false;
