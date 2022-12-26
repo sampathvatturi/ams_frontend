@@ -78,15 +78,30 @@
       <div class='debitColor text-center' >{{ d.data.debit }}</div>
     </div>
   
-    <dxo-summary>
+    <dxo-summary [calculateCustomSummary]="difference">
       <dxi-total-item alignment="center" column="debit" summaryType="sum" displayFormat="{0}"
       valueFormat="currency">
       </dxi-total-item> 
       <dxi-total-item alignment="center" column="credit" summaryType="sum" displayFormat="{0}"
       valueFormat="currency">
-      </dxi-total-item> 
+      </dxi-total-item>
+      <dxi-total-item
+      alignment="right"
+      summaryType="custom"
+      displayFormat="Balance"
+      showInColumn="credit"
+    >
+    </dxi-total-item>
+      <dxi-total-item
+      alignment="center"
+      name="diff"
+      summaryType="custom"
+      valueFormat="currency"
+      displayFormat="{0}"
+      showInColumn="debit"
+    >
+    </dxi-total-item>
     </dxo-summary>
-
   </dx-data-grid>
 </div>
 

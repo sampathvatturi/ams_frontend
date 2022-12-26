@@ -2,6 +2,11 @@ import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { AccountsService } from 'src/app/shared/moduleservices/accounts.service';
 import { TransactionsService } from 'src/app/shared/moduleservices/transactions.service';
+import config from 'devextreme/core/config';
+
+config({
+  defaultCurrency: 'INR'
+})
 
 @Component({
   selector: 'app-transactions',
@@ -257,6 +262,16 @@ export class TransactionsComponent implements OnInit {
         this.ref_acc_head.push(elem)
       }
     })
+  }
+  difference(options:any) {
+    if (options.name === 'diff') {
+      if (options.summaryProcess === 'start') {
+        options.totalValue = 0;
+      } else if (options.summaryProcess === 'calculate') {
+        options.totalValue = options.totalValue + (options.value.credit - options.value.debit);
+        console.log(options.value.credit - options.value.debit);
+      }
+    }
   }
 
 }
