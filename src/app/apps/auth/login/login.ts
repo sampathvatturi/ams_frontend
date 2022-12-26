@@ -44,6 +44,7 @@ export class LoginComponent implements OnInit {
 
   loginForm: FormGroup;  
   responseMessage!: string;
+  loader: any;
 
   constructor(
     public fb: FormBuilder, 
@@ -54,15 +55,15 @@ export class LoginComponent implements OnInit {
     private md5: Md5hashService
   ) { }
 
-  ngOnInit(): void {
+  ngOnInit(): void {  
     this.loginForm = this.fb.group({
       username: [null, [Validators.required]],
       password: [null, [Validators.required]],
     });
   }
 
-  doLogin(): void {
-    // this.ngxUiLoaderService.start();
+  doLogin(): void {      
+    this.loader = true;
     const formData = this.loginForm.value;
     console.log("==formData==", formData);
     const obj = {
@@ -70,16 +71,16 @@ export class LoginComponent implements OnInit {
       password: this.md5.passwordEncrypt(formData.password)
     };
     this.userService.login(obj).subscribe((response: any) => {
+      this.loader = false;
       console.log("response in Login: ", response);
-      // this.ngxUiLoaderService.stop();
       this.responseMessage = "You are logged-in";
       this.notificationService.createNotification('success', this.responseMessage);
       localStorage.setItem('token', response?.token);
       localStorage.setItem('role', 'admin');
       sessionStorage.setItem('user_data',JSON.stringify(response?.user_data));
       this.route.navigate(['/internal/ams/dashboard']);
-    }, (error) => {
-      // this.ngxUiLoaderService.stop();
+    }, (error) => {      
+      this.loader = false;
       if (error?.error?.message) {
         this.responseMessage = error?.error?.message;
       } else if (error?.message) {
