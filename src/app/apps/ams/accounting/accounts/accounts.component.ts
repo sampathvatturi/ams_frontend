@@ -26,8 +26,8 @@ export class AccountsComponent implements OnInit {
   ) { }
 
   columnDefs = [
-    { headerName: 'S.No.', width: '100' },
-    { headerName: 'Account Name', width: '600' , filter: true}
+    { headerName: 'S.No.',field:'sno', width: '100',alignment: 'center', filter: false },
+    { headerName: 'Account Name',field:'name', width: '600' , filter: true}
   ]
 
   ngOnInit(): void {
@@ -54,8 +54,11 @@ export class AccountsComponent implements OnInit {
 
   getAccounts(): void {
     this.accountHeadService.getAccountHeads().subscribe((res) => {
-      this.rowData = res;
-      this.accounts_info = res
+      this.accounts_info = res;
+      this.accounts_info.forEach((element:any,index:any) => {
+        element['sno'] = index + 1;
+      })
+      console.log(this.accounts_info)
     });
   }
 

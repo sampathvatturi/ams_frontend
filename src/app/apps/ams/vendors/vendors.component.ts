@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { VendorsService } from 'src/app/shared/moduleservices/vendors.service';
+import { NotificationService } from 'src/app/shared/common/notification.service';
+import { Md5hashService } from 'src/app/shared/services/auth/md5hash.service';
 // import { ApiService } from 'src/app/services/api.service';
-// import { NotificationService } from 'src/app/services/auth/notification.service';
-// import { VendorsService } from 'src/app/services/vendors.service';
 // import { GlobalConstants } from 'src/app/shared/global_constants';
-// import { Md5hashService } from 'src/app/services/md5hash.service';
+
 
 
 @Component({
@@ -30,9 +31,9 @@ export class VendorsComponent implements OnInit {
 
   constructor(private fb: FormBuilder,
     // private api: ApiService,
-    // private notification: NotificationService,
-    // private vendorService: VendorsService,
-    // private md5hashService: 
+    private notification: NotificationService,
+    private vendorService: VendorsService,
+    private md5hashService: Md5hashService
     ) {}
 
     ngOnInit(): void {
@@ -73,11 +74,13 @@ export class VendorsComponent implements OnInit {
 
 
     getVendors(): void {
-      // this.vendorService.getVendors().subscribe((res) => {
-      //   this.vendor_info = res;
-      //   this.isLoading = false;
-      // });
-      this.vendor_info = [{sno:1,vendor_name:'vendor1',phone_number:'123',email:'ven1@ven.com',city:'rjy',gst_num:'GSTIN456',status:'open'}]
+      this.vendorService.getVendors().subscribe((res) => {
+        this.vendor_info = res;
+        this.vendor_info.forEach((element:any,index:any) => {
+          element['sno'] = index + 1;
+        })
+        this.isLoading = false;
+      });
     }
   
     edit(type:any,data: any) {
@@ -139,12 +142,12 @@ export class VendorsComponent implements OnInit {
   
     onCreateSubmit() {
       if (this.vendorForm.valid){
-        // this.vendorForm.value.password_md5 = this.md5hashService.passwordEncrypt(this.vendorForm.value.password_md5);
-        // this.vendorService.createVendor(this.prepareVendorPayload(this.vendorForm.value)).subscribe((res) => {
-        //   this.visible = false;
-        //   this.getVendors();
-        //   this.notification.createNotification("success", res?.message);
-        // });      
+        this.vendorForm.value.password_md5 = this.md5hashService.passwordEncrypt(this.vendorForm.value.password_md5);
+        this.vendorService.createVendor(this.prepareVendorPayload(this.vendorForm.value)).subscribe((res) => {
+          this.visible = false;
+          this.getVendors();
+          this.notification.createNotification("success", res?.message);
+        });      
       } else {
         console.log('invalid');
         Object.values(this.vendorForm.controls).forEach(control => {
@@ -174,11 +177,11 @@ export class VendorsComponent implements OnInit {
     onUpdateSubmit() {
       console.log(this.vendorForm);
       if (this.vendorForm.valid) {
-        // this.vendorService.updateVendor(this.vendorId, this.prepareUpdatePayload(this.vendorForm.value)).subscribe((res) => {
-        //   this.notification.createNotification(res.status,res.message);        
-        //   this.visible = false;
-        //   this.getVendors();
-        // });
+        this.vendorService.updateVendor(this.vendorId, this.prepareUpdatePayload(this.vendorForm.value)).subscribe((res) => {
+          this.notification.createNotification(res.status,res.message);        
+          this.visible = false;
+          this.getVendors();
+        });
       } else {
           console.log('invalid')
           Object.values(this.vendorForm.controls).forEach(control => {
@@ -217,11 +220,5 @@ export class VendorsComponent implements OnInit {
       }
       return {};
     };
-
-
-
-  
-
-
 
 }

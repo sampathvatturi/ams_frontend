@@ -1,6 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder ,Validators,FormGroup} from '@angular/forms';
 import { environment } from 'src/environments/environment';
+import { TenderDetailsService } from 'src/app/shared/moduleservices/tender-details.service';
+import { NotificationService } from 'src/app/shared/common/notification.service';
+import { WorksService } from 'src/app/shared/moduleservices/works.service';
+import { NzMessageService } from 'ng-zorro-antd/message';
 // import { ApiService } from 'src/app/services/api.service';
 // import { NotificationService } from 'src/app/services/auth/notification.service';
 // import { WorksService } from 'src/app/services/works.service';
@@ -8,8 +12,9 @@ import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
 // import { NzMessageService } from 'ng-zorro-antd/message';
 // import { GlobalConstants } from 'src/app/shared/global_constants';
 import { Observable } from 'rxjs';
+import { DatePipe } from '@angular/common';
 
-// import { TenderDetailsService } from 'src/app/services/tender-details.service';
+
 
 @Component({
   selector: 'app-create-tender',
@@ -30,6 +35,7 @@ export class CreateTenderComponent implements OnInit {
   tenderId: any;
   updateBtnDisable:boolean = true;
   files:any[]=[];
+  works_info:any = []
   filesDetails = {
     name : '',
     url:''
@@ -44,10 +50,10 @@ export class CreateTenderComponent implements OnInit {
 
   columnDefs = [
     { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false},
-    { headerName: 'Tender Id', alignment: 'left', field: 'tender_id' },
+    { headerName: 'Tender', alignment: 'left', field: 'title' },
     { headerName: 'Description', alignment: 'left', field: 'description' },
-    { headerName: 'Title', alignment: 'left', field: 'title' },
-    { headerName: 'Works', alignment: 'left', field: 'work_id' },
+    // { headerName: 'Title', alignment: 'left', field: 'title' },
+    { headerName: 'Works', alignment: 'left', field: 'works' },
     { headerName: 'Location', alignment: 'left', field: 'location' },
     { headerName: 'Tender Cost', alignment: 'left', field: 'tender_cost' },
     { headerName: 'status', alignment: 'left', field: 'status' },
@@ -57,10 +63,11 @@ export class CreateTenderComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     // private api: ApiService,
-    // private notification: NotificationService,
-    // private works: WorksService,
-    // private msg: NzMessageService,
-    // private tendersapi: TenderDetailsService
+    private notification: NotificationService,
+    private works: WorksService,
+    private msg: NzMessageService,
+    private tendersapi: TenderDetailsService,
+    private datePipe:DatePipe
   ) { }
 
   ngOnInit(): void {
@@ -87,25 +94,46 @@ export class CreateTenderComponent implements OnInit {
   }
 
   getWork() {
-    // this.works.getWorks().subscribe((res: any) => {
-    //   this.worksDetails = res;
-    //   res.forEach((data: any) => {
-    //     this.worksNames[data.work_id] = data.work_name;
-    //   });
-    // });
+    this.works.getWorks().subscribe((res: any) => {
+      this.worksDetails = res;
+      res.forEach((data: any) => {
+        this.worksNames[data.work_id] = data.work_name;
+      });
+    });
   }
 
   getCreateTender(){
-    // this.tendersapi.getTenderDetails().subscribe((res)=>{
-    //   this.isLoading = true;
-    //   if(res.status = 204){
-    //     this.dataMessage = res.message
-    //   }
-    //   this.tenders = res;
-    //   this.isLoading = false ;
-    // })
-    this.tenders = [{sno:1,tender_id:55,description:"Tender55",title:'Tender55',work_id:6,location:'rjy',tender_cost:100,status:'open',start_date:'12-5-2022',end_date:'20-6-2022'}]
+    this.tendersapi.getTenderDetails().subscribe((res)=>{
+      this.isLoading = true;
+      if(res.status = 204){
+        this.dataMessage = res.message
+      }
+      this.tenders = res;
+      this.tenders.forEach((element:any,index:any) => {
+        element['sno'] = index + 1;
+        element['works'] = this.workIdToName(element.work_id);
+        element.start_date = this.datePipe.transform(element.start_date,'dd-MM-YYYY');
+        element.end_date = this.datePipe.transform(element.end_date,'dd-MM-YYYY');
+      })
+
+      console.log(this.tenders)
+      
+      this.isLoading = false ;
+    })
   }
+  workIdToName(id:any){
+    let arr = id.split(',');
+    for (let index = 0; index < arr.length; index++) {
+      this.worksDetails.forEach((element:any) => {
+        if (element.work_id == Number(arr[index])){
+          arr[index]= element.work_name;
+        }
+      })
+      
+    }
+    return arr.join(', ');
+  }
+  
 
   create(){
     this.submit = true;
@@ -117,6 +145,7 @@ export class CreateTenderComponent implements OnInit {
     this.createTendorsFormValidators();
     this.createTenderForm.get('status')?.setValue('active');
   }
+
   edit(type:any,data:any){
     this.submit = false;
     this.drawerTitle = 'Edit Tender Form';
@@ -175,14 +204,14 @@ export class CreateTenderComponent implements OnInit {
   }
   onCreateSubmit(){
     if (this.createTenderForm.valid) {
-      // this.createTenderForm.value.work_id = this.createTenderForm.value.work_id.toString();
-      // //service
-      // this.tendersapi.createTenderDetail(this.createTenderForm.value).subscribe(res=>{
-      //   if(res.status == 'success')
-      //     this.notification.createNotification('success',res.message);
-      //   else
-      //     this.notification.createNotification('error',res.message);
-      // })
+      this.createTenderForm.value.work_id = this.createTenderForm.value.work_id.toString();
+      //service
+      this.tendersapi.createTenderDetail(this.createTenderForm.value).subscribe(res=>{
+        if(res.status == 'success')
+          this.notification.createNotification('success',res.message);
+        else
+          this.notification.createNotification('error',res.message);
+      })
     }
     else {
       Object.values(this.createTenderForm.controls).forEach((control) => {
@@ -229,16 +258,16 @@ export class CreateTenderComponent implements OnInit {
   }
   onUpdateSubmit(){
     if (this.createTenderForm.valid) {
-      // this.createTenderForm.value.work_id = this.createTenderForm.value.work_id.toString();
-      // //service
-      // this.tendersapi.updateTenderDetail(this.tenderId,this.createTenderForm.value).subscribe(res=>{
-      //   if(res.status == 'success'){
-      //     this.notification.createNotification('success',res.message);
-      //     this.visible = false;
-      //   }else{
-      //     this.notification.createNotification('error',res.message);
-      //   }
-      // })
+      this.createTenderForm.value.work_id = this.createTenderForm.value.work_id.toString();
+      //service
+      this.tendersapi.updateTenderDetail(this.tenderId,this.createTenderForm.value).subscribe(res=>{
+        if(res.status == 'success'){
+          this.notification.createNotification('success',res.message);
+          this.visible = false;
+        }else{
+          this.notification.createNotification('error',res.message);
+        }
+      })
     }
     else {
       console.log('invalid')
@@ -251,16 +280,16 @@ export class CreateTenderComponent implements OnInit {
     }
   }
   handleChange(info: NzUploadChangeParam): void {
-    // if (info.file.status === 'done') {
-    //   this.msg.success(`${info.file.name} file uploaded successfully`);
-    //   this.filesDetails.name = info.file.response.fileName;
-    //   this.filesDetails.url = this.getUploadedFIlesUrl+'/'+info.file.response.fileName;
-    //   this.files.push(this.filesDetails);
-    // } else if (info.file.status === 'error') {
-    //   this.msg.error(`${info.file.name} file upload failed.`);
-    // } else if(info.file.status !== 'uploading'){
-    //   console.log(info.file, info.fileList);
-    // }
+    if (info.file.status === 'done') {
+      this.msg.success(`${info.file.name} file uploaded successfully`);
+      this.filesDetails.name = info.file.response.fileName;
+      this.filesDetails.url = this.getUploadedFIlesUrl+'/'+info.file.response.fileName;
+      this.files.push(this.filesDetails);
+    } else if (info.file.status === 'error') {
+      this.msg.error(`${info.file.name} file upload failed.`);
+    } else if(info.file.status !== 'uploading'){
+      console.log(info.file, info.fileList);
+    }
   }
 
 

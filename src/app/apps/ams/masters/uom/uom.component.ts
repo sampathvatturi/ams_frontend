@@ -1,7 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder ,Validators,FormGroup} from '@angular/forms';
 import { getWeekYearWithOptions } from 'date-fns/fp';
-// import { NzMessageService } from 'ng-zorro-antd/message';
+import { UomService } from 'src/app/shared/moduleservices/uom.service';
+import { NotificationService } from 'src/app/shared/common/notification.service';
+// import { NzMessageService } from 'ng-zorro-antd/message ';
 // import { NzUploadChangeParam } from 'ng-zorro-antd/upload';
 
 @Component({
@@ -25,7 +27,7 @@ export class UomComponent implements OnInit {
 
   
 
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder,private uomService:UomService,private notification:NotificationService) { }
 
 
   // rowData = [{"sno":1,"uom_code":"KG","uom_name":"Kilo"},
@@ -66,12 +68,14 @@ export class UomComponent implements OnInit {
     }
 
     getUom(): void {
-      // this.uomService.getUoms().subscribe((res) => {
-      //   this.uom_info = res
-      //   this.isLoading = false ;
-      // });
-      this.uom_info = [{"sno":1,"uom_code":"KG","uom_name":"Kilo"},
-                 {"sno":2,"uom_code":"TON","uom_name":"Tons"}];
+      this.uomService.getUoms().subscribe((res) => {
+        this.uom_info = res;
+        this.uom_info.forEach((element:any,index:any) => {
+          element['sno'] = index + 1;
+        })
+        this.isLoading = false ;
+      });
+      
     }
     create(): void {
       this.submit = true;
@@ -112,11 +116,11 @@ export class UomComponent implements OnInit {
   
     onCreateSubmit() {
       if (this.uomForm.valid){
-        // this.uomService.createUom(this.prepareUomPayload(this.uomForm.value)).subscribe((res) => {
-        //   this.visible = false;
-        //   this.getUom();
-        //   this.notification.createNotification("success", res?.message);
-        // });      
+        this.uomService.createUom(this.prepareUomPayload(this.uomForm.value)).subscribe((res) => {
+          this.visible = false;
+          this.getUom();
+          this.notification.createNotification("success", res?.message);
+        });      
       } else {
         console.log('invalid');
         Object.values(this.uomForm.controls).forEach(control => {
@@ -139,11 +143,11 @@ export class UomComponent implements OnInit {
   
     onUpdateSubmit() {
       if (this.uomForm.valid) {
-        // this.uomService.updateUom(this.uomId, this.prepareUpdatePayload(this.uomForm.value)).subscribe((res) => {
-        //   this.notification.createNotification(res.status,res.message);        
-        //   this.visible = false;
-        //   this.getUom();
-        // });
+        this.uomService.updateUom(this.uomId, this.prepareUpdatePayload(this.uomForm.value)).subscribe((res) => {
+          this.notification.createNotification(res.status,res.message);        
+          this.visible = false;
+          this.getUom();
+        });
       } 
       else {
           console.log('invalid')

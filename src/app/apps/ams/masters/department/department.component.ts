@@ -1,8 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormGroup, PatternValidator, FormBuilder, Validators } from '@angular/forms';
-// import { ApiService } from 'src/app/services/api.service';
-// import { NotificationService } from 'src/app/services/auth/notification.service';
-// import { DepartmentService } from 'src/app/services/department.service';
+import { DepartmentService } from 'src/app/shared/moduleservices/department.service';
+import { NotificationService } from 'src/app/shared/common/notification.service';
 // import { GlobalConstants } from 'src/app/shared/global_constants';
 
 @Component({
@@ -31,6 +30,7 @@ export class DepartmentComponent implements OnInit {
     { headerName: 'Ranking', field: 'ranking', alignment: 'center'},
     ];
 
+
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
 
   // sort = {
@@ -44,8 +44,8 @@ export class DepartmentComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     // private api: ApiService,
-    // private notification: NotificationService,
-    // private departmentService: DepartmentService
+    private notification: NotificationService,
+    private departmentService: DepartmentService
   ) { }
 
   ngOnInit(): void {
@@ -71,13 +71,14 @@ export class DepartmentComponent implements OnInit {
   }
 
   getDepartment() {
-    // this.departmentService.getDepartments().subscribe((res) => {
-    //   this.departments = res;
-    //   this.isLoading = false;
-    // })
-
-    this.departments = [{sno:1,department_name:'dept1',status:'open',ranking:5}]
-    
+    this.departmentService.getDepartments().subscribe((res) => {
+      this.departments = res;
+      this.departments.forEach((element:any,index:any) => {
+        element['sno'] = index+1;
+      })
+      this.isLoading = false;
+      
+    })
   }
 
   create(): void {
@@ -124,11 +125,11 @@ export class DepartmentComponent implements OnInit {
 
   onCreateSubmit() {
     if (this.departmentForm.valid) {
-      // this.departmentService.createDepartment(this.prepareDepartmentPayload(this.departmentForm.value)).subscribe((res) => {
-      //   this.visible = false;
-      //   this.getDepartment();
-      //   this.notification.createNotification("success", res?.message);
-      // });
+      this.departmentService.createDepartment(this.prepareDepartmentPayload(this.departmentForm.value)).subscribe((res) => {
+        this.visible = false;
+        this.getDepartment();
+        this.notification.createNotification("success", res?.message);
+      });
     } else {
       Object.values(this.departmentForm.controls).forEach((control) => {
         if (control.invalid) {
@@ -151,11 +152,11 @@ export class DepartmentComponent implements OnInit {
 
   onUpdateSubmit() {
     if (this.departmentForm.valid) {
-      // this.departmentService.updateDepartment(this.departmentId, this.prepareUpdatePayload(this.departmentForm.value)).subscribe((res) => {
-      //   this.visible = false;
-      //   this.notification.createNotification("success", res?.message);
-      //   this.getDepartment();
-      // });
+      this.departmentService.updateDepartment(this.departmentId, this.prepareUpdatePayload(this.departmentForm.value)).subscribe((res) => {
+        this.visible = false;
+        this.notification.createNotification("success", res?.message);
+        this.getDepartment();
+      });
     } else {
       Object.values(this.departmentForm.controls).forEach((control) => {
         if (control.invalid) {

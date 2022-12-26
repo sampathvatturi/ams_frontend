@@ -5,11 +5,11 @@ import {
   FormControl,
   Validators,
 } from '@angular/forms';
+import { UserService } from 'src/app/shared/moduleservices/user.service';
+import { NotificationService } from 'src/app/shared/common/notification.service';
+import { DepartmentService } from 'src/app/shared/moduleservices/department.service';
+import { Md5hashService } from 'src/app/shared/services/auth/md5hash.service';
 // import { ApiService } from 'src/app/services/api.service';
-// import { NotificationService } from 'src/app/services/auth/notification.service';
-// import { Md5hashService } from 'src/app/services/md5hash.service';
-// import { UserService } from 'src/app/services/user.service';
-// import { DepartmentService } from 'src/app/services/department.service';
 // import { GlobalConstants } from 'src/app/shared/global_constants';
 
 @Component({
@@ -45,10 +45,10 @@ export class UserAccountsComponent implements OnInit {
   constructor(
     private fb: FormBuilder,
     // private api: ApiService,
-    // private notificationService: NotificationService,
-    // private md5: Md5hashService,
-    // private userService: UserService,
-    // private deptService: DepartmentService
+    private notificationService: NotificationService,
+    private md5: Md5hashService,
+    private userService: UserService,
+    private deptService: DepartmentService
   ) {}
 
   ngOnInit(): void {
@@ -76,27 +76,30 @@ export class UserAccountsComponent implements OnInit {
 
 
   getDepts(): void {
-    // this.deptService.getDepartments().subscribe((res) => {
-    //   this.departments = res;
-    // });
+    this.deptService.getDepartments().subscribe((res) => {
+      this.departments = res;
+    });
   }
 
   getUsers(): void {
-    // this.userService.getAllUsers().subscribe((res: any) => {
-    //   this.users = res;
-    //   this.isLoading = false;
-    // });
+    this.userService.getAllUsers().subscribe((res: any) => {
+      this.users = res;
+      this.users.forEach((element:any,index:any) => {
+        element['sno'] = index+1;
+      })
+      this.isLoading = false;
+    });
   }
 
   getUserById(id: any): void {
-    // this.userService.getUserById(id).subscribe((res: any) => {
-    //   this.updateUserData = res;
-    //   const decrypt_password = this.md5.passwordDecrypt(this.updateUserData[0]?.password_md5);
-    //   this.createUserForm.get('password_md5')?.setValue(decrypt_password);
-    //   this.createUserForm.get('cnfrm_password_md5')?.setValue(decrypt_password);     
-    //   this.createUserForm.get('password_md5')?.disable();
-    //   this.createUserForm.get('cnfrm_password_md5')?.disable();
-    // });
+    this.userService.getUserById(id).subscribe((res: any) => {
+      this.updateUserData = res;
+      const decrypt_password = this.md5.passwordDecrypt(this.updateUserData[0]?.password_md5);
+      this.createUserForm.get('password_md5')?.setValue(decrypt_password);
+      this.createUserForm.get('cnfrm_password_md5')?.setValue(decrypt_password);     
+      this.createUserForm.get('password_md5')?.disable();
+      this.createUserForm.get('cnfrm_password_md5')?.disable();
+    });
   }
 
   create(): void {
@@ -112,16 +115,16 @@ export class UserAccountsComponent implements OnInit {
     const userData = this.users.find((item: any) => (item?.email === email || item?.user_name === user_name));
     console.log("==userData==", userData);
     if (this.createUserForm.valid) {
-      // if(!userData) {
-      //   this.createUserForm.value.password_md5 = this.md5.passwordEncrypt(this.createUserForm.value.password_md5);
-      //   this.userService.createUser(this.prepareUserPayload(this.createUserForm.value)).subscribe((data) => {          
-      //     this.visible = false;
-      //     this.notificationService.createNotification('success', data.message);
-      //     this.getUsers();
-      //   });
-      // } else {
-      //   this.notificationService.createNotification('error', "UserName or Email already exists");
-      // }      
+      if(!userData) {
+        this.createUserForm.value.password_md5 = this.md5.passwordEncrypt(this.createUserForm.value.password_md5);
+        this.userService.createUser(this.prepareUserPayload(this.createUserForm.value)).subscribe((data) => {          
+          this.visible = false;
+          this.notificationService.createNotification('success', data.message);
+          this.getUsers();
+        });
+      } else {
+        this.notificationService.createNotification('error', "UserName or Email already exists");
+      }      
     } else {
       Object.values(this.createUserForm.controls).forEach((control) => {
         if (control.invalid) {
@@ -204,12 +207,12 @@ export class UserAccountsComponent implements OnInit {
 
   onUpdateSubmit() {
     if (this.createUserForm.valid) {
-    //   this.userService.updateUser(this.updateUserId, this.prepareUpdateUserPayload(this.createUserForm.value)).subscribe((res) => {
-    //     this.notificationService.createNotification(res.status, res.message);
-    //     this.visible = false;
-    //     this.getUsers();
-    //   });
-    // } else {
+      this.userService.updateUser(this.updateUserId, this.prepareUpdateUserPayload(this.createUserForm.value)).subscribe((res) => {
+        this.notificationService.createNotification(res.status, res.message);
+        this.visible = false;
+        this.getUsers();
+      });
+    } else {
       Object.values(this.createUserForm.controls).forEach((control) => {
         if (control.invalid) {
           control.markAsDirty();
@@ -293,9 +296,9 @@ export class UserAccountsComponent implements OnInit {
   onChangeRole(event: any): void {
     console.log("==onChangeRole==", event);
     if(event === 'vendor'){
-    //   this.notificationService.createNotification('info', 'You can create vendor details in Vendor menu');
-    //   this.createUserForm.get('role')?.setValue('admin');
-    // }
+      this.notificationService.createNotification('info', 'You can create vendor details in Vendor menu');
+      this.createUserForm.get('role')?.setValue('admin');
+    }
   }
 
-  }}
+  }
