@@ -18,20 +18,20 @@
             fileName="Change Log"></dxo-export>
         <dxo-filter-row [visible]="true"></dxo-filter-row>
         <dxi-column *ngFor="let f of columnDefs" [visible]="true" [dataField]="f.field"
-            [caption]="f.headerName" [alignment]="f.alignment" [width]="175" [allowResizing]="false">
+            [caption]="f.headerName" [alignment]="f.alignment" [width]="f.width" [allowResizing]="false">
         </dxi-column>
-        <dxi-column [showInColumnChooser]="false" [visible]="(permissions.updt_in==1)?true:false" type="buttons"
+        <dxi-column [showInColumnChooser]="false" caption="Actions" [visible]="(permissions.updt_in==1)?true:false" type="buttons"
             [width]="100" cellTemplate="viewTemplate">
             <div *dxTemplate="let data of 'viewTemplate'">
                 <div class="tblEdtBtn" (click)="edit('edit',data.data)">
-                    Edit Vendor
+                    Edit
                 </div>
             </div>
         </dxi-column>
-        <dxi-column [showInColumnChooser]="false" type="button1" [width]="100" cellTemplate="EditTemplate">
+        <dxi-column [showInColumnChooser]="false" caption="Actions" type="button1" [width]="100" cellTemplate="EditTemplate">
             <div *dxTemplate="let data of 'EditTemplate'" (click)="edit('view',data.data)">
                 <div class="cursor-pointer tblEdtBtn">
-                    View Vendor
+                    View
                 </div>
             </div>
         </dxi-column>
@@ -301,7 +301,7 @@
           <div>
             <nz-form-item>
               <nz-form-label nz-col class="required" nzSpan="5"
-                >Confirm Password</nz-form-label
+                >Confirm <br/> Password</nz-form-label
               >
               <nz-form-control
                 nz-col
@@ -339,7 +339,7 @@
                   type="text"
                   nz-input
                   formControlName="email"
-                  placeholder="Email"
+                  placeholder="Please Enter Email"
                 />
                 <ng-template #emailErrorTip let-control>
                   <ng-container *ngIf="control.hasError('required')"

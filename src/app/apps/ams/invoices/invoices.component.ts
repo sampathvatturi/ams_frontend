@@ -46,13 +46,14 @@ export class InvoicesComponent implements OnInit {
   isLoading: boolean = true;
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
 
-  columnDefs = [{ headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false },
-  { headerName: 'Remarks', field: 'remarks', alignment: 'center' },
-  { headerName: 'Vendor', field: 'vendor_name', alignment: 'center' },
-  { headerName: 'Total Amount', field: 'amount', alignment: 'center' },
-  { headerName: 'Total Tax', field: 'tax', alignment: 'center' },
-  { headerName: 'Grand Total', field: 'grand_total', alignment: 'center' },
-  { headerName: 'Date', field: 'created_date', alignment: 'center' }];
+  columnDefs = [
+  { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false,width:100 },
+  { headerName: 'Remarks', field: 'remarks', alignment: 'center',width:175 },
+  { headerName: 'Vendor', field: 'vendor_name', alignment: 'center',width:175 },
+  { headerName: 'Total Amount', field: 'amount', alignment: 'center',width:175 },
+  { headerName: 'Total Tax', field: 'tax', alignment: 'center',width:175 },
+  { headerName: 'Grand Total', field: 'grand_total', alignment: 'center',width:175 },
+  { headerName: 'Date', field: 'created_date', alignment: 'center',width:125 }];
 
   constructor(
     private fb: FormBuilder,

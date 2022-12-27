@@ -46,14 +46,13 @@ export class VendorsComponent implements OnInit {
     permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
 
     columnDefs = [
-      { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false},
-      { headerName: 'Vendor Name', alignment: 'left', field: 'vendor_name' },
-      { headerName: 'Phone Number', alignment: 'left', field: 'phone_number' },
-      { headerName: 'Email', alignment: 'left', field: 'email' },
-      { headerName: 'City', alignment: 'left', field: 'city' },
-      { headerName: 'GST No', alignment: 'left', field: 'gst_num' },
-      { headerName: 'Status', alignment: 'left', field: 'status' },
-
+      { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false,width:100},
+      { headerName: 'Vendor Name', alignment: 'left', field: 'vendor_name' ,width:175},
+      { headerName: 'Phone Number', alignment: 'left', field: 'phone_number',width:125 },
+      { headerName: 'Email', alignment: 'left', field: 'email',width:175 },
+      { headerName: 'City', alignment: 'left', field: 'city',width:175 },
+      { headerName: 'GST No', alignment: 'left', field: 'gst_num',width:175 },
+      { headerName: 'Status', alignment: 'left', field: 'status',width:100 },
     ]
 
 
@@ -200,7 +199,7 @@ export class VendorsComponent implements OnInit {
         address:['',[Validators.required,Validators.minLength(3),Validators.maxLength(150)]],
         status:['',[Validators.required]],
         user_name: ['',[Validators.required,Validators.maxLength(50),Validators.minLength(3)]],
-        password_md5: ['',[Validators.required ,Validators.minLength(5),Validators.maxLength(5)]],
+        password_md5: ['',[Validators.required ,Validators.minLength(5)]],
         confirm: ['',[this.confirmValidator]],
         email: [null, [Validators.required]],
         city: ['',[Validators.required,Validators.maxLength(50),Validators.minLength(3)]],

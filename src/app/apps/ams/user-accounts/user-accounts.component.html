@@ -1,41 +1,41 @@
 <div class="ds-card grid">
-    <dx-data-grid class="p-8 flow" id="gridContainer" [wordWrapEnabled]="true" [dataSource]="users"
-        [remoteOperations]="false" [allowColumnReordering]="true" [rowAlternationEnabled]="true"
-        [allowColumnResizing]="true" [showColumnLines]="true" [showRowLines]="true" [showBorders]="true"
-        style="width:100%" (onToolbarPreparing)="(permissions.insrt_in==1)?onToolbarPreparing($event):false">
-        <dxo-paging [pageSize]="5"></dxo-paging>
-        <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
-        <dxo-pager [visible]="true" [showPageSizeSelector]="true" [allowedPageSizes]="[5,10, 25, 50, 100]"
-            [showInfo]="true"></dxo-pager>
-        <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
-        <dxo-filter-panel [visible]="true"></dxo-filter-panel>
-        <dxo-header-filter [visible]="true"></dxo-header-filter>
-        <dxo-group-panel [visible]="true"></dxo-group-panel>
-        <dxo-grouping [autoExpandAll]="false"></dxo-grouping>
-        <dxo-column-chooser [enabled]="true" mode="select">
-        </dxo-column-chooser>
-        <dxo-export [enabled]="(permissions.exprt_in==1)?true:false" [allowExportSelectedData]="true"
-            fileName="Change Log"></dxo-export>
-        <dxo-filter-row [visible]="true"></dxo-filter-row>
-        <dxi-column *ngFor="let f of columnDefs" [visible]="true" [dataField]="f.field"
-            [caption]="f.headerName" [alignment]="f.alignment" [width]="175" [allowResizing]="false">
-        </dxi-column>
-        <dxi-column [showInColumnChooser]="false" [visible]="(permissions.updt_in==1)?true:false" type="buttons"
-            [width]="100" cellTemplate="viewTemplate">
-            <div *dxTemplate="let data of 'viewTemplate'">
-                <div class="tblEdtBtn" (click)="edit('data',data.data)">
-                    Edit
-                </div>
-            </div>
-        </dxi-column>
-        <dxi-column [showInColumnChooser]="false" type="button1" [width]="100" cellTemplate="EditTemplate">
-            <div *dxTemplate="let data of 'EditTemplate'" (click)="edit('view',data.data)">
-                <div class="cursor-pointer tblEdtBtn">
-                    View
-                </div>
-            </div>
-        </dxi-column>
-    </dx-data-grid>
+  <dx-data-grid class="p-8 flow" id="gridContainer" [wordWrapEnabled]="true" [dataSource]="users"
+    [remoteOperations]="false" [allowColumnReordering]="true" [rowAlternationEnabled]="true"
+    [allowColumnResizing]="true" [showColumnLines]="true" [showRowLines]="true" [showBorders]="true" style="width:100%"
+    (onToolbarPreparing)="(permissions.insrt_in==1)?onToolbarPreparing($event):false">
+    <dxo-paging [pageSize]="5"></dxo-paging>
+    <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+    <dxo-pager [visible]="true" [showPageSizeSelector]="true" [allowedPageSizes]="[5,10, 25, 50, 100]"
+      [showInfo]="true"></dxo-pager>
+    <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+    <dxo-filter-panel [visible]="true"></dxo-filter-panel>
+    <dxo-header-filter [visible]="true"></dxo-header-filter>
+    <dxo-group-panel [visible]="true"></dxo-group-panel>
+    <dxo-grouping [autoExpandAll]="false"></dxo-grouping>
+    <dxo-column-chooser [enabled]="true" mode="select">
+    </dxo-column-chooser>
+    <dxo-export [enabled]="(permissions.exprt_in==1)?true:false" [allowExportSelectedData]="true"
+      fileName="Change Log"></dxo-export>
+    <dxo-filter-row [visible]="true"></dxo-filter-row>
+    <dxi-column *ngFor="let f of columnDefs" [visible]="true" [dataField]="f.field" [caption]="f.headerName"
+      [alignment]="f.alignment" [width]="f.width" [allowResizing]="false">
+    </dxi-column>
+    <dxi-column [showInColumnChooser]="false" caption="Actions" [allowResizing]="false" [visible]="(permissions.updt_in==1)?true:false" type="buttons"
+      [width]="100" cellTemplate="viewTemplate">
+      <div *dxTemplate="let data of 'viewTemplate'">
+        <div class="tblEdtBtn" (click)="edit('data',data.data)">
+          Edit
+        </div>
+      </div>
+    </dxi-column>
+    <dxi-column [showInColumnChooser]="false" caption="Actions" [allowResizing]="false" type="button1" [width]="100" cellTemplate="EditTemplate">
+      <div *dxTemplate="let data of 'EditTemplate'" (click)="edit('view',data.data)">
+        <div class="cursor-pointer tblEdtBtn">
+          View
+        </div>
+      </div>
+    </dxi-column>
+  </dx-data-grid>
 </div>
 <nz-drawer [nzBodyStyle]="{ overflow: 'scroll' }" [nzMaskClosable]="false" [nzWidth]="720" [nzVisible]="visible"
   [nzFooter]="footerTpl" [nzTitle]="drawerTitle" (nzOnClose)="close()" [nzClosable]="false" [nzCloseIcon]="icon"
@@ -51,7 +51,7 @@
             <nz-form-item nz-col nzSpan="12">
               <nz-form-label class="required">First Name</nz-form-label>
               <nz-form-control [nzErrorTip]="firstNameErrTip" class="create">
-                <input type="text" nz-input id = "inputs" formControlName="first_name" placeholder="First Name" />
+                <input type="text" nz-input id="inputs" formControlName="first_name" placeholder="First Name" />
                 <ng-template #firstNameErrTip let-control>
                   <ng-container *ngIf="control.hasError('required')">Please enter first name</ng-container>
                   <ng-container *ngIf="control.hasError('minlength')">Please enter atleast 3
@@ -66,10 +66,11 @@
             <nz-form-item nz-col nzSpan="12" *ngIf="userRole !=='vendor'">
               <nz-form-label class="required">Last Name</nz-form-label>
               <nz-form-control [nzErrorTip]="lastNameErrTip" class="create">
-                <input type="text" nz-input id = "inputs" formControlName="last_name" placeholder="Last Name" />
+                <input type="text" nz-input id="inputs" formControlName="last_name" placeholder="Last Name" />
                 <ng-template #lastNameErrTip let-control>
                   <ng-container *ngIf="control.hasError('required')">Please enter Last Name</ng-container>
-                  <ng-container *ngIf="control.hasError('minlength')">Please enter atleast 3 characters<br /></ng-container>
+                  <ng-container *ngIf="control.hasError('minlength')">Please enter atleast 3
+                    characters<br /></ng-container>
                   <ng-container *ngIf="control.hasError('maxlength')">Maxlength exceeded<br /></ng-container>
                   <ng-container *ngIf="control.hasError('pattern')">Please enter valid Last Name<br /></ng-container>
                 </ng-template>
@@ -79,7 +80,7 @@
             <nz-form-item nz-col nzSpan="12">
               <nz-form-label class="required">Email</nz-form-label>
               <nz-form-control [nzErrorTip]="emailErrorTip" class="create">
-                <input type="text" nz-input id = "inputs" formControlName="email" placeholder="Email" />
+                <input type="text" nz-input id="inputs" formControlName="email" placeholder="Email" />
                 <ng-template #emailErrorTip let-control>
                   <ng-container *ngIf="control.hasError('required')">Please enter email</ng-container>
                   <ng-container *ngIf="control.hasError('pattern')">Please enter valid email<br /></ng-container>
@@ -90,10 +91,11 @@
             <nz-form-item nz-col nzSpan="12">
               <nz-form-label class="required">User Name</nz-form-label>
               <nz-form-control [nzErrorTip]="userNameErrorTip" class="create">
-                <input type="text" nz-input id = "inputs" formControlName="user_name" placeholder="User name" />
+                <input type="text" nz-input id="inputs" formControlName="user_name" placeholder="User name" />
                 <ng-template #userNameErrorTip let-control>
                   <ng-container *ngIf="control.hasError('required')">Please enter user name</ng-container>
-                  <ng-container *ngIf="control.hasError('minlength')">Please enter atleast 5 characters<br /></ng-container>
+                  <ng-container *ngIf="control.hasError('minlength')">Please enter atleast 5
+                    characters<br /></ng-container>
                   <ng-container *ngIf="control.hasError('maxlength')">Maxlength exceeded<br /></ng-container>
                   <ng-container *ngIf="control.hasError('pattern')">Please enter valid UserName<br /></ng-container>
                 </ng-template>
@@ -103,7 +105,7 @@
             <nz-form-item nz-col nzSpan="12">
               <nz-form-label class="required">Password</nz-form-label>
               <nz-form-control nzErrorTip="Please input your Password!" class="create">
-                <input type="password" nz-input id = "inputs" formControlName="password_md5" placeholder="Password"
+                <input type="password" nz-input id="inputs" formControlName="password_md5" placeholder="Password"
                   autocomplete="new-password" (ngModelChange)="validateConfirmPassword()" />
               </nz-form-control>
             </nz-form-item>
@@ -111,7 +113,8 @@
             <nz-form-item nz-col nzSpan="12">
               <nz-form-label class="required">Confirm Password</nz-form-label>
               <nz-form-control class="create" nzHasFeedback [nzErrorTip]="passwordErrorTpl">
-                <input type="password" nz-input id = "inputs" formControlName="cnfrm_password_md5" placeholder="Re-enter Password" />
+                <input type="password" nz-input id="inputs" formControlName="cnfrm_password_md5"
+                  placeholder="Re-enter Password" />
                 <ng-template #passwordErrorTpl let-control>
                   <ng-container *ngIf="control.hasError('required')">Please confirm your password!</ng-container>
                   <ng-container *ngIf="control.hasError('confirm')">Password is inconsistent!</ng-container>
@@ -122,7 +125,7 @@
             <nz-form-item nz-col nzSpan="12">
               <nz-form-label class="required">Mobile Number</nz-form-label>
               <nz-form-control [nzErrorTip]="mobileErrorTip" class="create">
-                <input type="text" nz-input id = "inputs" formControlName="phone_number" placeholder="Mobile Number" />
+                <input type="text" nz-input id="inputs" formControlName="phone_number" placeholder="Mobile Number" />
                 <ng-template #mobileErrorTip let-control>
                   <ng-container *ngIf="control.hasError('required')">Please enter mobile number</ng-container>
                   <ng-container *ngIf="control.hasError('pattern')">Please enter valid MobileNumber<br /></ng-container>
@@ -134,7 +137,7 @@
 
             <nz-form-item nz-col nzSpan="12" *ngIf="userRole !=='vendor'">
               <nz-form-label class="required">Department</nz-form-label>
-              <nz-form-control class="create" id = "inputs" nzErrorTip="Please Select Department">
+              <nz-form-control class="create" id="inputs" nzErrorTip="Please Select Department">
                 <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a Department"
                   formControlName="department_id">
                   <nz-option *ngFor="let d of departments" nzValue="{{ d.department_id }}"
@@ -147,7 +150,8 @@
             <nz-form-item nz-col nzSpan="12">
               <nz-form-label class="required">User Role</nz-form-label>
               <nz-form-control class="create" nzErrorTip="Please Select Role">
-                <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a Role" id = "inputs" formControlName="role" (ngModelChange)="onChangeRole($event)">
+                <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a Role" id="inputs" formControlName="role"
+                  (ngModelChange)="onChangeRole($event)">
                   <nz-option nzValue="admin" nzLabel="Admin"></nz-option>
                   <nz-option nzValue="user" nzLabel="User"></nz-option>
                   <nz-option nzValue="vendor" nzLabel="Vendor"></nz-option>
@@ -160,7 +164,8 @@
             <nz-form-item nz-col nzSpan="12">
               <nz-form-label class="required">Status</nz-form-label>
               <nz-form-control class="create" nzErrorTip="Please Select Status">
-                <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a Status" id = "inputs" formControlName="status">
+                <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select a Status" id="inputs"
+                  formControlName="status">
                   <nz-option nzValue="active" nzLabel="Active"></nz-option>
                   <nz-option nzValue="inactive" nzLabel="InActive"></nz-option>
                 </nz-select>
@@ -171,10 +176,11 @@
               <nz-form-label style="margin-bottom: none" class="required">Address</nz-form-label>
               <nz-form-control [nzErrorTip]="addressErrorTip" class="address">
                 <nz-input-group nzPrefixIcon="home">
-                  <input type="text" nz-input id = "inputs" formControlName="address" placeholder="Address" />
+                  <input type="text" nz-input formControlName="address" placeholder="Address" />
                   <ng-template #addressErrorTip let-control>
                     <ng-container *ngIf="control.hasError('required')">Please enter address</ng-container>
-                    <ng-container *ngIf="control.hasError('minlength')">please enter atleast 5 characters<br /></ng-container>
+                    <ng-container *ngIf="control.hasError('minlength')">please enter atleast 5
+                      characters<br /></ng-container>
                     <ng-container *ngIf="control.hasError('maxlength')">Maxlength exceeded<br /></ng-container>
                     <ng-container *ngIf="control.hasError('pattern')">Please enter valid Address</ng-container>
                   </ng-template>
@@ -185,7 +191,8 @@
             <nz-form-item nz-col nzSpan="12">
               <nz-form-label class="required">City</nz-form-label>
               <nz-form-control class="create" nzErrorTip="Please Select City">
-                <nz-select id = "inputs" formControlName="city" nzShowSearch nzAllowClear nzPlaceHolder="Select a Department">
+                <nz-select id="inputs" formControlName="city" nzShowSearch nzAllowClear
+                  nzPlaceHolder="Select a Department">
                   <nz-option nzValue="1" nzLabel="City 1"></nz-option>
                   <nz-option nzValue="2" nzLabel="City 2"></nz-option>
                 </nz-select>
@@ -195,7 +202,8 @@
             <nz-form-item nz-col nzSpan="12">
               <nz-form-label class="required">District</nz-form-label>
               <nz-form-control class="create" nzErrorTip="Please Select District">
-                <nz-select id = "inputs" formControlName="district" nzShowSearch nzAllowClear nzPlaceHolder="Select a Department">
+                <nz-select id="inputs" formControlName="district" nzShowSearch nzAllowClear
+                  nzPlaceHolder="Select a Department">
                   <nz-option nzValue="1" nzLabel="District 1"></nz-option>
                   <nz-option nzValue="2" nzLabel="District 2"></nz-option>
                 </nz-select>

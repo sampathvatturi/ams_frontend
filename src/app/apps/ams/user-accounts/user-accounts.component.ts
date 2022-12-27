@@ -31,16 +31,17 @@ export class UserAccountsComponent implements OnInit {
   updateUserData: any;
   updateUserId: any;
   userRole: any;
-  updateBtnDisable:boolean = true;
-  isLoading:boolean = true;
+  updateBtnDisable: boolean = true;
+  isLoading: boolean = true;
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
-  columnDefs = [{ headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false},
-                { headerName: 'Name', field: 'first_name', alignment: 'center'},
-                { headerName: 'User Name', field: 'user_name', alignment: 'center'},
-                { headerName: 'Email', field: 'email', alignment: 'center'},
-                { headerName: 'Phone No', field: 'phone_number', alignment: 'center'},
-                { headerName: 'Department', field: 'department_name', alignment: 'center'},
-                { headerName: 'Role', field: 'role', alignment: 'center'},]
+  columnDefs = [
+  { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false ,width:100},
+  { headerName: 'Name', field: 'first_name', alignment: 'center' ,width:175},
+  { headerName: 'User Name', field: 'user_name', alignment: 'center',width:175 },
+  { headerName: 'Email', field: 'email', alignment: 'center',width:175 },
+  { headerName: 'Phone No', field: 'phone_number', alignment: 'center' ,width:175},
+  { headerName: 'Department', field: 'department_name', alignment: 'center' ,width:175},
+  { headerName: 'Role', field: 'role', alignment: 'center',width:100 },]
 
   constructor(
     private fb: FormBuilder,
@@ -49,7 +50,7 @@ export class UserAccountsComponent implements OnInit {
     private md5: Md5hashService,
     private userService: UserService,
     private deptService: DepartmentService
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.user_data = sessionStorage.getItem('user_data');
@@ -59,7 +60,7 @@ export class UserAccountsComponent implements OnInit {
     this.userFormFieldsConfig();
 
   }
-  onToolbarPreparing(e:any) {
+  onToolbarPreparing(e: any) {
     e.toolbarOptions.items.unshift({
       location: 'after',
       widget: 'dxButton',
@@ -84,8 +85,8 @@ export class UserAccountsComponent implements OnInit {
   getUsers(): void {
     this.userService.getAllUsers().subscribe((res: any) => {
       this.users = res;
-      this.users.forEach((element:any,index:any) => {
-        element['sno'] = index+1;
+      this.users.forEach((element: any, index: any) => {
+        element['sno'] = index + 1;
       })
       this.isLoading = false;
     });
@@ -96,7 +97,7 @@ export class UserAccountsComponent implements OnInit {
       this.updateUserData = res;
       const decrypt_password = this.md5.passwordDecrypt(this.updateUserData[0]?.password_md5);
       this.createUserForm.get('password_md5')?.setValue(decrypt_password);
-      this.createUserForm.get('cnfrm_password_md5')?.setValue(decrypt_password);     
+      this.createUserForm.get('cnfrm_password_md5')?.setValue(decrypt_password);
       this.createUserForm.get('password_md5')?.disable();
       this.createUserForm.get('cnfrm_password_md5')?.disable();
     });
@@ -110,21 +111,21 @@ export class UserAccountsComponent implements OnInit {
   }
 
   onCreateSubmit() {
-    const email =  this.createUserForm.value.email;
+    const email = this.createUserForm.value.email;
     const user_name = this.createUserForm.value.user_name;
     const userData = this.users.find((item: any) => (item?.email === email || item?.user_name === user_name));
     console.log("==userData==", userData);
     if (this.createUserForm.valid) {
-      if(!userData) {
+      if (!userData) {
         this.createUserForm.value.password_md5 = this.md5.passwordEncrypt(this.createUserForm.value.password_md5);
-        this.userService.createUser(this.prepareUserPayload(this.createUserForm.value)).subscribe((data) => {          
+        this.userService.createUser(this.prepareUserPayload(this.createUserForm.value)).subscribe((data) => {
           this.visible = false;
           this.notificationService.createNotification('success', data.message);
           this.getUsers();
         });
       } else {
         this.notificationService.createNotification('error', "UserName or Email already exists");
-      }      
+      }
     } else {
       Object.values(this.createUserForm.controls).forEach((control) => {
         if (control.invalid) {
@@ -155,10 +156,10 @@ export class UserAccountsComponent implements OnInit {
     return userPayload;
   }
 
-  edit(type:any,data: any) { 
+  edit(type: any, data: any) {
     this.updateUserId = data?.user_id;
-    this.userRole = data?.role;    
-    this.userFormFieldsConfig();  
+    this.userRole = data?.role;
+    this.userFormFieldsConfig();
     this.getUserById(this.updateUserId);
     this.submit = false;
     this.visible = true;
@@ -173,15 +174,15 @@ export class UserAccountsComponent implements OnInit {
     this.createUserForm.get('city')?.setValue(data?.city);
     this.createUserForm.get('district')?.setValue(data?.district);
     this.createUserForm.get('role')?.setValue(data?.role);
-    this.createUserForm.get('status')?.setValue(data?.status); 
-    this.createUserForm.get('user_name')?.disable();   
+    this.createUserForm.get('status')?.setValue(data?.status);
+    this.createUserForm.get('user_name')?.disable();
     this.createUserForm.get('email')?.disable();
-    if(this.userRole === 'vendor') {      
+    if (this.userRole === 'vendor') {
       this.createUserForm.get('last_name')?.disable();
       this.createUserForm.get('department_id')?.disable();
     }
     this.updateBtnDisable = true;
-    if (type === 'view'){
+    if (type === 'view') {
       this.updateBtnDisable = false;
     }
   }
@@ -238,16 +239,14 @@ export class UserAccountsComponent implements OnInit {
       last_name: [null,
         [
           Validators.required,
-          
           Validators.minLength(3),
           Validators.maxLength(50),
         ],
       ],
-      email: [null, ],
+      email: [null,],
       user_name: [null,
         [
           Validators.required,
-         
           Validators.minLength(5),
           Validators.maxLength(50),
         ],
@@ -257,7 +256,6 @@ export class UserAccountsComponent implements OnInit {
       phone_number: [null,
         [
           Validators.required,
-          
           Validators.minLength(10),
           Validators.maxLength(10),
         ],
@@ -266,21 +264,20 @@ export class UserAccountsComponent implements OnInit {
       address: [null,
         [
           Validators.required,
-          
           Validators.minLength(5),
           Validators.maxLength(150),
         ],
       ],
       city: [null, [Validators.required]],
-      district: [null, [Validators.required]],      
-      role: ['user', [Validators.required]],         
+      district: [null, [Validators.required]],
+      role: ['user', [Validators.required]],
       status: ['active', [Validators.required]]
     });
   }
 
   validateConfirmPassword(): void {
     setTimeout(() =>
-      this.createUserForm.controls['confirm']?.updateValueAndValidity()
+      this.createUserForm.controls['cnfrm_password_md5']?.updateValueAndValidity()
     );
   }
 
@@ -295,10 +292,10 @@ export class UserAccountsComponent implements OnInit {
 
   onChangeRole(event: any): void {
     console.log("==onChangeRole==", event);
-    if(event === 'vendor'){
+    if (event === 'vendor') {
       this.notificationService.createNotification('info', 'You can create vendor details in Vendor menu');
       this.createUserForm.get('role')?.setValue('admin');
     }
   }
 
-  }
+}
