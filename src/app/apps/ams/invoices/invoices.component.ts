@@ -1,6 +1,6 @@
 import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormArray, FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormArray, UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
 import { Observable } from 'rxjs';
 import { NotificationService } from 'src/app/shared/common/notification.service';
@@ -19,7 +19,7 @@ export class InvoicesComponent implements OnInit {
   visible = false;
   submit = true;
   drawerTitle: string = '';
-  invoiceForm!: FormGroup;
+  invoiceForm!: UntypedFormGroup;
   invoice_info: any = [];
   vendor_array: any = [];
   v_name: any = {};
@@ -56,7 +56,7 @@ export class InvoicesComponent implements OnInit {
   { headerName: 'Date', field: 'created_date', alignment: 'center',width:125 }];
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     // private api: ApiService,
     private notification: NotificationService,
     private invoice: InvoicesService,
@@ -288,7 +288,7 @@ export class InvoicesComponent implements OnInit {
   // }
   //dynamic form fields
   get inventory_details() {
-    return this.invoiceForm.get("inventory_details") as FormArray
+    return this.invoiceForm.get("inventory_details") as UntypedFormArray
   }
   addInvertory() {
     if(this.itemRepeat()) return this.notification.createNotification('error', 'Duplicate Items');

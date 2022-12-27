@@ -1,5 +1,5 @@
 import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 // import { NotificationService } from 'src/app/services/auth/notification.service';
 // import { GlobalConstants } from 'src/app/shared/global_constants';
 import { DatePipe, formatDate } from '@angular/common';
@@ -16,7 +16,7 @@ export class FundsComponent implements OnInit {
   visible = false;
   submit = true;
   drawerTitle: string = '';
-  fundsForm!: FormGroup;
+  fundsForm!: UntypedFormGroup;
   searchText = '';
   user_data: any;
   fundId: any;
@@ -30,7 +30,7 @@ export class FundsComponent implements OnInit {
 
   constructor(
     @Inject(LOCALE_ID) private locale: string,
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private notification: NotificationService,
     private fundService: FundsService,
     private datePipe: DatePipe

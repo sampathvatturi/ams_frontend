@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-work-wise-master',
@@ -10,7 +10,7 @@ export class WorkWiseMasterComponent implements OnInit {
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
   columnDefs;
   rowData;
-  workWiseForm: FormGroup;
+  workWiseForm: UntypedFormGroup;
   data = {
     sd_nv_hdng :''
   };
@@ -20,7 +20,7 @@ export class WorkWiseMasterComponent implements OnInit {
   setting1 = {
     isBtnLoading : false
   };
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: UntypedFormBuilder) {
     this.workWiseForm = this.fb.group({
       prjct_nm: [null, [Validators.required]],
       wn_nu: [null, [Validators.required]],

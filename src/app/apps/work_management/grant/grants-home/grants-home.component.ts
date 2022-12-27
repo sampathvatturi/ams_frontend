@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AppsService } from 'src/app/shared/services/apps.service';
-import { FormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
+import { UntypedFormBuilder, FormGroup, Validators, FormArray } from '@angular/forms';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import { ToastrService } from 'ngx-toastr';
 import { Router } from '@angular/router';
@@ -28,7 +28,7 @@ export class GrantsHomeComponent implements OnInit {
   };
 
 
-  constructor(private apisrvc: AppsService, private toastr: ToastrService, private fb: FormBuilder, private modal: NzModalService, private router: Router) {
+  constructor(private apisrvc: AppsService, private toastr: ToastrService, private fb: UntypedFormBuilder, private modal: NzModalService, private router: Router) {
 
   }
 

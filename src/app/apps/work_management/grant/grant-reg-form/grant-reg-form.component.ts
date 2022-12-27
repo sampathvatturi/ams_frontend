@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 
 @Component({
   selector: 'app-grant-reg-form',
@@ -8,7 +8,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class GrantRegFormComponent implements OnInit {
 
-  grantRegForm: FormGroup;
+  grantRegForm: UntypedFormGroup;
 
   data = {
     grnt_lst: [{
@@ -54,7 +54,7 @@ export class GrantRegFormComponent implements OnInit {
     isBtnLoading : false
   }
 
-  constructor(private fb: FormBuilder) {
+  constructor(private fb: UntypedFormBuilder) {
    this.myform();
 
   }

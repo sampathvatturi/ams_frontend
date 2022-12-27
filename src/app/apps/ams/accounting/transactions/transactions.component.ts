@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { AccountsService } from 'src/app/shared/moduleservices/accounts.service';
 import { TransactionsService } from 'src/app/shared/moduleservices/transactions.service';
 import config from 'devextreme/core/config';
@@ -20,8 +20,8 @@ export class TransactionsComponent implements OnInit {
   visible = false;
   submit = true;
   drawerTitle: string = '';
-  transactionsForm!: FormGroup;
-  transactionsFilterForm!:FormGroup;
+  transactionsForm!: UntypedFormGroup;
+  transactionsFilterForm!:UntypedFormGroup;
   user_data: any;
   searchText = '';
   transId: any;
@@ -39,7 +39,7 @@ export class TransactionsComponent implements OnInit {
   totalAmount = 0;
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private transactionsservice:TransactionsService,
     private accountHeadService:AccountsService
   ) { }

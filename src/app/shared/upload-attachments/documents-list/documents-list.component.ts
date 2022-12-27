@@ -5,7 +5,7 @@ import { ThemeConstantService } from 'src/app/shared/services/theme-constant.ser
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { DatePipe } from '@angular/common';
 import { NzModalRef, NzModalService } from 'ng-zorro-antd/modal';
-import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { UploadAttachmentsComponent } from 'src/app/shared/upload-attachments/upload-attachments.component';
 import { NzUploadFile } from "ng-zorro-antd/upload";
 
@@ -53,7 +53,7 @@ export class DocumentsListComponent implements OnInit {
     private notification: NzNotificationService,
     private modalService: NzModalService,
     private datePipe: DatePipe,
-    private fb: FormBuilder) {
+    private fb: UntypedFormBuilder) {
 
     this.hms_loggedin_user_clients = JSON.parse(localStorage.getItem('clients'));
     this.clnt_nm = this.hms_loggedin_user_clients[0].clnt_nm;

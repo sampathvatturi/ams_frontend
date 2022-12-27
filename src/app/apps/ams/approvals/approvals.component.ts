@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 // import { NotificationService } from 'src/app/services/auth/notification.service';
 // import { TenderDetailsService } from 'src/app/services/tender-details.service';
 // import { TransactionDetailsService } from 'src/app/services/transaction-details.service';
@@ -12,7 +12,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class ApprovalsComponent implements OnInit {
 
-  validateForm!: FormGroup;
+  validateForm!: UntypedFormGroup;
   listOfData: any[] = [];
   tenders: any[] = [];
   tendersData: any = [];
@@ -42,7 +42,7 @@ export class ApprovalsComponent implements OnInit {
   
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     // private notification: NotificationService,
     // private tenderService: TenderDetailsService,
     // private userService: UserService,

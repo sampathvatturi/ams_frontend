@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { NotificationService } from 'src/app/shared/common/notification.service';
 import { WorksService } from 'src/app/shared/moduleservices/works.service';
 
@@ -13,7 +13,7 @@ export class WorksComponent implements OnInit {
   visible = false;
   submit = true;
   drawerTitle: string = '';
-  workForm!: FormGroup;
+  workForm!: UntypedFormGroup;
   works_info:any = [];
   user_data:any = [];
   searchText = '';
@@ -30,7 +30,7 @@ export class WorksComponent implements OnInit {
   ]
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private notification:NotificationService,
     private workService:WorksService
     ) { }

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, FormControl, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, Validators } from '@angular/forms';
 import { VendorsService } from 'src/app/shared/moduleservices/vendors.service';
 import { NotificationService } from 'src/app/shared/common/notification.service';
 import { Md5hashService } from 'src/app/shared/services/auth/md5hash.service';
@@ -19,7 +19,7 @@ export class VendorsComponent implements OnInit {
   visible = false;
   submit = true;
   drawerTitle: string = '';
-  vendorForm!: FormGroup;
+  vendorForm!: UntypedFormGroup;
   vendor_info:any = [];
   vendor_array:any = [];
   user_data:any = [];
@@ -29,7 +29,7 @@ export class VendorsComponent implements OnInit {
   updateBtnDisable:boolean = true;
   isLoading:boolean = true;
 
-  constructor(private fb: FormBuilder,
+  constructor(private fb: UntypedFormBuilder,
     // private api: ApiService,
     private notification: NotificationService,
     private vendorService: VendorsService,
@@ -211,7 +211,7 @@ export class VendorsComponent implements OnInit {
     validateConfirmPassword(): void {
       setTimeout(() => this.vendorForm.controls['confirm'].updateValueAndValidity());
     }
-    confirmValidator = (control: FormControl): { [s: string]: boolean } => {
+    confirmValidator = (control: UntypedFormControl): { [s: string]: boolean } => {
       if (!control.value) {
         return { error: true, required: true };
       } else if (control.value !== this.vendorForm.controls['password_md5'].value) {

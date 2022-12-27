@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { AccountsService } from 'src/app/shared/moduleservices/accounts.service';
 
 @Component({
@@ -11,7 +11,7 @@ export class AccountsComponent implements OnInit {
   visible = false;
   submit = true;
   drawerTitle: string = '';
-  accountsForm!: FormGroup;
+  accountsForm!: UntypedFormGroup;
   accounts_info: any = [];
   user_data: any = [];
   searchText = '';
@@ -21,7 +21,7 @@ export class AccountsComponent implements OnInit {
   rowData = [];
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private accountHeadService: AccountsService
   ) { }
 

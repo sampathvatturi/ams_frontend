@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NotificationService } from 'src/app/shared/common/notification.service';
@@ -42,12 +42,12 @@ export class LoginComponent implements OnInit {
     current_screen: "login", screen_heading: "Employee Login"
   }
 
-  loginForm: FormGroup;  
+  loginForm: UntypedFormGroup;  
   responseMessage!: string;
   loader: any;
 
   constructor(
-    public fb: FormBuilder, 
+    public fb: UntypedFormBuilder, 
     private domSanitizer: DomSanitizer,
     private route: Router,
     private userService: UserService,

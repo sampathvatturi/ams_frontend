@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { NotificationService } from 'src/app/shared/common/notification.service';
 import { InventoryItemsService } from 'src/app/shared/moduleservices/inventory-items.service';
 import { UomService } from 'src/app/shared/moduleservices/uom.service';
@@ -16,7 +16,7 @@ export class InventoryComponent implements OnInit {
   visible = false;
   submit = true;
   drawerTitle: string = '';
-  inventoryForm!: FormGroup;
+  inventoryForm!: UntypedFormGroup;
   inventory_info: any = [];
   user_data: any = [];
   searchText = '';
@@ -27,7 +27,7 @@ export class InventoryComponent implements OnInit {
 
   
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     private inventoryService: InventoryItemsService,
     private notificationService: NotificationService,
     private uomService: UomService,

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder ,Validators,FormGroup} from '@angular/forms';
+import { UntypedFormBuilder ,Validators,UntypedFormGroup} from '@angular/forms';
 
 @Component({
   selector: 'app-assign-tender',
@@ -11,7 +11,7 @@ export class AssignTenderComponent implements OnInit {
   visible = false;
   submit = true;
   drawerTitle: string = '';
-  assignTendersForm!: FormGroup;
+  assignTendersForm!: UntypedFormGroup;
   tender_info: any = [];
   vendors: any = [];
   tenders:any = [];
@@ -30,7 +30,7 @@ export class AssignTenderComponent implements OnInit {
                 { headerName: 'Status', field: 'status', alignment: 'center'},];
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     // private msg: NzMessageService,
     // private vendor: VendorsService,
     // private user: UserService,

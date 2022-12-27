@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormGroup, PatternValidator, FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, PatternValidator, UntypedFormBuilder, Validators } from '@angular/forms';
 import { DepartmentService } from 'src/app/shared/moduleservices/department.service';
 import { NotificationService } from 'src/app/shared/common/notification.service';
 // import { GlobalConstants } from 'src/app/shared/global_constants';
@@ -16,7 +16,7 @@ export class DepartmentComponent implements OnInit {
   visible = false;
   submit = true;
   drawerTitle: string = '';
-  departmentForm!: FormGroup;
+  departmentForm!: UntypedFormGroup;
   user_data: any;
   searchText = '';
   departmentId: any;
@@ -42,7 +42,7 @@ export class DepartmentComponent implements OnInit {
   // };
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     // private api: ApiService,
     private notification: NotificationService,
     private departmentService: DepartmentService

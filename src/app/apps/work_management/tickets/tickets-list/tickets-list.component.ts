@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators } from '@angular/forms';
+import { UntypedFormBuilder, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { ToastrService } from 'ngx-toastr';
@@ -42,7 +42,7 @@ export class TicketsListComponent implements OnInit {
   tcktID: any;
 
   
-  constructor(public route: ActivatedRoute, private router: Router, private fb: FormBuilder, public apiSrv: AppsService,
+  constructor(public route: ActivatedRoute, private router: Router, private fb: UntypedFormBuilder, public apiSrv: AppsService,
     private message: NzMessageService, private toastr: ToastrService) {
 
     this.apiSrv.getLgnUsrDtls().then((res: any) => {

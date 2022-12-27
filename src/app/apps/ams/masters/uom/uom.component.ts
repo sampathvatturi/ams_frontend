@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder ,Validators,FormGroup} from '@angular/forms';
+import { UntypedFormBuilder ,Validators,UntypedFormGroup} from '@angular/forms';
 import { getWeekYearWithOptions } from 'date-fns/fp';
 import { UomService } from 'src/app/shared/moduleservices/uom.service';
 import { NotificationService } from 'src/app/shared/common/notification.service';
@@ -17,7 +17,7 @@ export class UomComponent implements OnInit {
   visible = false;
   submit = true;
   drawerTitle: string = '';
-  uomForm!: FormGroup;
+  uomForm!: UntypedFormGroup;
   uom_info: any = [];
   user_data: any = [];
   searchText = '';
@@ -27,7 +27,7 @@ export class UomComponent implements OnInit {
 
   
 
-  constructor(private fb: FormBuilder,private uomService:UomService,private notification:NotificationService) { }
+  constructor(private fb: UntypedFormBuilder,private uomService:UomService,private notification:NotificationService) { }
 
 
   // rowData = [{"sno":1,"uom_code":"KG","uom_name":"Kilo"},

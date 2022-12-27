@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzUploadChangeParam } from 'ng-zorro-antd/upload';
-import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators, FormControl } from '@angular/forms';
 
 @Component({
   selector: 'app-road-transfer',
@@ -9,9 +9,9 @@ import { FormGroup, FormBuilder, Validators, FormControl } from '@angular/forms'
   styleUrls: ['./road-transfer.component.scss']
 })
 export class RoadTransferComponent implements OnInit {
-  validateForm!: FormGroup;
-  validateForm1!: FormGroup;
-  validateForm2!: FormGroup;
+  validateForm!: UntypedFormGroup;
+  validateForm1!: UntypedFormGroup;
+  validateForm2!: UntypedFormGroup;
   rowData=[{"sno":1,
             "trnsr_id":1234,
             "prpsl_dt":"5/11/2015",
@@ -176,7 +176,7 @@ export class RoadTransferComponent implements OnInit {
 
 
   constructor(private msg: NzMessageService,
-              private fb: FormBuilder
+              private fb: UntypedFormBuilder
               ) { 
                 this.addform();
                 this.editform('');

@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {
-  FormGroup,
-  FormBuilder,
-  FormControl,
+  UntypedFormGroup,
+  UntypedFormBuilder,
+  UntypedFormControl,
   Validators,
 } from '@angular/forms';
 import { UserService } from 'src/app/shared/moduleservices/user.service';
@@ -22,7 +22,7 @@ export class UserAccountsComponent implements OnInit {
   visible = false;
   submit = true;
   drawerTitle: string = '';
-  createUserForm!: FormGroup;
+  createUserForm!: UntypedFormGroup;
   user_data: any;
   users: any = [];
   departments: any[] = [];
@@ -44,7 +44,7 @@ export class UserAccountsComponent implements OnInit {
   { headerName: 'Role', field: 'role', alignment: 'center',width:100 },]
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     // private api: ApiService,
     private notificationService: NotificationService,
     private md5: Md5hashService,
@@ -281,7 +281,7 @@ export class UserAccountsComponent implements OnInit {
     );
   }
 
-  confirmValidator = (control: FormControl): { [s: string]: boolean } => {
+  confirmValidator = (control: UntypedFormControl): { [s: string]: boolean } => {
     if (!control.value) {
       return { error: true, required: true };
     } else if (control.value !== this.createUserForm.controls['password_md5'].value) {

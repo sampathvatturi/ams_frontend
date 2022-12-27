@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder ,Validators,FormGroup} from '@angular/forms';
+import { UntypedFormBuilder ,Validators,UntypedFormGroup} from '@angular/forms';
 import { environment } from 'src/environments/environment';
 import { TenderDetailsService } from 'src/app/shared/moduleservices/tender-details.service';
 import { NotificationService } from 'src/app/shared/common/notification.service';
@@ -27,7 +27,7 @@ export class CreateTenderComponent implements OnInit {
   visible = false;
   submit = true;
   drawerTitle: string = '';
-  createTenderForm!: FormGroup;
+  createTenderForm!: UntypedFormGroup;
   tenders: any = [];
   user_data: any = [];
   searchText = '';
@@ -62,7 +62,7 @@ export class CreateTenderComponent implements OnInit {
     { headerName: 'End Date', alignment: 'left', field: 'end_date' }];
 
   constructor(
-    private fb: FormBuilder,
+    private fb: UntypedFormBuilder,
     // private api: ApiService,
     private notification: NotificationService,
     private works: WorksService,
