@@ -6,7 +6,7 @@ import { DepartmentComponent } from './department/department.component';
 import { WorksComponent } from './works/works.component';
 import { InventoryComponent } from './inventory/inventory.component';
 import { UomComponent } from './uom/uom.component';
-import { DxButtonModule, DxDataGridModule } from 'devextreme-angular';
+import { DxButtonModule, DxDataGridModule,DxLoadPanelModule } from 'devextreme-angular';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgAntdModule } from 'src/app/shared/common/ng-antd.module';
 
@@ -22,6 +22,7 @@ import { NgAntdModule } from 'src/app/shared/common/ng-antd.module';
     MastersRoutingModule,
     DxDataGridModule,
     DxButtonModule,
+    DxLoadPanelModule,
     FormsModule,
     ReactiveFormsModule,
     NgAntdModule

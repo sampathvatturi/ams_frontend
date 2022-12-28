@@ -1,8 +1,8 @@
 import { Component, OnInit } from '@angular/core';
-import { TenderDetailsService } from 'src/app/shared/moduleservices/tender-details.service';
-import { VendorsService } from 'src/app/shared/moduleservices/vendors.service';
-import { WorksService } from 'src/app/shared/moduleservices/works.service';
+import { SurveyReportService } from 'src/app/shared/moduleservices/survey-report.service';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { NotificationService } from 'src/app/shared/common/notification.service';
+
 
 @Component({
   selector: 'app-survey-report',
@@ -13,92 +13,138 @@ export class SurveyReportComponent implements OnInit {
 
   tenders: any = [];
   visible = false;
-  // submit = true;
   drawerTitle: string = '';
-  vendor_array: any = [];
-  v_name: any = {};
-  works_info: any = [];
+  survey_info:any = [];
   surveyForm!: UntypedFormGroup;
   updateBtnDisable: boolean = false;
-  isLoading: boolean;
+  // isLoading: boolean;
+  submit:boolean = true;
+  user_data:any = [];
+  surveyId:any;
 
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
 
   columnDefs = [
-    // { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false, width: '100' },
-    { headerName: 'Works', alignment: 'left', field: 'work_name' },
-    { headerName: 'Tender', alignment: 'left', field: 'title' },
-    { headerName: 'Tender Location', alignment: 'left', field: 'location' },
+    { headerName: 'Name', alignment: 'left', field: 'name' },
+    { headerName: 'Description', alignment: 'left', field: 'description' },
     { headerName: 'Status', alignment: 'left', field: 'status' },
+
   ]
   constructor(
-    private tenderService: TenderDetailsService,
-    private works: WorksService,
-    private vendors: VendorsService,
-    private fb: UntypedFormBuilder
+    private fb: UntypedFormBuilder,
+    private surveyReportService:SurveyReportService,
+    private notification:NotificationService,
+
   ) { }
 
   ngOnInit(): void {
-    this.isLoading = true;
+    // this.isLoading = true;
     this.surveyFormValidators();
-    this.getWorks();
+    this.getSurveyReport();
+    this.user_data = sessionStorage.getItem('user_data');
+      this.user_data = JSON.parse(this.user_data);
 
   }
 
-  getTenders() {
-    this.tenderService.getTenderDetails().subscribe((res) => {
+  
+
+  getSurveyReport(){
+    this.surveyReportService.getSurveyreports().subscribe((res) => {
       if (res.length > 0) {
-        this.tenders = res;
-        this.tenders.forEach((elem: any) => {
-          // elem['sno'] = index + 1;
-          elem['work_name'] = this.workIdToName(elem.work_id);
-        })
-        this.isLoading = false;
+        this.survey_info = res;
       } else {
-        this.tenders = [];
+        this.survey_info = [];
       }
     })
   }
-  // getVendors(){
-  //   this.vendors.getVendors().subscribe((res) => {
-  //     this.vendor_array = res;
-  //     for (let x of this.vendor_array) {
-  //       this.v_name[x.vendor_id] = x.vendor_name;
-  //     }
-  //   });
-  // }
-  getWorks() {
-    this.works.getWorks().subscribe((res) => {
-      this.works_info = res;
-      this.getTenders();
-    });
-  }
-  workIdToName(id: any) {
-    let arr = id.split(',');
-    for (let index = 0; index < arr.length; index++) {
-      this.works_info.forEach((element: any) => {
-        if (element.work_id == Number(arr[index])) {
-          arr[index] = element.work_name;
+  onToolbarPreparing(e:any) {
+    e.toolbarOptions.items.unshift({
+      location: 'after',
+      widget: 'dxButton',
+      options: {
+        icon: 'plus',
+        text: 'Add',
+        onClick: this.create.bind(this, 'new'),
+        bindingOptions: {
+          'disabled': 'isEmailButtonDisabled'
         }
-      })
-
-    }
-    return arr.join(', ');
+      }
+    });
+    
   }
+
+  create(): void {
+    this.submit = true;
+    this.drawerTitle = 'Add Work';
+    this.visible = true;
+    this.surveyFormValidators();
+    this.surveyForm.get('status')?.setValue('open');
+  }
+
   edit(type: any, data: any) {
     this.drawerTitle = 'Edit Survey Report';
     this.visible = true;
+    this.submit = false;
     this.surveyFormValidators();
+    this.surveyId = data?.id;
     this.surveyForm.get('status')?.setValue(data.status);
+    this.surveyForm.get('name')?.setValue(data.name);
+    this.surveyForm.get('description')?.setValue(data.description);
     this.updateBtnDisable = true;
     if (type === 'view') {
       this.updateBtnDisable = false;
       this.drawerTitle = 'View Survey Report';
     }
   }
+
+  prepareSurveyPayload(data:any){
+    const payload = {
+      name:data.name,
+      description:data.description,
+      status:data.status,
+      created_by:this.user_data.user_id,
+      updated_by:this.user_data?.user_id
+    }
+    return payload;
+  }
+
+  onCreateSubmit() {
+    if (this.surveyForm.valid){
+      this.surveyReportService.createSurveyreport(this.prepareSurveyPayload(this.surveyForm.value)).subscribe((res)=>{
+          this.visible = false;
+          this.getSurveyReport();
+          this.notification.createNotification("success", res?.message);
+      });
+    }
+    else {
+      console.log('invalid')
+      Object.values(this.surveyForm.controls).forEach(control => {
+        if (control.invalid) {
+          control.markAsDirty();
+          control.updateValueAndValidity({ onlySelf: true });
+        }
+      });
+    }
+  }
+
+  prepareUpdatePayload(data:any){
+    const payload = {
+      name:data.name,
+      description:data.description,
+      status:data.status,
+      updated_by:this.user_data?.user_id
+    }
+    return payload;
+  }
+
   onUpdateSubmit() {
     if (this.surveyForm.valid) {
-      //service
+      this.surveyReportService.updateSurveyreport(this.surveyId, this.prepareUpdatePayload(this.surveyForm.value)).subscribe((res) => {
+        this.visible = false;
+        this.getSurveyReport();
+        this.notification.createNotification(res.status,res.message);        
+        
+      });
     } else {
       Object.values(this.surveyForm.controls).forEach((control) => {
         if (control.invalid) {
@@ -114,6 +160,7 @@ export class SurveyReportComponent implements OnInit {
   }
   surveyFormValidators() {
     this.surveyForm = this.fb.group({
+      name:['',[Validators.required]],
       status: ['', [Validators.required]],
       description: ['', [Validators.required]]
     });
