@@ -34,7 +34,7 @@ export class TransactionsComponent implements OnInit {
   ref_acc_head:any =[];
   debitTotal = 0;
   creditTotal = 0 ;
-  isLoading : boolean = true ;
+  isLoading : boolean = false ;
   dataMessage = "";
   totalAmount = 0;
 
@@ -77,18 +77,11 @@ export class TransactionsComponent implements OnInit {
   
   
   getTransactions(){
-    // this.isLoading = true;
+    this.isLoading = true;
     this.transactionsservice.getTransactions(this.transactionsFilterForm.value).subscribe((res) => {
-      // this.isLoading = false;
       // if(res.length < 0) this.dataMessage ="No Transactions Found";
-      // if(res.length>0)
-       this.rowData = res;
-      //  this.transactions = res;
-      //  if(this.rowData.length > 0){
-      //   this.getsum();
-      //  }
-
-      
+      if(res.length>0) this.rowData = res;
+      this.isLoading = false;
     })
     
     
@@ -105,10 +98,6 @@ export class TransactionsComponent implements OnInit {
     this.accountHeadService.getAccountHeads().subscribe((res) =>{
       this.accounts_info = res;
       this.acconts_heads = [...res];
-      this.accounts_info.unshift({
-        id:'%',
-        name:'All'
-      })
       res.forEach((data: any) => {
         this.accountName[data.id] = data.name;
       });

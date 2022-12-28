@@ -29,6 +29,7 @@
       <nz-form-label>Account</nz-form-label>
       <nz-form-control nzErrorTip="Please select account">
         <nz-select formControlName="acc_head" nzPlaceHolder="Account" nzShowSearch>
+          <nz-option nzValue="%" nzLabel="All" nzSelected></nz-option>
           <nz-option *ngFor="let a of accounts_info" nzValue="{{ a.id }}" nzLabel="{{ a.name }}"></nz-option>
         </nz-select>
       </nz-form-control>
@@ -47,6 +48,12 @@
     (onToolbarPreparing)="(permissions.insrt_in==1)?onToolbarPreparing($event):false"
     
     >
+<dxo-load-panel
+        [height]="100"
+        [width]="250"
+        [enabled]="isLoading"
+        >
+    </dxo-load-panel>
     <dxo-paging [pageSize]="10"></dxo-paging>
     <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
     <dxo-pager [visible]="true" [showPageSizeSelector]="true" [allowedPageSizes]="[5,10, 25, 50, 100]"
@@ -69,7 +76,13 @@
       {{ d.data.trsxcn_date | date : "dd-MM-YYYY"}}
     </div>
     <div *dxTemplate="let d of 'particularTemplate'">
-      <b>{{ accountName[d.data.particulars.ref_acc_head] }}</b><br><i>{{ d.data.particulars.remarks }}</i>
+      <div *ngIf="d.data.particulars.ref_acc_head===0;else show">
+        <b>{{ accountName[d.data.particulars.acc_head] }}</b><br><i>{{ d.data.particulars.remarks }}</i>
+      </div>
+      <ng-template #show>
+        <b>{{ accountName[d.data.particulars.ref_acc_head] }}</b><br><i>{{ d.data.particulars.remarks }}</i>
+      </ng-template>
+      
     </div>
     <div *dxTemplate="let d of 'creditTemplate'">
       <div class='creditColor text-center' >{{ d.data.credit }}</div>
@@ -79,7 +92,7 @@
     </div>
   
     <dxo-summary [calculateCustomSummary]="difference">
-      <dxi-total-item alignment="center" column="debit" summaryType="sum" displayFormat="{0}"
+      <dxi-total-item cssClass="debitColor" alignment="center" column="debit" summaryType="sum" displayFormat="{0}"
       valueFormat="currency">
       </dxi-total-item> 
       <dxi-total-item alignment="center" column="credit" summaryType="sum" displayFormat="{0}"

@@ -5,9 +5,10 @@ import { AccountingRoutingModule } from './accounting-routing.module';
 import { FundsComponent } from './funds/funds.component';
 import { AccountsComponent } from './accounts/accounts.component';
 import { TransactionsComponent } from './transactions/transactions.component';
-import { DxButtonModule, DxDataGridModule } from 'devextreme-angular';
+import { DxButtonModule, DxDataGridModule, DxLoadPanelModule } from 'devextreme-angular';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgAntdModule } from 'src/app/shared/common/ng-antd.module';
+import dxLoadPanel from 'devextreme/ui/load_panel';
 
 
 @NgModule({
@@ -23,7 +24,8 @@ import { NgAntdModule } from 'src/app/shared/common/ng-antd.module';
     DxButtonModule,
     FormsModule,
     ReactiveFormsModule,
-    NgAntdModule
+    NgAntdModule,
+    DxLoadPanelModule
   ]
 })
 export class AccountingModule { }
