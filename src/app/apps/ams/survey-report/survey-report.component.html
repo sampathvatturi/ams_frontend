@@ -1,4 +1,4 @@
-<div class="ds-card grid">
+<div class="ds-card grid" #container id="load" >
     <dx-data-grid class="p-8 flow" id="gridContainer" [wordWrapEnabled]="true" [dataSource]="tenders"
         [remoteOperations]="false" [allowColumnReordering]="true" [rowAlternationEnabled]="true"
         [allowColumnResizing]="true" [showColumnLines]="true" [showRowLines]="true" [showBorders]="true"
@@ -17,6 +17,13 @@
         <dxo-export [enabled]="(permissions.exprt_in==1)?true:false" [allowExportSelectedData]="true"
             fileName="Change Log"></dxo-export>
         <dxo-filter-row [visible]="true"></dxo-filter-row>
+        
+        <dxi-column [showInColumnChooser]="false" [visible]="true" type="text" alignment="center"
+        cellTemplate="snoTempelate" caption="S.No." [width]="100">
+            <div *dxTemplate="let data of 'snoTempelate'">
+                {{data.row.rowIndex + 1}}
+            </div>
+        </dxi-column>
         <dxi-column *ngFor="let f of columnDefs;let i=index" [visible]="true" [dataField]="f.field"
             [caption]="f.headerName" [alignment]="f.alignment" [width]="f.width" [allowResizing]="false">
         </dxi-column>
@@ -38,6 +45,8 @@
         </dxi-column>
     </dx-data-grid>
 </div>
+<dx-load-panel [container]="container" [visible]="isLoading" [showIndicator]="true" [position]="{ of: '#load' }"
+[showPane]="true" [shading]="true" [closeOnOutsideClick]="false" ></dx-load-panel>
 <nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="true" [nzWidth]="720" [nzVisible]="visible"
     [nzTitle]="drawerTitle" [nzFooter]="footerTpl" (nzOnClose)="close()" [nzClosable]="false" [nzCloseIcon]="icon"
     [nzExtra]="icon">

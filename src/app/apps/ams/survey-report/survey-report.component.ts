@@ -10,6 +10,7 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
   styleUrls: ['./survey-report.component.scss']
 })
 export class SurveyReportComponent implements OnInit {
+
   tenders: any = [];
   visible = false;
   // submit = true;
@@ -19,12 +20,12 @@ export class SurveyReportComponent implements OnInit {
   works_info: any = [];
   surveyForm!: UntypedFormGroup;
   updateBtnDisable: boolean = false;
-
+  isLoading: boolean;
 
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
 
   columnDefs = [
-    { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false, width: '100' },
+    // { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false, width: '100' },
     { headerName: 'Works', alignment: 'left', field: 'work_name' },
     { headerName: 'Tender', alignment: 'left', field: 'title' },
     { headerName: 'Tender Location', alignment: 'left', field: 'location' },
@@ -38,18 +39,21 @@ export class SurveyReportComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.getWorks();
-    // this.getVendors();
+    this.isLoading = true;
     this.surveyFormValidators();
+    this.getWorks();
+
   }
+
   getTenders() {
     this.tenderService.getTenderDetails().subscribe((res) => {
       if (res.length > 0) {
         this.tenders = res;
-        this.tenders.forEach((elem: any, index: any) => {
-          elem['sno'] = index + 1;
-          elem['work_name'] = this.workIdToName(elem.work_id)
+        this.tenders.forEach((elem: any) => {
+          // elem['sno'] = index + 1;
+          elem['work_name'] = this.workIdToName(elem.work_id);
         })
+        this.isLoading = false;
       } else {
         this.tenders = [];
       }
@@ -111,7 +115,7 @@ export class SurveyReportComponent implements OnInit {
   surveyFormValidators() {
     this.surveyForm = this.fb.group({
       status: ['', [Validators.required]],
-      description:['',[Validators.required]]
+      description: ['', [Validators.required]]
     });
   }
 }

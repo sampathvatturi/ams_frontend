@@ -17,7 +17,7 @@ import { MastersModule } from './masters/masters.module';
 import { ThemeConstantService } from 'src/app/shared/services/theme-constant.service';
 import { NgChartsModule } from 'ng2-charts';
 import { NgAntdModule } from 'src/app/shared/common/ng-antd.module';
-import { DxDataGridModule } from 'devextreme-angular';
+import { DxDataGridModule, DxLoadPanelModule } from 'devextreme-angular';
 
 
 
@@ -43,7 +43,8 @@ import { DxDataGridModule } from 'devextreme-angular';
     MastersModule,
     DxDataGridModule,
     NgChartsModule,
-    NgAntdModule
+    NgAntdModule,
+    DxLoadPanelModule
   ],
   providers: [
     ThemeConstantService,DatePipe]
