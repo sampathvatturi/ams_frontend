@@ -18,6 +18,8 @@ import { MessageDialogComponent } from './components/message-dialog/message-dial
 import { LoadingComponent } from './components/loading/loading.component';
 import { InnerLoadingComponent } from './components/inner-loading/inner-loading.component';
 import { PgHeaderComponent } from './components/pg-header/pg-header.component';
+import { GlobalTablesearchPipe } from './pipes/global-tablesearch.pipe';
+import { CurrencyPipe } from './pipes/currency.pipe';
 
 @NgModule({
     exports: [
@@ -46,7 +48,8 @@ import { PgHeaderComponent } from './components/pg-header/pg-header.component';
         LoadingComponent,
         InnerLoadingComponent,
         PgHeaderComponent,
-        
+        GlobalTablesearchPipe,
+        CurrencyPipe
     ],
     providers: [
         ThemeConstantService,

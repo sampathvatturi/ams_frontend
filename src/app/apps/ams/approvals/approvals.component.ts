@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-// import { NotificationService } from 'src/app/services/auth/notification.service';
-// import { TenderDetailsService } from 'src/app/services/tender-details.service';
-// import { TransactionDetailsService } from 'src/app/services/transaction-details.service';
-// import { UserService } from 'src/app/services/user.service';
-// import { WorksService } from 'src/app/services/works.service';
+import { NotificationService } from 'src/app/shared/common/notification.service';
+import { TenderDetailsService } from 'src/app/shared/moduleservices/tender-details.service';
+import { UserService } from 'src/app/shared/moduleservices/user.service';
+import { WorksService } from 'src/app/shared/moduleservices/works.service';
+import { TransactionDetailsService } from 'src/app/shared/moduleservices/transaction-details.service';
+
 @Component({
   selector: 'app-approvals',
   templateUrl: './approvals.component.html',
@@ -43,10 +44,10 @@ export class ApprovalsComponent implements OnInit {
 
   constructor(
     private fb: UntypedFormBuilder,
-    // private notification: NotificationService,
-    // private tenderService: TenderDetailsService,
-    // private userService: UserService,
-    // private works:WorksService
+    private notification: NotificationService,
+    private tenderService: TenderDetailsService,
+    private userService: UserService,
+    private works:WorksService,
   ) {}
 
   ngOnInit(): void {    
@@ -79,23 +80,23 @@ export class ApprovalsComponent implements OnInit {
   }
   
   getVendorTenders(action?: any): void {
-    // this.tenderService.getVendorTenders().subscribe((res) => {
-    //   this.tenders = res;
-    //   if(action) {        
-    //     this.getTendersData();
-    //   }
-    // })
+    this.tenderService.getVendorTenders().subscribe((res) => {
+      this.tenders = res;
+      if(action) {        
+        this.getTendersData();
+      }
+    })
   }
 
   getUsers(): void {
-    // this.userService.getAllUsers().subscribe((res) => {
-    //   this.users = res;
-    // });
+    this.userService.getAllUsers().subscribe((res) => {
+      this.users = res;
+    });
   }
   getWorks(){
-    // this.works.getWorks().subscribe((res) => {
-    //   this.works_info = res;
-    // })
+    this.works.getWorks().subscribe((res) => {
+      this.works_info = res;
+    })
   }
 
   workIdToName(id:any){
@@ -124,16 +125,22 @@ export class ApprovalsComponent implements OnInit {
 
   getTendersData(): void {
     this.tendersData = this.tenders.filter((item) => item.status === this.validateForm.value.status);
+    this.tendersData.forEach((element:any,index:any) => {
+      element['sno'] = index+1;
+    })
+
     console.log("this.tendersData:", this.tendersData);
     
   }
 
   onClickApprove(data: any): void {
+    console.log(data)
     this.currentTenderData = data;
     this.userApprovalList(data);
   }
 
   userApprovalList(item: any): void {
+    console.log(item.tender_user_status)
     this.userStatusList = item?.tender_user_status;
     this.currentTenderId = item?.id;
     console.log(this.userStatusList);
@@ -185,16 +192,16 @@ export class ApprovalsComponent implements OnInit {
   }
 
   updateTenderUserStatus(): void {
-    // if (this.userStatus === 'Rejected' && !this.reason) {      
-    //   this.notification.createNotification('error', 'Please enter a reson');
-    // }
-    // else {
-    //   this.tenderService.updateTenderUserStatus(this.currentTenderId, this.prepareUpdatePayload()).subscribe((res) => {
-    //     this.notification.createNotification("success", res?.message);
-    //     this.isVisible = false;
-    //     this.getVendorTenders('update');
-    //   })
-    // }
+    if (this.userStatus === 'Rejected' && !this.reason) {      
+      this.notification.createNotification('error', 'Please enter a reson');
+    }
+    else {
+      this.tenderService.updateTenderUserStatus(this.currentTenderId, this.prepareUpdatePayload()).subscribe((res) => {
+        this.notification.createNotification("success", res?.message);
+        this.isVisible = false;
+        this.getVendorTenders('update');
+      })
+    }
   }
 
 }
