@@ -32,7 +32,7 @@ export class UserAccountsComponent implements OnInit {
   updateUserId: any;
   userRole: any;
   updateBtnDisable: boolean = true;
-  isLoading: boolean = true;
+  isLoading: boolean;
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
   columnDefs = [
   { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false ,width:100},
@@ -53,6 +53,7 @@ export class UserAccountsComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.isLoading = true;
     this.user_data = sessionStorage.getItem('user_data');
     this.user_data = JSON.parse(this.user_data);
     this.getDepts();

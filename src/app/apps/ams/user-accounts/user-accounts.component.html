@@ -1,4 +1,4 @@
-<div class="ds-card grid">
+<div class="ds-card grid" id="load" #container>
   <dx-data-grid class="p-8 flow" id="gridContainer" [wordWrapEnabled]="true" [dataSource]="users"
     [remoteOperations]="false" [allowColumnReordering]="true" [rowAlternationEnabled]="true"
     [allowColumnResizing]="true" [showColumnLines]="true" [showRowLines]="true" [showBorders]="true" style="width:100%"
@@ -37,6 +37,8 @@
     </dxi-column>
   </dx-data-grid>
 </div>
+<dx-load-panel [container]="container" [visible]="isLoading" [showIndicator]="true" [position]="{ of: '#load' }"
+[showPane]="true" [shading]="true" [closeOnOutsideClick]="false" ></dx-load-panel>
 <nz-drawer [nzBodyStyle]="{ overflow: 'scroll' }" [nzMaskClosable]="false" [nzWidth]="720" [nzVisible]="visible"
   [nzFooter]="footerTpl" [nzTitle]="drawerTitle" (nzOnClose)="close()" [nzClosable]="false" [nzCloseIcon]="icon"
   [nzExtra]="icon" [nzMaskClosable]="true">

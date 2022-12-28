@@ -44,7 +44,7 @@ export class CreateTenderComponent implements OnInit {
   baseUrl = environment.apiUrl;
   uploadUrl = this.baseUrl+'/upload/uploadFiles';
   getUploadedFIlesUrl = this.baseUrl+'/upload/getUploadedFiles/';
-  isLoading : boolean = true ;
+  isLoading : boolean = false ;
   dataMessage = 'Loading';
 
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
@@ -72,14 +72,11 @@ export class CreateTenderComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
+    this.isLoading = true;
     this.user_data = sessionStorage.getItem('user_data');
     this.user_data = JSON.parse(this.user_data);
     this.createTendorsFormValidators();
     this.getWork();
-    
-    setTimeout(() => {
-      this.getCreateTender();
-    },1000)
   }
 
   onToolbarPreparing(e:any) {
@@ -103,6 +100,7 @@ export class CreateTenderComponent implements OnInit {
       res.forEach((data: any) => {
         this.worksNames[data.work_id] = data.work_name;
       });
+      this.getCreateTender();
     });
   }
 

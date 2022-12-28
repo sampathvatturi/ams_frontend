@@ -5,7 +5,7 @@ import { TenderRoutingModule } from './tender-routing.module';
 import { TenderDetailsComponent } from './tender-details/tender-details.component';
 import { AssignTenderComponent } from './assign-tender/assign-tender.component';
 import { CreateTenderComponent } from './create-tender/create-tender.component';
-import { DxButtonModule, DxDataGridModule } from 'devextreme-angular';
+import { DxButtonModule, DxDataGridModule, DxLoadPanelModule } from 'devextreme-angular';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgAntdModule } from 'src/app/shared/common/ng-antd.module';
 
@@ -24,7 +24,8 @@ import { NgAntdModule } from 'src/app/shared/common/ng-antd.module';
     DxButtonModule,
     FormsModule,
     ReactiveFormsModule,
-    NgAntdModule
+    NgAntdModule,
+    DxLoadPanelModule
   ]
 })
 export class TenderModule { }
