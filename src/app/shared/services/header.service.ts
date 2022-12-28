@@ -8,7 +8,7 @@ export class HeaderService {
     isMenuFolded: boolean = false
     isSideNavDark: boolean = false;
     headerColor: string = 'default';
-    headerTitle: string = '---';
+    headerTitle: string = '';
     emitheaderTitle: EventEmitter<string> = new EventEmitter<string>();
     _headerTitleChange:Subject<string> = new Subject<string>();
     constructor()  {

@@ -59,11 +59,11 @@ export class InventoryComponent implements OnInit {
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
 
   columnDefs = [
-    { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false},
-    { headerName: 'Item Name', alignment: 'left', field: 'item_name' },
-    { headerName: 'UOM', alignment: 'left', field: 'uom_id' },
-    { headerName: 'Price', alignment: 'left', field: 'price' },
-    { headerName: 'Tax', alignment: 'left', field: 'tax' },
+    { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false,width:'100'},
+    { headerName: 'Item Name', alignment: 'left', field: 'item_name',width:'175'},
+    { headerName: 'UOM', alignment: 'left', field: 'uom_id',width:'175' },
+    { headerName: 'Price', alignment: 'left', field: 'price',},
+    { headerName: 'Tax', alignment: 'left', field: 'tax',width:'175' },
   ];
 
   getInventoryItems(): void {

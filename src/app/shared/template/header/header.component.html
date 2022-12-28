@@ -37,7 +37,7 @@
 
             <li>
                 <span class=" pointer" nz-dropdown [nzDropdownMenu]="profile" [nzTrigger]="'click'" [nzPlacement]="'bottomRight'">
-                    <nz-avatar nzText="---" style="color:#f56a00; background-color:#fde3cf;"></nz-avatar>
+                    <nz-avatar nzText="{{first_name[0]}}" style="color:#f56a00; background-color:#fde3cf;"></nz-avatar>
                     <!-- <nz-avatar [nzIcon]="'user'" nzSrc="assets/images/avatars/profile.jpeg" class="hdrUsrImg"></nz-avatar> -->
                     <!-- <span class="m-b-8 text-dark font-weight-semibold ml-2 shwNmDiv">{{usrDtls.fst_nm}} {{usrDtls.lst_nm}}
                         <p class="m-b-0 opacity-07 usrDsgnTxt">{{clntDtls[0].dsgn_nm}}</p>
@@ -55,9 +55,10 @@
                             <div class="d-flex m-r-50">
                                 <nz-avatar nzSize="large" nzSrc="assets/images/avatars/profile.jpeg"></nz-avatar>
                                 <div class="m-l-10">
-                                    <p class="m-b-0 text-dark font-weight-semibold">Raja Rao</p>
-                                    <p class="m-b-0 opacity-07">Job</p>
-                                    <p class="m-b-0 opacity-07 usrDsgnTxt" style="margin-top: -4px;font-size:10px">Last Login 00-00-00</p>
+                                    <p class="m-b-0 text-dark font-weight-semibold">{{full_name}}</p>
+                                    <p class="m-b-0 opacity-07">Role:  {{role}}</p>
+                                    <p class="m-b-0 opacity-07">Dept:  {{user_department}}</p>
+                                    <!-- <p class="m-b-0 opacity-07 usrDsgnTxt" style="margin-top: -4px;font-size:10px">Last Login 00-00-00</p> -->
                                 </div>
                             </div>
                         </li>

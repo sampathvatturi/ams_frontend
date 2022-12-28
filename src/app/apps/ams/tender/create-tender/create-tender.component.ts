@@ -50,16 +50,16 @@ export class CreateTenderComponent implements OnInit {
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
 
   columnDefs = [
-    { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false},
-    { headerName: 'Tender', alignment: 'left', field: 'title' },
-    { headerName: 'Description', alignment: 'left', field: 'description' },
+    { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false,width:'100'},
+    { headerName: 'Tender', alignment: 'left', field: 'title',width:'175' },
+    { headerName: 'Description', alignment: 'left', field: 'description',width:'175'},
     // { headerName: 'Title', alignment: 'left', field: 'title' },
-    { headerName: 'Works', alignment: 'left', field: 'works' },
-    { headerName: 'Location', alignment: 'left', field: 'location' },
-    { headerName: 'Tender Cost', alignment: 'left', field: 'tender_cost' },
-    { headerName: 'status', alignment: 'left', field: 'status' },
-    { headerName: 'Start Date', alignment: 'left', field: 'start_date' },
-    { headerName: 'End Date', alignment: 'left', field: 'end_date' }];
+    { headerName: 'Works', alignment: 'left', field: 'works',width:'175' },
+    { headerName: 'Location', alignment: 'left', field: 'location',width:'175' },
+    { headerName: 'Tender Cost', alignment: 'left', field: 'tender_cost',width:'175' },
+    { headerName: 'status', alignment: 'left', field: 'status',width:'175' },
+    { headerName: 'Start Date', alignment: 'left', field: 'start_date',width:'175' },
+    { headerName: 'End Date', alignment: 'left', field: 'end_date',width:'175' }];
 
   constructor(
     private fb: UntypedFormBuilder,
@@ -76,7 +76,10 @@ export class CreateTenderComponent implements OnInit {
     this.user_data = JSON.parse(this.user_data);
     this.createTendorsFormValidators();
     this.getWork();
-    this.getCreateTender();
+    
+    setTimeout(() => {
+      this.getCreateTender();
+    },1000)
   }
 
   onToolbarPreparing(e:any) {

@@ -18,20 +18,20 @@
             fileName="Change Log"></dxo-export>
         <dxo-filter-row [visible]="true"></dxo-filter-row>
         <dxi-column *ngFor="let f of columnDefs" [visible]="true" [dataField]="f.field"
-            [caption]="f.headerName" [alignment]="f.alignment" [width]="175" [allowResizing]="false">
+            [caption]="f.headerName" [alignment]="f.alignment" [width]="f.width" [allowResizing]="false">
         </dxi-column>
         <dxi-column [showInColumnChooser]="false" [visible]="(permissions.updt_in==1)?true:false" type="buttons"
-            [width]="100" cellTemplate="viewTemplate">
+            [width]="100" cellTemplate="viewTemplate" caption="Actions">
             <div *dxTemplate="let data of 'viewTemplate'">
                 <div class="tblEdtBtn" (click)="edit('edit',data.data)">
-                    Edit Inventory
+                    Edit
                 </div>
             </div>
         </dxi-column>
-        <dxi-column [showInColumnChooser]="false" type="button1" [width]="100" cellTemplate="EditTemplate">
+        <dxi-column [showInColumnChooser]="false" type="button1" [width]="100" cellTemplate="EditTemplate" caption="Actions">
             <div *dxTemplate="let data of 'EditTemplate'" (click)="edit('view',data.data)">
                 <div class="cursor-pointer tblEdtBtn">
-                    View Inventory
+                    View
                 </div>
             </div>
         </dxi-column>

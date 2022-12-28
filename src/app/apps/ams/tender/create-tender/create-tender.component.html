@@ -18,20 +18,20 @@
             fileName="Change Log"></dxo-export>
         <dxo-filter-row [visible]="true"></dxo-filter-row>
         <dxi-column *ngFor="let f of columnDefs" [visible]="true" [dataField]="f.field"
-            [caption]="f.headerName" [alignment]="f.alignment" [width]="175" [allowResizing]="false">
+            [caption]="f.headerName" [alignment]="f.alignment" [width]="f.width" [allowResizing]="false">
         </dxi-column>
         <dxi-column [showInColumnChooser]="false" [visible]="(permissions.updt_in==1)?true:false" type="buttons"
             [width]="100" cellTemplate="viewTemplate">
             <div *dxTemplate="let data of 'viewTemplate'">
                 <div class="tblEdtBtn" (click)="edit('edit',data.data)">
-                    Edit Tender
+                    Edit
                 </div>
             </div>
         </dxi-column>
         <dxi-column [showInColumnChooser]="false" type="button1" [width]="100" cellTemplate="EditTemplate">
             <div *dxTemplate="let data of 'EditTemplate'" (click)="edit('view',data.data)">
                 <div class="cursor-pointer tblEdtBtn">
-                    View Tender
+                    View
                 </div>
             </div>
         </dxi-column>
@@ -50,10 +50,10 @@
         <nz-form-item >
           <nz-form-label class="required space" >Title</nz-form-label>
           <nz-form-control nz-col nzSpan="15" [nzErrorTip]="title1">
-            <input formControlName="title" nz-input placeholder="Enter Ticket Title" />
+            <input formControlName="title" nz-input placeholder="Enter Tender Title" />
             <ng-template #title1 let-control>
               <ng-container *ngIf="control.hasError('pattern')">Please enter valid input</ng-container>
-              <ng-container *ngIf="control.hasError('required')">Please enter title</ng-container>
+              <ng-container *ngIf="control.hasError('required')">Please enter tender</ng-container>
             </ng-template>
 
           </nz-form-control>
@@ -65,9 +65,9 @@
           <nz-form-label class="required space" >Description</nz-form-label>
           <nz-form-control nz-col nzSpan="15" [nzErrorTip]="description">
             <textarea formControlName="description" nz-input rows="2"
-              placeholder="Enter Ticket Description"></textarea>
+              placeholder="Enter Tender Description"></textarea>
             <ng-template #description let-control>
-              <ng-container *ngIf="control.hasError('required')">Please enter ticket description</ng-container>
+              <ng-container *ngIf="control.hasError('required')">Please enter tender description</ng-container>
               <ng-container *ngIf="control.hasError('pattern')">Please enter valid input</ng-container>
             </ng-template>
           </nz-form-control>
@@ -109,7 +109,7 @@
           <nz-form-item>
             <nz-form-label class="required space">Tender Cost</nz-form-label>
             <nz-form-control nz-col nzSpan="10" nzErrorTip="Please enter cost">
-              <input type="text" formControlName="tender_cost" nz-input placeholder="Enter Ticket Est. Cost" />
+              <input type="text" formControlName="tender_cost" nz-input placeholder="Enter Tender Est. Cost" />
             </nz-form-control>
           </nz-form-item>
         </div>

@@ -24,10 +24,10 @@ export class DepartmentComponent implements OnInit {
   isLoading:boolean = true;
 
   columnDefs = [
-    { headerName: 'S.No', field: 'sno', alignment: 'center', filter: false},
+    { headerName: 'S.No', field: 'sno', alignment: 'center',width:'100', filter: false},
     { headerName: 'Department Name', field: 'department_name', alignment: 'center'},
-    { headerName: 'Status', field: 'status', alignment: 'center'},
-    { headerName: 'Ranking', field: 'ranking', alignment: 'center'},
+    { headerName: 'Status', field: 'status', alignment: 'center',width:'175'},
+    { headerName: 'Ranking', field: 'ranking', alignment: 'center',width:'175'},
     ];
 
 

@@ -5,6 +5,7 @@ import { AppsService } from 'src/app/shared/services/apps.service';
 import { NzNotificationService } from 'ng-zorro-antd/notification';
 import { HeaderService } from 'src/app/shared/services/header.service';
 import { Observable } from 'rxjs';
+import { DepartmentService } from '../../moduleservices/department.service';
 @Component({
     selector: 'app-header',
     templateUrl: './header.component.html'
@@ -22,10 +23,19 @@ export class HeaderComponent {
     data = { "short_lbl": "" }
     id: string;
     folder_id$: Observable<string>;
-    constructor(private themeService: ThemeConstantService, public router: Router, public apiSrv: AppsService, private notification: NzNotificationService
-        , private headerService: HeaderService) {
+    user_data:any;
+    name:string = '';
+    first_name:string = '';
+    last_name: any;
+    full_name: string;
+    role:any;
+    department:any = [];
+    user_department:any;
+    constructor(private themeService: ThemeConstantService, public router: Router, public apiSrv: AppsService, private notification: NzNotificationService,private Depts:DepartmentService,
+        private headerService: HeaderService) {
         this.clntDtls = JSON.parse(localStorage.getItem('clients'));
         this.usrDtls = JSON.parse(localStorage.getItem('userdata'));
+        
         // this.data.short_lbl = this.usrDtls.fst_nm.substring(0, 1)+this.usrDtls.lst_nm.substring(0, 1);
 
 
@@ -47,6 +57,7 @@ export class HeaderComponent {
         //      this.id = folder_id;
         //   }
         // );
+
     }
 
 
@@ -57,12 +68,35 @@ export class HeaderComponent {
             this.isFolded = isFolded;
             console.log("Theeme is fold triggered")
         });
+        
         this.themeService.isExpandChanges.subscribe(isExpand => this.isExpand = isExpand);
 
         this.headerService.selectedHeaderTitle.subscribe(header => {
             this.setting.header_title = header;
             console.log("------header selectedHeaderTitle change triggered ::" + header)
         });
+
+        this.Depts.getDepartments().subscribe((res) => {
+            this.department = res;
+            // this.department = this.department.map((current:any) =>  console.log(JSON.parse(current)))
+        this.user_department = this.department.find((item: any)=> (item?.department_id === this.user_data?.department_id));
+        this.user_department = this.user_department.department_name
+        })
+
+        this.user_data = JSON.parse(sessionStorage.getItem('user_data'));
+        this.first_name = this.user_data.first_name.slice(0, 1).toUpperCase();
+        this.last_name = this.user_data.last_name.slice(0, 1).toUpperCase();
+        this.full_name = this.user_data.first_name + ' ' + this.user_data.last_name;
+        this.role = this.user_data.role;
+        
+        
+
+
+        
+        console.log(this.user_department)
+    //    console.log(this.user_data)
+
+
         // this._headerService._headerTitleChange.subscribe(value => {
         //     console.log("Value in setup ::"+value)
         //     this.setting.header_title=value;

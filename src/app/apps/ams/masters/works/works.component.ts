@@ -25,7 +25,7 @@ export class WorksComponent implements OnInit {
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
 
   columnDefs = [
-    { headerName: 'Sl.No.', field: 'sno', alignment: 'center', filter: false },
+    { headerName: 'Sl.No.', field: 'sno', alignment: 'center', filter: false,width:'100'},
     { headerName: 'Works Name', alignment: 'left', field: 'work_name' },
   ]
 
