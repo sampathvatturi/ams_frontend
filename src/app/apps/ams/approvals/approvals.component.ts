@@ -5,6 +5,7 @@ import { TenderDetailsService } from 'src/app/shared/moduleservices/tender-detai
 import { UserService } from 'src/app/shared/moduleservices/user.service';
 import { WorksService } from 'src/app/shared/moduleservices/works.service';
 import { TransactionDetailsService } from 'src/app/shared/moduleservices/transaction-details.service';
+import { InvoicesService } from 'src/app/shared/moduleservices/invoices.service';
 
 @Component({
   selector: 'app-approvals',
@@ -15,8 +16,8 @@ export class ApprovalsComponent implements OnInit {
 
   validateForm!: UntypedFormGroup;
   listOfData: any[] = [];
-  tenders: any[] = [];
-  tendersData: any = [];
+  invoices: any[] = [];
+  invoicesData: any = [];
   searchText = '';
   isVisible = false;
   users: any = [];
@@ -48,6 +49,7 @@ export class ApprovalsComponent implements OnInit {
     private tenderService: TenderDetailsService,
     private userService: UserService,
     private works:WorksService,
+    private invoicesService: InvoicesService
   ) {}
 
   ngOnInit(): void {    
@@ -59,7 +61,7 @@ export class ApprovalsComponent implements OnInit {
       type: ['tenders', [Validators.required]],
       status: ['open', [Validators.required]],
     });
-    this.getVendorTenders();
+    this.getVendorInvoices();
     this.getUsers();
     this.getWorks();
   }
@@ -79,9 +81,9 @@ export class ApprovalsComponent implements OnInit {
     });
   }
   
-  getVendorTenders(action?: any): void {
-    this.tenderService.getVendorTenders().subscribe((res) => {
-      this.tenders = res;
+  getVendorInvoices(action?: any): void {
+    this.invoicesService.getVendorInvoices().subscribe((res) => {
+      this.invoices = res;
       if(action) {        
         this.getTendersData();
       }
@@ -124,12 +126,12 @@ export class ApprovalsComponent implements OnInit {
   } 
 
   getTendersData(): void {
-    this.tendersData = this.tenders.filter((item) => item.status === this.validateForm.value.status);
-    this.tendersData.forEach((element:any,index:any) => {
+    this.invoicesData = this.invoices.filter((item) => item.status === this.validateForm.value.status);
+    this.invoicesData.forEach((element:any,index:any) => {
       element['sno'] = index+1;
     })
 
-    console.log("this.tendersData:", this.tendersData);
+    console.log("this.invoicesData:", this.invoicesData);
     
   }
 
@@ -199,7 +201,7 @@ export class ApprovalsComponent implements OnInit {
       this.tenderService.updateTenderUserStatus(this.currentTenderId, this.prepareUpdatePayload()).subscribe((res) => {
         this.notification.createNotification("success", res?.message);
         this.isVisible = false;
-        this.getVendorTenders('update');
+        this.getVendorInvoices('update');
       })
     }
   }

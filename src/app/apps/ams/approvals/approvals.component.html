@@ -1,10 +1,4 @@
-<form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()" nz-row nzGutter="16">
-    <!-- <nz-form-item nz-col nzSpan="6">
-        <nz-form-label >Date Range</nz-form-label>
-        <nz-form-control>
-          <nz-range-picker formControlName="rangePicker" ></nz-range-picker>
-        </nz-form-control>
-      </nz-form-item> -->
+<!-- <form nz-form [formGroup]="validateForm" (ngSubmit)="submitForm()" nz-row nzGutter="16">
     <nz-form-item nz-col nzSpan="6" class="ml-3">
         <nz-form-label >Type</nz-form-label> 
         <nz-form-control>
@@ -14,15 +8,6 @@
           </nz-select>
         </nz-form-control>
     </nz-form-item>
-    <!-- <nz-form-item nz-col nzSpan="6" class="ml-3">
-        <nz-form-label >Status</nz-form-label> 
-        <nz-form-control>
-          <nz-select nzShowSearch nzAllowClear nzPlaceHolder="Select Type" formControlName="status">
-            <nz-option nzValue="Active" nzLabel="Active"></nz-option>
-            <nz-option nzValue="InActive" nzLabel="InActive"></nz-option>
-          </nz-select>
-        </nz-form-control>
-    </nz-form-item> -->
     <nz-form-item nz-col nzSpan="6" class="ml-3">
       <nz-form-label>Status</nz-form-label>
       <nz-form-control>
@@ -35,9 +20,9 @@
       </nz-form-control>          
     </nz-form-item>
     <button nz-button nzType="primary" nz-col nzSpan="2" class="ml-2"><span nz-icon nzType="search" nzTheme="outline"></span>Search</button>        
-</form>
+</form> -->
 <div class="ds-card grid">
-    <dx-data-grid class="p-8 flow" id="gridContainer" [wordWrapEnabled]="true" [dataSource]="tendersData"
+    <dx-data-grid class="p-8 flow" id="gridContainer" [wordWrapEnabled]="true" [dataSource]="invoicesData"
         [remoteOperations]="false" [allowColumnReordering]="true" [rowAlternationEnabled]="true"
         [allowColumnResizing]="true" [showColumnLines]="true" [showRowLines]="true" [showBorders]="true"
         style="width:100%" (onToolbarPreparing)="(permissions.insrt_in==1)?onToolbarPreparing($event):false">

@@ -45,4 +45,12 @@ export class InvoicesService {
     );
   }
 
+  getVendorInvoices(): Observable<any>{
+    return this.apiService.getCall('/invoice/getVendorInvoices').pipe(
+      map((response: any) => {
+        return response;
+      })
+    );
+  }
+
 }

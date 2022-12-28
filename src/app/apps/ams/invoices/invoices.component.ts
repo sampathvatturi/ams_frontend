@@ -47,23 +47,22 @@ export class InvoicesComponent implements OnInit {
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
 
   columnDefs = [
-  { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false,width:100 },
-  { headerName: 'Remarks', field: 'remarks', alignment: 'center',width:175 },
-  { headerName: 'Vendor', field: 'vendor_name', alignment: 'center',width:175 },
-  { headerName: 'Total Amount', field: 'amount', alignment: 'center',width:175 },
-  { headerName: 'Total Tax', field: 'tax', alignment: 'center',width:175 },
-  { headerName: 'Grand Total', field: 'grand_total', alignment: 'center',width:175 },
-  { headerName: 'Date', field: 'created_date', alignment: 'center',width:125 }];
+  { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false, width:100 },
+  { headerName: 'Vendor', field: 'vendor_name', alignment: 'center', width:175 },
+  { headerName: 'Date', field: 'created_date', alignment: 'center', width:125 },
+  { headerName: 'Total Amount', field: 'amount', alignment: 'center', width:175 },
+  { headerName: 'Total Tax', field: 'tax', alignment: 'center', width:175 },
+  { headerName: 'Grand Total', field: 'grand_total', alignment: 'center', width:175 },
+  { headerName: 'Remarks', field: 'remarks', alignment: 'center', width:175 },
+];
 
   constructor(
     private fb: UntypedFormBuilder,
-    // private api: ApiService,
     private notification: NotificationService,
     private invoice: InvoicesService,
     private datePipe: DatePipe,
     private vendors: VendorsService,
     private inventory: InventoryItemsService,
-    // private msg: NzMessageService,
   ) { }
 
   ngOnInit(): void {
@@ -176,6 +175,7 @@ export class InvoicesComponent implements OnInit {
   }
   onSubmit() {
     if(this.itemRepeat()) return this.notification.createNotification('error', 'Duplicate Items');
+    console.log(this.invoiceForm.valid);
     if (this.invoiceForm.valid) {
       // var fileNames: any[] = [];
       // this.files.forEach(element => {
@@ -186,15 +186,13 @@ export class InvoicesComponent implements OnInit {
       // )
       // this.invoiceForm.value.attachments = fileNames.toString();
       // console.log(this.invoiceForm.value.attachments)
-      // this.invoice.createInvoice(this.invoiceForm.value).subscribe(res => {
-      //   this.notification.createNotification(res.status, res.message);
-      //   if (res.status === 'success') {
-      //     this.visible = false;
-      //     this.invoice
-      //       .getInvoices()
-      //       .subscribe((res) => (this.invoice_info = res));
-      //   }
-      // });
+      this.invoice.createInvoice(this.invoiceForm.value).subscribe(res => {
+        this.notification.createNotification(res.status, res.message);
+        if (res.status === 'success') {
+          this.visible = false;
+          this.invoice.getInvoices().subscribe((res) => (this.invoice_info = res));
+        }
+      });
     } else {
       Object.values(this.invoiceForm.controls).forEach((control) => {
         if (control.invalid) {
@@ -256,7 +254,7 @@ export class InvoicesComponent implements OnInit {
       ]),
       tax: ['', [Validators.required]],
       grand_total: ['', [Validators.required]],
-      attachments: [''],
+      // attachments: [''],
       created_by: [''],
       updated_by: [''],
     });
