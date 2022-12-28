@@ -20,7 +20,8 @@ import { AppsService } from './shared/services/apps.service';
 import { AppComponent } from './app.component';
 import { FullLayoutComponent } from './layouts/full-layout/full-layout.component';
 import { LayoutAppComponent } from './layouts/layout-app/layout-app.component';
-import { NgChartjsModule } from 'ng-chartjs';
+// import { NgChartjsModule } from 'ng-chartjs';
+import { NgChartsModule } from 'ng2-charts';
 import { ThemeConstantService } from './shared/services/theme-constant.service';
 import { TokenInterceptorInterceptor } from './shared/services/auth/token-interceptor.interceptor';
 import { NgAntdModule } from './shared/common/ng-antd.module';
@@ -42,7 +43,8 @@ registerLocaleData(en);
         AppRoutingModule,
         NzBreadCrumbModule,
         SharedModule,
-        NgChartjsModule,
+        // NgChartjsModule,
+        NgChartsModule,
         TemplateModule,
         KeyboardShortcutsModule.forRoot(),
         NgAntdModule

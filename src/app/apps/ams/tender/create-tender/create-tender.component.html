@@ -81,8 +81,8 @@
           <nz-form-label class="required space">Works</nz-form-label>
           <nz-form-control nzErrorTip="Please select a work" nz-col nzSpan="15">
             <nz-select  nzMode="multiple" formControlName="work_id" nzPlaceHolder="Select Works" nzShowSearch>
-              <!-- <nz-option *ngFor="let w of worksDetails" [nzLabel]="w.work_name" [nzValue]="w.work_id"></nz-option> -->
-              <nz-option nzLabel="Work1" nzValue="1"></nz-option>
+              <nz-option *ngFor="let w of worksDetails" [nzLabel]="w.work_name" [nzValue]="w.work_id"></nz-option>
+              <!-- <nz-option nzLabel="Work1" nzValue="1"></nz-option> -->
               <nz-option></nz-option>
             </nz-select>
           </nz-form-control> 

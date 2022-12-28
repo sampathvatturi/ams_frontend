@@ -2,8 +2,8 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from "@angular/common";
 import { SharedModule } from '../shared/shared.module';
 import { DashboardRoutingModule } from "./dashboard-routing.module";
-import { NgChartjsModule } from 'ng-chartjs';
-
+// import { NgChartjsModule } from 'ng-chartjs';
+import { NgChartsModule } from 'ng2-charts';
 import { ThemeConstantService } from '../shared/services/theme-constant.service';
 
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -49,7 +49,8 @@ const antdModule = [
         CommonModule,
         SharedModule,
         DashboardRoutingModule,
-        NgChartjsModule,
+        // NgChartjsModule,
+        NgChartsModule,
         ...antdModule
     ],
     exports: [],

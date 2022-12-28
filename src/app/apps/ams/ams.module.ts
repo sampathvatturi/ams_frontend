@@ -15,7 +15,7 @@ import { TenderModule } from './tender/tender.module';
 import { AccountingModule } from './accounting/accounting.module';
 import { MastersModule } from './masters/masters.module';
 import { ThemeConstantService } from 'src/app/shared/services/theme-constant.service';
-import { NgChartjsModule } from 'ng-chartjs';
+import { NgChartsModule } from 'ng2-charts';
 import { NgAntdModule } from 'src/app/shared/common/ng-antd.module';
 import { DxDataGridModule } from 'devextreme-angular';
 
@@ -42,7 +42,7 @@ import { DxDataGridModule } from 'devextreme-angular';
     AccountingModule,
     MastersModule,
     DxDataGridModule,
-    NgChartjsModule,
+    NgChartsModule,
     NgAntdModule
   ],
   providers: [

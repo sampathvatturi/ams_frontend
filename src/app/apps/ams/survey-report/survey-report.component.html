@@ -1,1 +1,89 @@
-<p>survey-report works!</p>
+<div class="ds-card grid">
+    <dx-data-grid class="p-8 flow" id="gridContainer" [wordWrapEnabled]="true" [dataSource]="tenders"
+        [remoteOperations]="false" [allowColumnReordering]="true" [rowAlternationEnabled]="true"
+        [allowColumnResizing]="true" [showColumnLines]="true" [showRowLines]="true" [showBorders]="true"
+        style="width:100%">
+        <dxo-paging [pageSize]="5"></dxo-paging>
+        <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+        <dxo-pager [visible]="true" [showPageSizeSelector]="true" [allowedPageSizes]="[5,10, 25, 50, 100]"
+            [showInfo]="true"></dxo-pager>
+        <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+        <dxo-filter-panel [visible]="true"></dxo-filter-panel>
+        <dxo-header-filter [visible]="true"></dxo-header-filter>
+        <dxo-group-panel [visible]="true"></dxo-group-panel>
+        <dxo-grouping [autoExpandAll]="false"></dxo-grouping>
+        <dxo-column-chooser [enabled]="true" mode="select">
+        </dxo-column-chooser>
+        <dxo-export [enabled]="(permissions.exprt_in==1)?true:false" [allowExportSelectedData]="true"
+            fileName="Change Log"></dxo-export>
+        <dxo-filter-row [visible]="true"></dxo-filter-row>
+        <dxi-column *ngFor="let f of columnDefs;let i=index" [visible]="true" [dataField]="f.field"
+            [caption]="f.headerName" [alignment]="f.alignment" [width]="f.width" [allowResizing]="false">
+        </dxi-column>
+        <dxi-column [showInColumnChooser]="false" [visible]="(permissions.updt_in==1)?true:false" type="buttons"
+            [width]="100" cellTemplate="viewTemplate" caption="Actions">
+            <div *dxTemplate="let data of 'viewTemplate'">
+                <div class="tblEdtBtn" (click)="edit('edit',data.data)">
+                    Edit
+                </div>
+            </div>
+        </dxi-column>
+        <dxi-column [showInColumnChooser]="false" type="button1" [width]="100" cellTemplate="EditTemplate"
+            caption="Actions">
+            <div *dxTemplate="let data of 'EditTemplate'" (click)="edit('view',data.data)">
+                <div class="cursor-pointer tblEdtBtn">
+                    View
+                </div>
+            </div>
+        </dxi-column>
+    </dx-data-grid>
+</div>
+<nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="true" [nzWidth]="720" [nzVisible]="visible"
+    [nzTitle]="drawerTitle" [nzFooter]="footerTpl" (nzOnClose)="close()" [nzClosable]="false" [nzCloseIcon]="icon"
+    [nzExtra]="icon">
+    <ng-template #icon>
+        <i (click)="close()" class="fa-solid fa-circle-xmark"></i>
+    </ng-template>
+    <form nz-form *nzDrawerContent [formGroup]="surveyForm" class="drawer-form">
+        <div>
+            <nz-form-item >
+                <nz-form-label nz-col nzSpan="5" class="required" >Description</nz-form-label>
+                <nz-form-control nz-col nzSpan="10" [nzErrorTip]="description">
+                  <textarea formControlName="description" nz-input rows="2"
+                    placeholder="Enter Tender Description"></textarea>
+                  <ng-template #description let-control>
+                    <ng-container *ngIf="control.hasError('required')">Please enter tender description</ng-container>
+                    <ng-container *ngIf="control.hasError('pattern')">Please enter valid input</ng-container>
+                  </ng-template>
+                </nz-form-control>
+              </nz-form-item>
+        </div>
+        <div>
+            <nz-form-item>
+                <nz-form-label nz-col nzSpan="5" class="required">Status</nz-form-label>
+                <nz-form-control nz-col nzSpan="10" nzErrorTip="Please Select Status">
+                    <nz-select formControlName="status" nzPlaceHolder="Status" nzShowSearch>
+                        <nz-option nzValue="open" nzLabel="Open"></nz-option>
+                        <nz-option nzValue="close" nzLabel="Close"></nz-option>
+                        <nz-option nzValue="accept" nzLabel="Accept"></nz-option>
+                        <nz-option nzValue="reject" nzLabel="Reject"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+    </form>
+
+    <ng-template #footerTpl>
+        <div style="float: right">
+            <button nz-button style="margin-right: 8px" (click)="close()">
+                Cancel
+            </button>
+            <!-- <button nz-button *ngIf="submit" nzType="primary" (click)="onCreateSubmit()">
+                Submit
+            </button> -->
+            <button nz-button *ngIf="updateBtnDisable" nzType="primary" (click)="onUpdateSubmit()">
+                Update
+            </button>
+        </div>
+    </ng-template>
+</nz-drawer>

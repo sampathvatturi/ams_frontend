@@ -58,13 +58,12 @@
                 </div>
             </div>
             <div class="m-t-50" style="height: 330px">
-                <canvas ngChartjs 
+                <canvas baseChart
                     [datasets]="revenueChartData" 
                     [labels]="revenueChartLabels"
-                    [options]="revenueChartOptions" 
-                    [colors]="revenueChartColors" 
+                    [options]="revenueChartOptions"
                     [legend]="false"
-                    [chartType]="revenueChartType">
+                    [type]="revenueChartType">
                 </canvas>
             </div>
         </nz-card>
@@ -73,13 +72,12 @@
         <nz-card>
             <h5 class="m-b-0">Customers</h5>
             <div class="m-v-60 text-center" style="height: 200px">
-                <canvas ngChartjs 
-                    [data]="customersChartData" 
-                    [labels]="customersChartLabels" 
-                    [chartType]="customersChartType"
-                    [colors]="customersChartColors"
+                <canvas baseChart
+                    [datasets]="customersChartData" 
+                    [labels]="customersChartLabels"
                     [options]="customersChartOptions"
-                    [legend]="false">
+                    [legend]="true"
+                    [type]="customersChartType">
                 </canvas>
             </div>
             <div class="row border-top p-t-25">
@@ -133,13 +131,12 @@
                 </div>
             </div>
             <div class="m-t-50" style="height: 360px">
-                <canvas ngChartjs 
+                <canvas baseChart 
                     [datasets]="avgProfitChartData" 
                     [labels]="avgProfitChartLabels"
                     [options]="avgProfitChartOptions" 
-                    [colors]="avgProfitChartColors"
                     [legend]="avgProfitChartLegend" 
-                    [chartType]="avgProfitChartType">
+                    [type]="avgProfitChartType">
                 </canvas>
             </div>
         </nz-card>
@@ -153,7 +150,8 @@
                 </div>
             </div>
             <div class="m-t-30">
-                <nz-table #productTable [nzData]="productsList" [nzShowPagination]="false" class="no-border-last">
+                <nz-table #productTable [nzData]="productsList" 
+                [nzShowPagination]="false" class="no-border-last">
                     <thead>
                         <tr>
                             <th>Product</th>

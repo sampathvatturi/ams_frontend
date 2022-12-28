@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ChartConfiguration } from 'chart.js';
 import { ThemeConstantService } from '../../../shared/services/theme-constant.service';
 
 @Component({
@@ -86,9 +87,13 @@ export class DashboardComponent implements OnInit {
       }
   ];
   revenueChartType = 'line';
-
+ 
+  //doughnut
   customersChartLabels: string[] = ['New', 'Returning', 'Others'];
-  customersChartData: number[] = [350, 450, 100];
+//   customersChartData: number[] = [350, 450, 100];
+  customersChartData: ChartConfiguration<'doughnut'>['data']['datasets'] = [
+    { data: [ 350, 450, 100 ], label: 'Series A' },
+  ];
   customersChartColors: Array<any> =  [{ 
       backgroundColor: [this.cyan, this.purple, this.gold],
       pointBackgroundColor : [this.cyan, this.purple, this.gold]
