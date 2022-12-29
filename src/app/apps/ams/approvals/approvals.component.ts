@@ -7,6 +7,7 @@ import { WorksService } from 'src/app/shared/moduleservices/works.service';
 import { TransactionDetailsService } from 'src/app/shared/moduleservices/transaction-details.service';
 import { InvoicesService } from 'src/app/shared/moduleservices/invoices.service';
 import { DatePipe } from '@angular/common';
+import { DepartmentService } from 'src/app/shared/moduleservices/department.service';
 
 @Component({
   selector: 'app-approvals',
@@ -34,6 +35,9 @@ export class ApprovalsComponent implements OnInit {
   allUsersApprovedStatus: boolean = false;
   noDataShow: boolean = false;
   isLoading = false;
+  departments: any =[];
+  currentDeptId: any;
+  currentUserName: any;
 
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
 
@@ -62,7 +66,8 @@ export class ApprovalsComponent implements OnInit {
     private userService: UserService,
     private works: WorksService,
     private invoicesService: InvoicesService,
-    private datePipe: DatePipe,
+    private datePipe: DatePipe,    
+    private departmentService: DepartmentService
   ) { }
 
   ngOnInit(): void {
@@ -70,6 +75,8 @@ export class ApprovalsComponent implements OnInit {
     this.user_data = sessionStorage.getItem('user_data');
     this.user_data = JSON.parse(this.user_data);
     this.currentUserId = this.user_data?.user_id;
+    this.currentUserName = this.user_data?.first_name +" "+ this.user_data?.last_name;
+    this.currentDeptId = this.user_data?.department_id;
     this.validateForm = this.fb.group({
       rangePicker: [null],
       type: ['tenders', [Validators.required]],
@@ -78,6 +85,7 @@ export class ApprovalsComponent implements OnInit {
     this.getUsers();
     this.getWorks();
     this.getVendorInvoices();
+    this.getDepartments();
   }
 
   onToolbarPreparing(e: any) {
@@ -108,9 +116,16 @@ export class ApprovalsComponent implements OnInit {
       this.users = res;
     });
   }
+
   getWorks() {
     this.works.getWorks().subscribe((res) => {
       this.works_info = res;
+    })
+  }
+
+  getDepartments() {
+    this.departmentService.getDepartments().subscribe((res) => {
+      this.departments = res;
     })
   }
 
@@ -153,13 +168,12 @@ export class ApprovalsComponent implements OnInit {
     this.userStatusList = item?.invoice_user_status;
     this.currentInvoiceId = item?.invoice_id;
     console.log(this.userStatusList);
-    this.users.forEach((user: any) => {
+    this.departments.forEach((dept: any) => {
       this.userStatusList.map((item: any) => {
-        if (user?.user_id === item?.user_id) {
-          item.user_name = user?.user_name;
-          item.user_full_name = user?.first_name + " " + user?.last_name;
+        if (dept?.department_id === item?.department_id) {
+          item.department_name = dept?.department_name;
         }
-        if (item.user_id === this.currentUserId) {
+        if (item.department_id === this.currentDeptId) {
           this.userStatus = item?.status;
         }
       });
@@ -171,16 +185,18 @@ export class ApprovalsComponent implements OnInit {
   handleOk(): void {
     console.log('Button ok clicked!', this.userStatus, this.userStatusList);
     this.invoiceUserStatusList = [];
-    this.userStatusList.forEach((user: any) => {
+    this.userStatusList.forEach((item: any) => {
       const obj = {
-        user_id: user?.user_id,
-        status: (user?.user_id === this.currentUserId) ? this.userStatus : user?.status,
-        reason: (user?.user_id === this.currentUserId && this.userStatus === 'Rejected') ? this.reason : ''
+        department_id: item?.department_id,
+        user_id: (item?.department_id===this.currentDeptId) ? this.currentUserId : item?.user_id ? item?.user_id : "",
+        user_name: (item?.department_id===this.currentDeptId) ? this.currentUserName : item?.user_name ? item?.user_name : "",
+        status: (item?.department_id === this.currentDeptId) ? this.userStatus : item?.status,
+        reason: (item?.department_id === this.currentDeptId && this.userStatus === 'Rejected') ? this.reason : item?.reason ? item?.reason : "",
       }
       this.invoiceUserStatusList.push(obj);
     });
     console.log('invoiceUserStatusList :: ', this.invoiceUserStatusList);
-    this.invoiceUserStatusList.filter((item: any) => (item?.status === 'Pending' || item?.status === 'Rejected'))
+    // this.invoiceUserStatusList.filter((item: any) => (item?.status === 'Pending' || item?.status === 'Rejected'))
     this.updateInvoiceUserStatus();
   }
 
@@ -192,11 +208,13 @@ export class ApprovalsComponent implements OnInit {
   prepareUpdatePayload() {
     this.allUsersApprovedStatus = this.invoiceUserStatusList.every((item: any) => item.status === 'Approved');
     const allUsersRejectStatus = this.invoiceUserStatusList.every((item: any) => item.status === 'Rejected');
+    const mainStatus = this.invoiceUserStatusList.some((item: any) => (item?.status === 'Pending' || item?.status === 'Rejected'));
     console.log("allUsersApprovedStatus", this.allUsersApprovedStatus, allUsersRejectStatus);
+
     const payload = {
       invoice_user_status: this.invoiceUserStatusList,
       updated_by: this.user_data?.user_id,
-      status: this.allUsersApprovedStatus ? 'paid' : allUsersRejectStatus ? 'cancel' : this.currentInvoiceData?.status
+      status: this.allUsersApprovedStatus ? 'paid' : allUsersRejectStatus ? 'cancel' : mainStatus ? 'open' : this.currentInvoiceData?.status
     }
     return payload;
   }
