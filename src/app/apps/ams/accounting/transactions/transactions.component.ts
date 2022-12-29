@@ -34,7 +34,7 @@ export class TransactionsComponent implements OnInit {
   ref_acc_head:any =[];
   debitTotal = 0;
   creditTotal = 0 ;
-  isLoading : boolean = false ;
+  isLoading : boolean = true ;
   dataMessage = "";
   totalAmount = 0;
 

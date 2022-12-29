@@ -41,19 +41,11 @@
   </form>
 </div>
 
-<div class="ds-card grid">
+<div class="ds-card grid" id="load" #container>
   <dx-data-grid class="p-8 flow" id="gridContainer" [wordWrapEnabled]="true" [dataSource]="rowData"
     [remoteOperations]="false" [allowColumnReordering]="true" [rowAlternationEnabled]="true"
     [allowColumnResizing]="true" [showColumnLines]="true" [showRowLines]="true" [showBorders]="true" style="width:100%"
-    (onToolbarPreparing)="(permissions.insrt_in==1)?onToolbarPreparing($event):false"
-    
-    >
-<dxo-load-panel
-        [height]="100"
-        [width]="250"
-        [enabled]="isLoading"
-        >
-    </dxo-load-panel>
+    (onToolbarPreparing)="(permissions.insrt_in==1)?onToolbarPreparing($event):false">
     <dxo-paging [pageSize]="10"></dxo-paging>
     <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
     <dxo-pager [visible]="true" [showPageSizeSelector]="true" [allowedPageSizes]="[5,10, 25, 50, 100]"
@@ -117,7 +109,8 @@
     </dxo-summary>
   </dx-data-grid>
 </div>
-
+<dx-load-panel [container]="container" [visible]="isLoading" [showIndicator]="true" [position]="{ of: '#load' }"
+[showPane]="true" [shading]="true"></dx-load-panel>
 
 <nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="true" [nzWidth]="600" [nzVisible]="visible"
   [nzTitle]="drawerTitle" [nzFooter]="footerTpl" (nzOnClose)="close()" [nzClosable]="false" [nzCloseIcon]="icon"

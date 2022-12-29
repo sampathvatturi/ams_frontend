@@ -51,7 +51,6 @@ export class FundsComponent implements OnInit {
     this.user_data = sessionStorage.getItem('user_data');
     this.user_data = JSON.parse(this.user_data);
     this.getFunds();
-    console.log(this.currentDate);
   }
 
   onToolbarPreparing(e:any) {

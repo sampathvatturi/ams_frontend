@@ -19,6 +19,7 @@ export class AccountsComponent implements OnInit {
   updateBtnDisable: boolean = true;
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
   rowData = [];
+  isLoading:boolean;
 
   constructor(
     private fb: UntypedFormBuilder,
@@ -31,6 +32,7 @@ export class AccountsComponent implements OnInit {
   ]
 
   ngOnInit(): void {
+    this.isLoading=true;
     this.accountsFormValidators();
     this.user_data = sessionStorage.getItem('user_data');
     this.user_data = JSON.parse(this.user_data);
@@ -58,7 +60,7 @@ export class AccountsComponent implements OnInit {
       this.accounts_info.forEach((element:any,index:any) => {
         element['sno'] = index + 1;
       })
-      console.log(this.accounts_info)
+     this.isLoading= false;
     });
   }
 
