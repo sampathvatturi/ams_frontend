@@ -1,43 +1,60 @@
-<div class="ds-card grid">
-    <dx-data-grid class="p-8 flow" id="gridContainer" [wordWrapEnabled]="true" [dataSource]="invoice_info"
-        [remoteOperations]="false" [allowColumnReordering]="true" [rowAlternationEnabled]="true"
-        [allowColumnResizing]="true" [showColumnLines]="true" [showRowLines]="true" [showBorders]="true"
-        style="width:100%" (onToolbarPreparing)="(permissions.insrt_in==1)?onToolbarPreparing($event):false">
-        <dxo-paging [pageSize]="5"></dxo-paging>
-        <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
-        <dxo-pager [visible]="true" [showPageSizeSelector]="true" [allowedPageSizes]="[5,10, 25, 50, 100]"
-            [showInfo]="true"></dxo-pager>
-        <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
-        <dxo-filter-panel [visible]="true"></dxo-filter-panel>
-        <dxo-header-filter [visible]="true"></dxo-header-filter>
-        <dxo-group-panel [visible]="true"></dxo-group-panel>
-        <dxo-grouping [autoExpandAll]="false"></dxo-grouping>
-        <dxo-column-chooser [enabled]="true" mode="select">
-        </dxo-column-chooser>
-        <dxo-export [enabled]="(permissions.exprt_in==1)?true:false" [allowExportSelectedData]="true"
-            fileName="Change Log"></dxo-export>
-        <dxo-filter-row [visible]="true"></dxo-filter-row>
-        <dxi-column *ngFor="let f of columnDefs" [visible]="true" [dataField]="f.field"
-            [caption]="f.headerName" [alignment]="f.alignment" [width]="f.width" [allowResizing]="false">
-        </dxi-column>
-        <dxi-column [showInColumnChooser]="false" caption="Actions" [visible]="(permissions.updt_in==1)?true:false" type="buttons"
-            [width]="100" cellTemplate="viewTemplate">
-            <div *dxTemplate="let data of 'viewTemplate'">
-                <div class="tblEdtBtn" (click)="edit('data',data.data)">
-                    Edit
-                </div>
-            </div>
-        </dxi-column>
-        <dxi-column [showInColumnChooser]="false" caption="Actions" type="button1" [width]="100" cellTemplate="EditTemplate">
-            <div *dxTemplate="let data of 'EditTemplate'" (click)="edit('view',data.data)">
-                <div class="cursor-pointer tblEdtBtn">
-                    View
-                </div>
-            </div>
-        </dxi-column>
-    </dx-data-grid>
+<div class="ds-card grid" id="load" #container>
+  <dx-data-grid class="p-8 flow" id="gridContainer" [wordWrapEnabled]="true" [dataSource]="invoice_info"
+    [remoteOperations]="false" [allowColumnReordering]="true" [rowAlternationEnabled]="true"
+    [allowColumnResizing]="true" [showColumnLines]="true" [showRowLines]="true" [showBorders]="true" style="width:100%"
+    (onToolbarPreparing)="(permissions.insrt_in==1)?onToolbarPreparing($event):false">
+    <dxo-paging [pageSize]="5"></dxo-paging>
+    <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+    <dxo-pager [visible]="true" [showPageSizeSelector]="true" [allowedPageSizes]="[5,10, 25, 50, 100]"
+      [showInfo]="true"></dxo-pager>
+    <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+    <dxo-filter-panel [visible]="true"></dxo-filter-panel>
+    <dxo-header-filter [visible]="true"></dxo-header-filter>
+    <dxo-group-panel [visible]="true"></dxo-group-panel>
+    <dxo-grouping [autoExpandAll]="false"></dxo-grouping>
+    <dxo-column-chooser [enabled]="true" mode="select">
+    </dxo-column-chooser>
+    <dxo-export [enabled]="(permissions.exprt_in==1)?true:false" [allowExportSelectedData]="true"
+      fileName="Change Log"></dxo-export>
+    <dxo-filter-row [visible]="true"></dxo-filter-row>
+    <dxi-column *ngFor="let f of columnDefs" [visible]="true" [dataField]="f.field" [cellTemplate]="f.cellTemplate"
+      [caption]="f.headerName" [alignment]="f.alignment" [width]="f.width" [allowResizing]="false">
+    </dxi-column>
+    <div *dxTemplate="let data of 'snoTempelate'">
+      {{data.row.rowIndex + 1}}
+    </div>
+    <div *dxTemplate="let d of 'endDate'">
+      {{ d.data.created_date | date : "dd-MM-YYYY"}}
+    </div>
+    <div *dxTemplate="let d of 'taxAmt'">
+      {{ d.data.tax | currencyIn}}
+    </div>
+    <div *dxTemplate="let d of 'Amt'">
+      {{ d.data.amount | currencyIn}}
+    </div>
+    <div *dxTemplate="let d of 'grandTotal'">
+      {{ d.data.grand_total | currencyIn}}
+    </div>
+    <dxi-column [showInColumnChooser]="false" caption="Actions" [visible]="(permissions.updt_in==1)?true:false"
+      type="buttons" [width]="100" cellTemplate="viewTemplate">
+      <div *dxTemplate="let data of 'viewTemplate'">
+        <div class="tblEdtBtn" (click)="edit('data',data.data)">
+          Edit
+        </div>
+      </div>
+    </dxi-column>
+    <dxi-column [showInColumnChooser]="false" caption="Actions" type="button1" [width]="100"
+      cellTemplate="EditTemplate">
+      <div *dxTemplate="let data of 'EditTemplate'" (click)="edit('view',data.data)">
+        <div class="cursor-pointer tblEdtBtn">
+          View
+        </div>
+      </div>
+    </dxi-column>
+  </dx-data-grid>
 </div>
-
+<dx-load-panel [container]="container" [visible]="isLoading" [showIndicator]="true" [position]="{ of: '#load' }"
+  [showPane]="true" [shading]="true"></dx-load-panel>
 <nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="false" [nzWidth]="720" [nzVisible]="visible"
   [nzTitle]="drawerTitle" [nzFooter]="footerTpl" (nzOnClose)="close()" [nzClosable]="false" [nzCloseIcon]="icon"
   [nzExtra]="icon" [nzMaskClosable]="true">
@@ -64,14 +81,14 @@
       <nz-form-item>
         <nz-form-label nz-col nzSpan="5" class="required">Vendor</nz-form-label>
         <nz-form-control nz-col nzSpan="10" nzErrorTip="Please Select Vendor">
-          <nz-select formControlName="vendor_id" nzPlaceHolder="Vendor" nzShowSearch >
+          <nz-select formControlName="vendor_id" nzPlaceHolder="Vendor" nzShowSearch>
             <nz-option *ngFor="let v of vendor_array" nzValue="{{ v.vendor_id }}"
               nzLabel="{{ v.vendor_name }}"></nz-option>
           </nz-select>
         </nz-form-control>
       </nz-form-item>
     </div>
-    
+
     <div>
       <nz-form-item>
         <nz-form-label nz-col nzSpan="5" class="required">Remarks</nz-form-label>
@@ -86,7 +103,7 @@
         </nz-form-control>
       </nz-form-item>
     </div>
-    
+
     <div>
       <nz-form-item>
         <nz-form-label nz-col nzSpan="5" class="required">Status</nz-form-label>
@@ -118,7 +135,8 @@
     <div formArrayName="inventory_details" class="dynamicForm">
       <div *ngFor="let x of inventory_details.controls; let i = index" formGroupName="{{i}}" class="mb-1" nz-row
         nzJustify="space-between" nzAlign="bottom">
-        <button nz-col [nzSpan]="1" class="border-0" nz-button nzType="default" (click)="removeInventory(i)"><span nz-icon nzType="close-circle" nzTheme="outline"></span></button>
+        <button nz-col [nzSpan]="1" class="border-0" nz-button nzType="default" (click)="removeInventory(i)"><span
+            nz-icon nzType="close-circle" nzTheme="outline"></span></button>
         <nz-form-item nz-col [nzSpan]="4">
           <nz-form-label *ngIf="i === 0" class="required">Item</nz-form-label>
           <nz-form-control>
@@ -132,46 +150,46 @@
 
         <nz-form-item nz-col [nzSpan]="2">
           <nz-form-label *ngIf="i === 0" class="required">Qty</nz-form-label>
-          <nz-form-control >
+          <nz-form-control>
             <input nz-input formControlName="quantity" placeholder="Quantity" (keyup)="change(i)" />
           </nz-form-control>
         </nz-form-item>
         <nz-form-item nz-col [nzSpan]="2">
           <nz-form-label *ngIf="i === 0">UOM</nz-form-label>
           <nz-form-control>
-            <input nz-input formControlName="uom" placeholder="UOM"/>
+            <input nz-input formControlName="uom" placeholder="UOM" />
           </nz-form-control>
         </nz-form-item>
 
         <nz-form-item nz-col [nzSpan]="3">
           <nz-form-label *ngIf="i === 0">Price</nz-form-label>
           <nz-form-control>
-            <input nz-input formControlName="price" placeholder="Price" (keyup)="change(i)"/>
+            <input nz-input formControlName="price" placeholder="Price" (keyup)="change(i)" />
           </nz-form-control>
         </nz-form-item>
 
         <nz-form-item nz-col [nzSpan]="2">
           <nz-form-label *ngIf="i === 0">Tax</nz-form-label>
           <nz-form-control>
-            <input nz-input formControlName="taxPercent" placeholder="Tax" (keyup)="change(i)"/>
+            <input nz-input formControlName="taxPercent" placeholder="Tax" (keyup)="change(i)" />
           </nz-form-control>
         </nz-form-item>
         <nz-form-item nz-col [nzSpan]="3">
           <nz-form-label *ngIf="i === 0">Amt</nz-form-label>
           <nz-form-control>
-            <input nz-input formControlName="amt" placeholder="Amount" (keyup)="change(i)" readonly/>
+            <input nz-input formControlName="amt" placeholder="Amount" (keyup)="change(i)" readonly />
           </nz-form-control>
         </nz-form-item>
         <nz-form-item nz-col [nzSpan]="2">
           <nz-form-label *ngIf="i === 0">Tax Amt</nz-form-label>
           <nz-form-control>
-            <input nz-input formControlName="taxAmt" placeholder="Tax amount" (keyup)="change(i)" readonly/>
+            <input nz-input formControlName="taxAmt" placeholder="Tax amount" (keyup)="change(i)" readonly />
           </nz-form-control>
         </nz-form-item>
         <nz-form-item nz-col [nzSpan]="3">
           <nz-form-label *ngIf="i === 0">Total</nz-form-label>
           <nz-form-control>
-            <input nz-input formControlName="total" placeholder="Total" (keyup)="change(i)" readonly/>
+            <input nz-input formControlName="total" placeholder="Total" (keyup)="change(i)" readonly />
           </nz-form-control>
         </nz-form-item>
 
@@ -184,7 +202,7 @@
       <nz-form-item>
         <nz-form-label nz-col nzSpan="5">Total Amount</nz-form-label>
         <nz-form-control nz-col nzSpan="10">
-          <input nz-input formControlName="amount" placeholder="Enter Amount" (keyup)="stable()" readonly/>
+          <input nz-input formControlName="amount" placeholder="Enter Amount" (keyup)="stable()" readonly />
         </nz-form-control>
       </nz-form-item>
     </div>
@@ -193,7 +211,7 @@
       <nz-form-item>
         <nz-form-label nz-col nzSpan="5">Total Tax Amount</nz-form-label>
         <nz-form-control nz-col nzSpan="10">
-          <input nz-input formControlName="tax" placeholder="Enter Tax" (keyup)="stable()" readonly/>
+          <input nz-input formControlName="tax" placeholder="Enter Tax" (keyup)="stable()" readonly />
         </nz-form-control>
       </nz-form-item>
     </div>
@@ -202,7 +220,7 @@
       <nz-form-item>
         <nz-form-label nz-col nzSpan="5">Grand Total</nz-form-label>
         <nz-form-control nz-col nzSpan="10">
-          <input nz-input formControlName="grand_total" placeholder="Enter Total" (keyup)="stable()" readonly/>
+          <input nz-input formControlName="grand_total" placeholder="Enter Total" (keyup)="stable()" readonly />
         </nz-form-control>
       </nz-form-item>
     </div>

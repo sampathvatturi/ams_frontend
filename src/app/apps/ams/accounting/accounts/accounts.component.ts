@@ -19,7 +19,7 @@ export class AccountsComponent implements OnInit {
   updateBtnDisable: boolean = true;
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
   rowData = [];
-  isLoading:boolean;
+  isLoading: boolean;
 
   constructor(
     private fb: UntypedFormBuilder,
@@ -27,19 +27,19 @@ export class AccountsComponent implements OnInit {
   ) { }
 
   columnDefs = [
-    { headerName: 'S.No.',field:'sno', width: '100',alignment: 'center', filter: false },
-    { headerName: 'Account Name',field:'name', width: '600' , filter: true}
+    { headerName: 'S.No.', field: 'sno', width: '100', alignment: 'center', filter: false, cellTemplate: 'serialNo' },
+    { headerName: 'Account Name', field: 'name', width: '600', filter: true }
   ]
 
   ngOnInit(): void {
-    this.isLoading=true;
+    this.isLoading = true;
     this.accountsFormValidators();
     this.user_data = sessionStorage.getItem('user_data');
     this.user_data = JSON.parse(this.user_data);
     this.getAccounts();
   }
 
-  onToolbarPreparing(e:any) {
+  onToolbarPreparing(e: any) {
     e.toolbarOptions.items.unshift({
       location: 'after',
       widget: 'dxButton',
@@ -57,10 +57,7 @@ export class AccountsComponent implements OnInit {
   getAccounts(): void {
     this.accountHeadService.getAccountHeads().subscribe((res) => {
       this.accounts_info = res;
-      this.accounts_info.forEach((element:any,index:any) => {
-        element['sno'] = index + 1;
-      })
-     this.isLoading= false;
+      this.isLoading = false;
     });
   }
 
@@ -144,9 +141,9 @@ export class AccountsComponent implements OnInit {
 
   accountsFormValidators() {
     this.accountsForm = this.fb.group({
-      name: ['', [Validators.required, 
-        // Validators.pattern(GlobalConstants.accountsRegex), 
-        Validators.minLength(3), Validators.maxLength(50)]]
+      name: ['', [Validators.required,
+      // Validators.pattern(GlobalConstants.accountsRegex), 
+      Validators.minLength(3), Validators.maxLength(50)]]
     })
   }
 }

@@ -27,10 +27,10 @@ export class ApprovalsComponent implements OnInit {
   userStatus: any;
   user_data: any;
   currentUserId: any;
-  invoiceUserStatusList: any=[];
+  invoiceUserStatusList: any = [];
   reason: any;
   currentInvoiceId: any;
-  works_info:any = [];
+  works_info: any = [];
   allUsersApprovedStatus: boolean = false;
   noDataShow: boolean = false;
   isLoading = false;
@@ -44,28 +44,29 @@ export class ApprovalsComponent implements OnInit {
   //               { headerName: 'Status', field: 'status', alignment: 'center'},]
 
   columnDefs = [
-    { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false, width:100 },
-    { headerName: 'Inv No.', field: 'invoice_number', alignment: 'center', filter: false, width:100 },
-    { headerName: 'Vendor', field: 'vendor_name', alignment: 'center', width:175 },
-    { headerName: 'Date', field: 'created_date', alignment: 'center', width:125 },
-    { headerName: 'Amount', field: 'amount', alignment: 'center', width:175 },
-    { headerName: 'Tax', field: 'tax', alignment: 'center', width:175 },
-    { headerName: 'Total', field: 'grand_total', alignment: 'center', width:175 },    
-    { headerName: 'Status', field: 'status', alignment: 'center', width:175 },
+    { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false, width: 100, cellTemplate: 'snoTempelate' },
+    { headerName: 'Inv No.', field: 'invoice_number', alignment: 'center', filter: false, width: 100 },
+    { headerName: 'Vendor', field: 'vendor_name', alignment: 'center', width: 175 },
+    { headerName: 'Date', field: 'created_date', alignment: 'center', width: 125, cellTemplate: 'createDate' },
+    { headerName: 'Amount', field: 'amount', alignment: 'center', width: 175, cellTemplate: 'Amt' },
+    { headerName: 'Tax', field: 'tax', alignment: 'center', width: 175, cellTemplate: 'taxAmt' },
+    { headerName: 'Total', field: 'grand_total', alignment: 'center', width: 175, cellTemplate: 'grandTotal' },
+    { headerName: 'Status', field: 'status', alignment: 'center', width: 175 },
   ];
-  
+
 
   constructor(
     private fb: UntypedFormBuilder,
     private notification: NotificationService,
     private tenderService: TenderDetailsService,
     private userService: UserService,
-    private works:WorksService,
+    private works: WorksService,
     private invoicesService: InvoicesService,
     private datePipe: DatePipe,
-  ) {}
+  ) { }
 
-  ngOnInit(): void {    
+  ngOnInit(): void {
+    this.isLoading = true;
     this.user_data = sessionStorage.getItem('user_data');
     this.user_data = JSON.parse(this.user_data);
     this.currentUserId = this.user_data?.user_id;
@@ -74,12 +75,12 @@ export class ApprovalsComponent implements OnInit {
       type: ['tenders', [Validators.required]],
       status: ['open', [Validators.required]],
     });
-    this.getVendorInvoices();
     this.getUsers();
     this.getWorks();
+    this.getVendorInvoices();
   }
 
-  onToolbarPreparing(e:any) {
+  onToolbarPreparing(e: any) {
     e.toolbarOptions.items.unshift({
       location: 'after',
       // widget: 'dxButton',
@@ -93,11 +94,12 @@ export class ApprovalsComponent implements OnInit {
       }
     });
   }
-  
+
   getVendorInvoices(action?: any): void {
     this.invoicesService.getVendorInvoices().subscribe((res) => {
-      this.invoices = res; 
+      this.invoices = res;
       this.getInvoicesData();
+      this.isLoading = false;
     })
   }
 
@@ -106,21 +108,21 @@ export class ApprovalsComponent implements OnInit {
       this.users = res;
     });
   }
-  getWorks(){
+  getWorks() {
     this.works.getWorks().subscribe((res) => {
       this.works_info = res;
     })
   }
 
-  workIdToName(id:any){
+  workIdToName(id: any) {
     let arr = id.split(',');
     for (let index = 0; index < arr.length; index++) {
-      this.works_info.forEach((element:any) => {
-        if (element.work_id == Number(arr[index])){
-          arr[index]= element.work_name;
+      this.works_info.forEach((element: any) => {
+        if (element.work_id == Number(arr[index])) {
+          arr[index] = element.work_name;
         }
       })
-      
+
     }
     return arr.join(', ');
   }
@@ -129,21 +131,15 @@ export class ApprovalsComponent implements OnInit {
     this.isLoading = true;
     console.log(this.validateForm.value);
     this.noDataShow = true;
-    if(this.validateForm.value.type === 'tenders') {
+    if (this.validateForm.value.type === 'tenders') {
       this.getInvoicesData();
-      
     }
     this.isLoading = false;
-  } 
+  }
 
   getInvoicesData(): void {
     // this.invoicesData = this.invoices.filter((item) => item.status === 'open');
     this.invoicesData = this.invoices;
-    this.invoicesData.map((item, index) => {
-      item.sno = index+1,
-      item.created_date = this.datePipe.transform(item.created_date,'dd-MM-YYYY')
-    });
-    console.log("this.invoicesData:", this.invoicesData);    
   }
 
   onClickApprove(data: any): void {
@@ -159,32 +155,32 @@ export class ApprovalsComponent implements OnInit {
     console.log(this.userStatusList);
     this.users.forEach((user: any) => {
       this.userStatusList.map((item: any) => {
-        if(user?.user_id === item?.user_id){
+        if (user?.user_id === item?.user_id) {
           item.user_name = user?.user_name;
           item.user_full_name = user?.first_name + " " + user?.last_name;
         }
-        if(item.user_id === this.currentUserId) {
+        if (item.user_id === this.currentUserId) {
           this.userStatus = item?.status;
         }
       });
-    });    
+    });
     this.isVisible = true;
-    console.log("userStatusList::",this.userStatusList);
+    console.log("userStatusList::", this.userStatusList);
   }
 
   handleOk(): void {
     console.log('Button ok clicked!', this.userStatus, this.userStatusList);
-    this.invoiceUserStatusList=[]; 
+    this.invoiceUserStatusList = [];
     this.userStatusList.forEach((user: any) => {
       const obj = {
         user_id: user?.user_id,
         status: (user?.user_id === this.currentUserId) ? this.userStatus : user?.status,
         reason: (user?.user_id === this.currentUserId && this.userStatus === 'Rejected') ? this.reason : ''
       }
-      this.invoiceUserStatusList.push(obj);      
+      this.invoiceUserStatusList.push(obj);
     });
     console.log('invoiceUserStatusList :: ', this.invoiceUserStatusList);
-    this.invoiceUserStatusList.filter((item: any) => (item?.status==='Pending' || item?.status==='Rejected'))
+    this.invoiceUserStatusList.filter((item: any) => (item?.status === 'Pending' || item?.status === 'Rejected'))
     this.updateInvoiceUserStatus();
   }
 
@@ -206,7 +202,7 @@ export class ApprovalsComponent implements OnInit {
   }
 
   updateInvoiceUserStatus(): void {
-    if (this.userStatus === 'Rejected' && !this.reason) {      
+    if (this.userStatus === 'Rejected' && !this.reason) {
       this.notification.createNotification('error', 'Please enter a reson');
     }
     else {

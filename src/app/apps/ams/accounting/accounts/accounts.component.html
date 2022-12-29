@@ -1,76 +1,76 @@
-
-
 <div class="ds-card grid" id="load" #container>
-    <dx-data-grid class="p-8 flow" id="gridContainer" [wordWrapEnabled]="true" [dataSource]="accounts_info"
-        [remoteOperations]="false" [allowColumnReordering]="true" [rowAlternationEnabled]="true"
-        [allowColumnResizing]="true" [showColumnLines]="true" [showRowLines]="true" [showBorders]="true"
-        style="width:100%" (onToolbarPreparing)="(permissions.insrt_in==1)?onToolbarPreparing($event):false" >
-        <dxo-paging [pageSize]="10" ></dxo-paging>
-        <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
-        <dxo-pager [visible]="true" [showPageSizeSelector]="true" [allowedPageSizes]="[5,10, 25, 50, 100]"
-            [showInfo]="true"></dxo-pager>
-        <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
-        <dxo-filter-panel [visible]="true"></dxo-filter-panel>
-        <dxo-header-filter [visible]="true"></dxo-header-filter>
-        <dxo-group-panel [visible]="true"></dxo-group-panel>
-        <dxo-grouping [autoExpandAll]="false"></dxo-grouping>
-        <dxo-column-chooser [enabled]="true" mode="select">
-        </dxo-column-chooser>
-        <dxo-export [enabled]="(permissions.exprt_in==1)?true:false" [allowExportSelectedData]="true"
-            fileName="Change Log"></dxo-export>
-        <dxo-filter-row [visible]="true"></dxo-filter-row>
-        <dxi-column *ngFor="let f of columnDefs" [visible]="true" [dataField]="f.field"
-            [caption]="f.headerName" [width]="f.width" [alignment]="f.alignment" [allowResizing]="false">
-        </dxi-column>
+  <dx-data-grid class="p-8 flow" id="gridContainer" [wordWrapEnabled]="true" [dataSource]="accounts_info"
+    [remoteOperations]="false" [allowColumnReordering]="true" [rowAlternationEnabled]="true"
+    [allowColumnResizing]="true" [showColumnLines]="true" [showRowLines]="true" [showBorders]="true" style="width:100%"
+    (onToolbarPreparing)="(permissions.insrt_in==1)?onToolbarPreparing($event):false">
+    <dxo-paging [pageSize]="10"></dxo-paging>
+    <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
+    <dxo-pager [visible]="true" [showPageSizeSelector]="true" [allowedPageSizes]="[5,10, 25, 50, 100]"
+      [showInfo]="true"></dxo-pager>
+    <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+    <dxo-filter-panel [visible]="true"></dxo-filter-panel>
+    <dxo-header-filter [visible]="true"></dxo-header-filter>
+    <dxo-group-panel [visible]="true"></dxo-group-panel>
+    <dxo-grouping [autoExpandAll]="false"></dxo-grouping>
+    <dxo-column-chooser [enabled]="true" mode="select">
+    </dxo-column-chooser>
+    <dxo-export [enabled]="(permissions.exprt_in==1)?true:false" [allowExportSelectedData]="true"
+      fileName="Change Log"></dxo-export>
+    <dxo-filter-row [visible]="true"></dxo-filter-row>
+    <dxi-column *ngFor="let f of columnDefs" [visible]="true" [dataField]="f.field" [cellTemplate]="f.cellTemplate"
+      [caption]="f.headerName" [width]="f.width" [alignment]="f.alignment" [allowResizing]="false">
+    </dxi-column>
+    <div *dxTemplate="let data of 'serialNo'">
+      {{data.row.rowIndex + 1}}
+    </div>
 
-
-        <!-- <ng-container *dxTemplate="let account of 'dataRowTemplateName'; let i = index">
+    <!-- <ng-container *dxTemplate="let account of 'dataRowTemplateName'; let i = index">
             <tr >
               <td>{{ i + 1 }}</td>
               <td>{{ account.data.name }}</td>
             </tr>
          </ng-container> -->
 
-    </dx-data-grid>
+  </dx-data-grid>
 </div>
 
 <dx-load-panel [container]="container" [visible]="isLoading" [showIndicator]="true" [position]="{ of: '#load' }"
-[showPane]="true" [shading]="true"></dx-load-panel>
+  [showPane]="true" [shading]="true"></dx-load-panel>
 
-  <nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="true" [nzWidth]="720" [nzVisible]="visible"
-    [nzTitle]="drawerTitle" [nzFooter]="footerTpl" (nzOnClose)="close()" [nzClosable]="false" [nzCloseIcon]="icon"
-    [nzExtra]="icon">
-    <ng-template #icon>
-      <i (click)="close()" class="fa-solid fa-circle-xmark"></i>
-    </ng-template>
-    <form nz-form *nzDrawerContent [formGroup]="accountsForm" class="drawer-form">
-      <div>
-        <nz-form-item>
-          <nz-form-label nz-col nzSpan="5" class="required">Account Name</nz-form-label>
-          <nz-form-control nz-col nzSpan="10" [nzErrorTip]="worksErrorTip">
-            <input nz-input formControlName="name"  type="text" nz-input placeholder="Please Enter Account Name" />
-            <ng-template #worksErrorTip let-control>
-              <ng-container *ngIf="control.hasError('required')">Please enter account name</ng-container>
-              <ng-container *ngIf="control.hasError('pattern')">Please enter valid input<br /></ng-container>
-              <ng-container *ngIf="control.hasError('minlength')">Please enter atleast 3 characters<br /></ng-container>
-              <ng-container *ngIf="control.hasError('maxlength')">Maximum length exceeded</ng-container>
-            </ng-template>
-          </nz-form-control>
-        </nz-form-item>
-      </div>
-    </form>
-  
-    <ng-template #footerTpl>
-      <div style="float: right">
-        <button nz-button style="margin-right: 8px" (click)="close()">
-          Cancel
-        </button>
-        <button nz-button *ngIf="submit" nzType="primary" (click)="onCreateSubmit()">
-          Submit
-        </button>
-        <button nz-button *ngIf="!submit && updateBtnDisable" nzType="primary" (click)="onUpdateSubmit()">
-          Update
-        </button>
-      </div>
-    </ng-template>
-  </nz-drawer>
+<nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="true" [nzWidth]="720" [nzVisible]="visible"
+  [nzTitle]="drawerTitle" [nzFooter]="footerTpl" (nzOnClose)="close()" [nzClosable]="false" [nzCloseIcon]="icon"
+  [nzExtra]="icon">
+  <ng-template #icon>
+    <i (click)="close()" class="fa-solid fa-circle-xmark"></i>
+  </ng-template>
+  <form nz-form *nzDrawerContent [formGroup]="accountsForm" class="drawer-form">
+    <div>
+      <nz-form-item>
+        <nz-form-label nz-col nzSpan="5" class="required">Account Name</nz-form-label>
+        <nz-form-control nz-col nzSpan="10" [nzErrorTip]="worksErrorTip">
+          <input nz-input formControlName="name" type="text" nz-input placeholder="Please Enter Account Name" />
+          <ng-template #worksErrorTip let-control>
+            <ng-container *ngIf="control.hasError('required')">Please enter account name</ng-container>
+            <ng-container *ngIf="control.hasError('pattern')">Please enter valid input<br /></ng-container>
+            <ng-container *ngIf="control.hasError('minlength')">Please enter atleast 3 characters<br /></ng-container>
+            <ng-container *ngIf="control.hasError('maxlength')">Maximum length exceeded</ng-container>
+          </ng-template>
+        </nz-form-control>
+      </nz-form-item>
+    </div>
+  </form>
+
+  <ng-template #footerTpl>
+    <div style="float: right">
+      <button nz-button style="margin-right: 8px" (click)="close()">
+        Cancel
+      </button>
+      <button nz-button *ngIf="submit" nzType="primary" (click)="onCreateSubmit()">
+        Submit
+      </button>
+      <button nz-button *ngIf="!submit && updateBtnDisable" nzType="primary" (click)="onUpdateSubmit()">
+        Update
+      </button>
+    </div>
+  </ng-template>
+</nz-drawer>

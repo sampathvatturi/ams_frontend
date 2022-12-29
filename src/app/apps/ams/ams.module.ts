@@ -18,6 +18,7 @@ import { ThemeConstantService } from 'src/app/shared/services/theme-constant.ser
 import { NgChartsModule } from 'ng2-charts';
 import { NgAntdModule } from 'src/app/shared/common/ng-antd.module';
 import { DxDataGridModule, DxLoadPanelModule } from 'devextreme-angular';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 
 
@@ -44,9 +45,10 @@ import { DxDataGridModule, DxLoadPanelModule } from 'devextreme-angular';
     DxDataGridModule,
     NgChartsModule,
     NgAntdModule,
-    DxLoadPanelModule
+    DxLoadPanelModule,
+    SharedModule
   ],
   providers: [
-    ThemeConstantService,DatePipe]
+    ThemeConstantService, DatePipe]
 })
 export class AmsModule { }

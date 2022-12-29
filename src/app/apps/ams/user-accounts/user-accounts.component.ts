@@ -35,13 +35,13 @@ export class UserAccountsComponent implements OnInit {
   isLoading: boolean;
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
   columnDefs = [
-  { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false ,width:100},
-  { headerName: 'Name', field: 'first_name', alignment: 'center' ,width:175},
-  { headerName: 'User Name', field: 'user_name', alignment: 'center',width:175 },
-  { headerName: 'Email', field: 'email', alignment: 'center',width:175 },
-  { headerName: 'Phone No', field: 'phone_number', alignment: 'center' ,width:175},
-  { headerName: 'Department', field: 'department_name', alignment: 'center' ,width:175},
-  { headerName: 'Role', field: 'role', alignment: 'center',width:100 },]
+    { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false, width: 100, cellTemplate: 'serialNo' },
+    { headerName: 'Name', field: 'first_name', alignment: 'center', width: 175 },
+    { headerName: 'User Name', field: 'user_name', alignment: 'center', width: 175 },
+    { headerName: 'Email', field: 'email', alignment: 'center', width: 175 },
+    { headerName: 'Phone No', field: 'phone_number', alignment: 'center', width: 175 },
+    { headerName: 'Department', field: 'department_name', alignment: 'center', width: 175 },
+    { headerName: 'Role', field: 'role', alignment: 'center', width: 100 },]
 
   constructor(
     private fb: UntypedFormBuilder,
@@ -86,9 +86,6 @@ export class UserAccountsComponent implements OnInit {
   getUsers(): void {
     this.userService.getAllUsers().subscribe((res: any) => {
       this.users = res;
-      this.users.forEach((element: any, index: any) => {
-        element['sno'] = index + 1;
-      })
       this.isLoading = false;
     });
   }

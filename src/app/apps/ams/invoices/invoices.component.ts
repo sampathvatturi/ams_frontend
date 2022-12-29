@@ -1,4 +1,3 @@
-import { DatePipe } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { UntypedFormArray, UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
@@ -47,25 +46,26 @@ export class InvoicesComponent implements OnInit {
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
 
   columnDefs = [
-  { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false, width:100 },
-  { headerName: 'Vendor', field: 'vendor_name', alignment: 'center', width:175 },
-  { headerName: 'Date', field: 'created_date', alignment: 'center', width:125 },
-  { headerName: 'Amount', field: 'amount', alignment: 'center', width:175 },
-  { headerName: 'Tax', field: 'tax', alignment: 'center', width:175 },
-  { headerName: 'Total', field: 'grand_total', alignment: 'center', width:175 },
-  { headerName: 'Remarks', field: 'remarks', alignment: 'center', width:175 },
-];
+    { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false, width: 100, cellTemplate: 'snoTempelate' },
+    { headerName: 'Inv No.', field: 'invoice_number', alignment: 'center', filter: false, width: 100 },
+    { headerName: 'Vendor', field: 'vendor_name', alignment: 'center', width: 175 },
+    { headerName: 'Date', field: 'created_date', alignment: 'center', width: 125, cellTemplate: 'endDate' },
+    { headerName: 'Amount', field: 'amount', alignment: 'center', width: 175, cellTemplate: 'Amt' },
+    { headerName: 'Tax', field: 'tax', alignment: 'center', width: 175, cellTemplate: 'taxAmt' },
+    { headerName: 'Total', field: 'grand_total', alignment: 'center', width: 175, cellTemplate: 'grandTotal' },
+    { headerName: 'Remarks', field: 'remarks', alignment: 'center', width: 175 },
+  ];
 
   constructor(
     private fb: UntypedFormBuilder,
     private notification: NotificationService,
     private invoice: InvoicesService,
-    private datePipe: DatePipe,
     private vendors: VendorsService,
     private inventory: InventoryItemsService,
   ) { }
 
   ngOnInit(): void {
+    this.isLoading = true;
     this.invoiceFormValidators();
     this.getVendors();
     this.getInvoices();
@@ -75,16 +75,11 @@ export class InvoicesComponent implements OnInit {
   getInvoices(): void {
     this.invoice.getInvoices().subscribe((res) => {
       this.invoice_info = res;
-      this.invoice_info.map((item, index) => {
-        item.sno = index+1,
-        item.created_date = this.datePipe.transform(item.created_date,'dd-MM-YYYY')
-      });
-      console.log(this.invoice_info);
       this.isLoading = false;
     })
   }
-  getVendors():void {
-     this.vendors.getVendors().subscribe((res) => {
+  getVendors(): void {
+    this.vendors.getVendors().subscribe((res) => {
       this.vendor_array = res;
       for (let x of this.vendor_array) {
         this.v_name[x.vendor_id] = x.vendor_name;
@@ -92,8 +87,8 @@ export class InvoicesComponent implements OnInit {
       // this.getInvoices();
     });
   }
-  getInventory():void{
-      this.inventory.getInventoryItems().subscribe(res => {
+  getInventory(): void {
+    this.inventory.getInventoryItems().subscribe(res => {
       this.inventory_array = res;
       this.updated_inventory = [...res];
     })
@@ -175,7 +170,7 @@ export class InvoicesComponent implements OnInit {
     this.updated_inventory = [...this.inventory_array];
   }
   onSubmit() {
-    if(this.itemRepeat()) return this.notification.createNotification('error', 'Duplicate Items');
+    if (this.itemRepeat()) return this.notification.createNotification('error', 'Duplicate Items');
     console.log(this.invoiceForm.valid);
     if (this.invoiceForm.valid) {
       // var fileNames: any[] = [];
@@ -204,7 +199,7 @@ export class InvoicesComponent implements OnInit {
     }
   }
   onUpdate() {
-    if(this.itemRepeat()) return this.notification.createNotification('error', 'Duplicate Items');
+    if (this.itemRepeat()) return this.notification.createNotification('error', 'Duplicate Items');
     if (this.invoiceForm.valid) {
       // this.api
       //   .patchCall(
@@ -290,7 +285,7 @@ export class InvoicesComponent implements OnInit {
     return this.invoiceForm.get("inventory_details") as UntypedFormArray
   }
   addInvertory() {
-    if(this.itemRepeat()) return this.notification.createNotification('error', 'Duplicate Items');
+    if (this.itemRepeat()) return this.notification.createNotification('error', 'Duplicate Items');
     if (this.inventory_details.valid) {
       this.inventory_details.push(this.fb.group({
         item: ['', [Validators.required]],
@@ -303,7 +298,7 @@ export class InvoicesComponent implements OnInit {
         total: [0],
       }));
     } else {
-      this.notification.createNotification('error','Fill all the fields');
+      this.notification.createNotification('error', 'Fill all the fields');
     }
   }
   removeInventory(i: any) {
@@ -427,12 +422,12 @@ export class InvoicesComponent implements OnInit {
 
 
   generateInvoiceNumber() {
-    var lastNum:string;
-    var str:any;
-    var  lastItem = this.invoice_info[this.invoice_info.length - 1];
+    var lastNum: string;
+    var str: any;
+    var lastItem = this.invoice_info[this.invoice_info.length - 1];
     lastNum = lastItem.invoice_number;
-    str = lastNum.substring(0,7)+(parseInt(lastNum.substring(7))+1).toString().padStart(4, "0");
+    str = lastNum.substring(0, 7) + (parseInt(lastNum.substring(7)) + 1).toString().padStart(4, "0");
     return str;
- }
+  }
 
 }

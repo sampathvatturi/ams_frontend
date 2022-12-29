@@ -18,17 +18,22 @@
       fileName="Change Log"></dxo-export>
     <dxo-filter-row [visible]="true"></dxo-filter-row>
     <dxi-column *ngFor="let f of columnDefs" [visible]="true" [dataField]="f.field" [caption]="f.headerName"
-      [alignment]="f.alignment" [width]="f.width" [allowResizing]="false">
+      [alignment]="f.alignment" [width]="f.width" [allowResizing]="false" [cellTemplate]="f.cellTemplate">
     </dxi-column>
-    <dxi-column [showInColumnChooser]="false" caption="Actions" [allowResizing]="false" [visible]="(permissions.updt_in==1)?true:false" type="buttons"
-      [width]="100" cellTemplate="viewTemplate">
+
+    <div *dxTemplate="let data of 'serialNo'">
+      {{data.row.rowIndex + 1}}
+    </div>
+    <dxi-column [showInColumnChooser]="false" caption="Actions" [allowResizing]="false"
+      [visible]="(permissions.updt_in==1)?true:false" type="buttons" [width]="100" cellTemplate="viewTemplate">
       <div *dxTemplate="let data of 'viewTemplate'">
         <div class="tblEdtBtn" (click)="edit('data',data.data)">
           Edit
         </div>
       </div>
     </dxi-column>
-    <dxi-column [showInColumnChooser]="false" caption="Actions" [allowResizing]="false" type="button1" [width]="100" cellTemplate="EditTemplate">
+    <dxi-column [showInColumnChooser]="false" caption="Actions" [allowResizing]="false" type="button1" [width]="100"
+      cellTemplate="EditTemplate">
       <div *dxTemplate="let data of 'EditTemplate'" (click)="edit('view',data.data)">
         <div class="cursor-pointer tblEdtBtn">
           View
@@ -38,7 +43,7 @@
   </dx-data-grid>
 </div>
 <dx-load-panel [container]="container" [visible]="isLoading" [showIndicator]="true" [position]="{ of: '#load' }"
-[showPane]="true" [shading]="true" [closeOnOutsideClick]="false" ></dx-load-panel>
+  [showPane]="true" [shading]="true" [closeOnOutsideClick]="false"></dx-load-panel>
 <nz-drawer [nzBodyStyle]="{ overflow: 'scroll' }" [nzMaskClosable]="false" [nzWidth]="720" [nzVisible]="visible"
   [nzFooter]="footerTpl" [nzTitle]="drawerTitle" (nzOnClose)="close()" [nzClosable]="false" [nzCloseIcon]="icon"
   [nzExtra]="icon" [nzMaskClosable]="true">
