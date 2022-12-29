@@ -7,6 +7,7 @@ import { InventoryItemsService } from 'src/app/shared/moduleservices/inventory-i
 import { InvoicesService } from 'src/app/shared/moduleservices/invoices.service';
 import { VendorsService } from 'src/app/shared/moduleservices/vendors.service';
 import { environment } from 'src/environments/environment';
+import { NzMessageService } from 'ng-zorro-antd/message';
 
 @Component({
   selector: 'app-invoices',
@@ -61,6 +62,7 @@ export class InvoicesComponent implements OnInit {
     private invoice: InvoicesService,
     private vendors: VendorsService,
     private inventory: InventoryItemsService,
+    private msg : NzMessageService
   ) { }
 
   ngOnInit(): void {
@@ -170,17 +172,12 @@ export class InvoicesComponent implements OnInit {
   }
   onSubmit() {
     if (this.itemRepeat()) return this.notification.createNotification('error', 'Duplicate Items');
-    console.log(this.invoiceForm.valid);
     if (this.invoiceForm.valid) {
-      // var fileNames: any[] = [];
-      // this.files.forEach(element => {
-      //   fileNames.push(element.name);
-      // });
-      // console.log(
-      //   this.files
-      // )
-      // this.invoiceForm.value.attachments = fileNames.toString();
-      // console.log(this.invoiceForm.value.attachments)
+      var fileNames: any[] = [];
+      this.files.forEach(element => {
+        fileNames.push(element.name);
+      });
+      this.invoiceForm.value.attachments = fileNames.toString();
       this.invoice.createInvoice(this.invoiceForm.value).subscribe(res => {
         this.notification.createNotification(res.status, res.message);
         if (res.status === 'success') {
@@ -200,23 +197,20 @@ export class InvoicesComponent implements OnInit {
   onUpdate() {
     if (this.itemRepeat()) return this.notification.createNotification('error', 'Duplicate Items');
     if (this.invoiceForm.valid) {
-      // this.api
-      //   .patchCall(
-      //     `/invoice/updateInvoice/${this.invoiceId}`,
-      //     this.invoiceForm.value
-      //   )
-      //   .subscribe((res) => {
-      //     this.notification.createNotification(res.status, res.message);
-      //     if (res.status === 'success') {
-      //       this.visible = false;
-
-      //       this.invoice
-      //         .getInvoices()
-      //         .subscribe((res) => (this.invoice_info = res));
-      //     } else {
-      //       this.notification.createNotification(res.status, res.message);
-      //     }
-      //   });
+      var fileNames: any[] = [];
+      this.files.forEach(element => {
+        fileNames.push(element.name);
+      });
+      this.invoiceForm.value.attachments = fileNames.toString();
+      this.invoice.updateInvoice(this.invoiceId,this.invoiceForm.value).subscribe((res) => {
+          if (res.status === 'success') {
+            this.notification.createNotification(res.status, res.message);
+            this.visible = false;
+            this.invoice.getInvoices().subscribe((res) => (this.invoice_info = res));
+          } else {
+            this.notification.createNotification(res.status, res.message);
+          }
+        });
     }
     else {
 
@@ -393,16 +387,17 @@ export class InvoicesComponent implements OnInit {
 
 
   handleChange(info: NzUploadChangeParam): void {
-    // if (info.file.status === 'done') {
-    //   this.msg.success(`${info.file.name} file uploaded successfully`);
-    //   this.filesDetails.name = info.file.response.fileName;
-    //   this.filesDetails.url = this.getUploadedFIlesUrl + '/' + info.file.response.fileName;
-    //   this.files.push(this.filesDetails);
-    // } else if (info.file.status === 'error') {
-    //   this.msg.error(`${info.file.name} file upload failed.`);
-    // } else if (info.file.status !== 'uploading') {
-    //   console.log(info.file, info.fileList);
-    // }
+    if (info.file.status === 'done') {
+      this.msg.success(`${info.file.name} file uploaded successfully`);
+      this.filesDetails.name = info.file.response.fileName;
+      this.filesDetails.url = this.getUploadedFIlesUrl + '/' + info.file.response.fileName;
+      this.files.push(this.filesDetails);
+      console.log(this.files)
+    } else if (info.file.status === 'error') {
+      this.msg.error(`${info.file.name} file upload failed.`);
+    } else if (info.file.status !== 'uploading') {
+      console.log(info.file, info.fileList);
+    }
   }
 
   previewImage = '';
