@@ -2,8 +2,8 @@
     <dx-data-grid class="p-8 flow" id="gridContainer" [wordWrapEnabled]="true" [dataSource]="inventory_info"
         [remoteOperations]="false" [allowColumnReordering]="true" [rowAlternationEnabled]="true"
         [allowColumnResizing]="true" [showColumnLines]="true" [showRowLines]="true" [showBorders]="true"
-        style="width:100%" (onToolbarPreparing)="(permissions.insrt_in==1)?onToolbarPreparing($event):false">
-        <dxo-paging [pageSize]="5"></dxo-paging>
+        style="width:100%" (onToolbarPreparing)="(permissions.insrt_in==1)?onToolbarPreparing($event):false" [noDataText]="dataMessage">
+        <dxo-paging [pageSize]="5" ></dxo-paging>
         <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
         <dxo-pager [visible]="true" [showPageSizeSelector]="true" [allowedPageSizes]="[5,10, 25, 50, 100]"
             [showInfo]="true"></dxo-pager>

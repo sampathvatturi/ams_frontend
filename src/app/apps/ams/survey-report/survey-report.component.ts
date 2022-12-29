@@ -137,7 +137,8 @@ export class SurveyReportComponent implements OnInit {
       start_date:data.start_date,
       end_date:data.end_date,
       created_by:this.user_data.user_id,
-      updated_by:this.user_data?.user_id
+      updated_by:this.user_data?.user_id,
+      attachments:data.attachments
     }
     return payload;
   }
@@ -167,14 +168,14 @@ export class SurveyReportComponent implements OnInit {
   }
 
   prepareUpdatePayload(data:any){
-    
     const payload = {
       name:data.name,
       description:data.description,
       status:data.status,
       start_date:data.start_date,
       end_date:data.end_date,
-      updated_by:this.user_data?.user_id
+      updated_by:this.user_data?.user_id,
+      attachments:data.attachments
     }
     return payload;
   }
