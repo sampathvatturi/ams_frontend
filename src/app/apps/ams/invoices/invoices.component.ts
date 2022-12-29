@@ -47,8 +47,7 @@ export class InvoicesComponent implements OnInit {
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
 
   columnDefs = [
-  { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false, width:100},
-  { headerName: 'Inv No.', field: 'invoice_number', alignment: 'center', filter: false, width:100 },
+  { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false, width:100 },
   { headerName: 'Vendor', field: 'vendor_name', alignment: 'center', width:175 },
   { headerName: 'Date', field: 'created_date', alignment: 'center', width:125 },
   { headerName: 'Amount', field: 'amount', alignment: 'center', width:175 },
@@ -158,7 +157,8 @@ export class InvoicesComponent implements OnInit {
     this.filesDetails.url = '';
     this.files = [];
     this.invoiceFormValidators();
-    this.invoiceForm.get('invoice_number')?.setValue(Math.floor(Math.random() * 100000));
+    this.invoiceForm.get('invoice_number')?.setValue(this.generateInvoiceNumber());
+    // this.invoiceForm.get('invoice_number')?.setValue(Math.floor(Math.random() * 100000));
     this.invoiceForm.get('status')?.setValue('open');
     this.invoiceForm.get('created_by')?.setValue(this.user_data.user_id);
     this.invoiceForm.get('updated_by')?.setValue(this.user_data.user_id);
@@ -424,5 +424,15 @@ export class InvoicesComponent implements OnInit {
     obs.next(false)
     // this.http.post('http://localhost:8080/upload/deleteFile')
   });
+
+
+  generateInvoiceNumber() {
+    var lastNum:string;
+    var str:any;
+    var  lastItem = this.invoice_info[this.invoice_info.length - 1];
+    lastNum = lastItem.invoice_number;
+    str = lastNum.substring(0,7)+(parseInt(lastNum.substring(7))+1).toString().padStart(4, "0");
+    return str;
+ }
 
 }

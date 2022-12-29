@@ -25,7 +25,7 @@ export class DepartmentComponent implements OnInit {
 
   columnDefs = [
     { headerName: 'S.No', field: 'sno', alignment: 'center',width:'100', filter: false},
-    { headerName: 'Department Name', field: 'department_name', alignment: 'center'},
+    { headerName: 'Department Name', field: 'department_name', alignment: 'left'},
     { headerName: 'Status', field: 'status', alignment: 'center',width:'175'},
     { headerName: 'Ranking', field: 'ranking', alignment: 'center',width:'175'},
     ];
