@@ -17,7 +17,7 @@ export class SurveyReportComponent implements OnInit {
   survey_info:any = [];
   surveyForm!: UntypedFormGroup;
   updateBtnDisable: boolean = false;
-  // isLoading: boolean;
+  isLoading: boolean;
   submit:boolean = true;
   user_data:any = [];
   surveyId:any;
@@ -38,7 +38,7 @@ export class SurveyReportComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    // this.isLoading = true;
+    this.isLoading = true;
     this.surveyFormValidators();
     this.getSurveyReport();
     this.user_data = sessionStorage.getItem('user_data');
@@ -52,6 +52,8 @@ export class SurveyReportComponent implements OnInit {
     this.surveyReportService.getSurveyreports().subscribe((res) => {
       if (res.length > 0) {
         this.survey_info = res;
+        this.isLoading = false;
+
       } else {
         this.survey_info = [];
       }

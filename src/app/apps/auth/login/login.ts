@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
+import { UntypedFormBuilder, UntypedFormGroup, Validators,UntypedFormControl } from '@angular/forms';
 import { Router } from '@angular/router';
 import { DomSanitizer } from '@angular/platform-browser';
 import { NotificationService } from 'src/app/shared/common/notification.service';
@@ -32,7 +32,11 @@ import { GlobalConstants } from 'src/app/shared/common/global_constants';
   ]
 })
 
+
+
 export class LoginComponent implements OnInit {
+
+  forgotForm!:UntypedFormGroup
 
   data = {
     clnt_aplcn_nm: "AMS Sunshine"
@@ -61,6 +65,7 @@ export class LoginComponent implements OnInit {
       password: [null, [Validators.required]],
     });
   }
+
 
   doLogin(): void {      
     this.loader = true;
@@ -91,5 +96,59 @@ export class LoginComponent implements OnInit {
       this.notificationService.createNotification('error', this.responseMessage);
     });
   }
+
+  frgtPasswrd() {
+    this.settings.current_screen = 'forgot';
+    this.settings.screen_heading = "RECOVER YOUR PASSWORD";
+    // this.lgnVw = false;
+    // this.frgtVw = true;
+    // this.rstVw = false;
+    // this.setPVw = false;
+    // this.getCaptchaText();
+    this.forgotFormValidators();
+  }
+
+  forgotFormValidators(){
+    this.forgotForm = this.fb.group({
+      username: [null, [Validators.required]],
+      newPassword: [null, [Validators.required]],
+      confirmPassword: [null, [Validators.required]],
+    });
+  }
+
+  bckToLgn() {
+    this.settings.current_screen = 'login';
+    this.settings.screen_heading = "EMPLOYEE LOGIN";
+    // this.lgnVw = true;
+    // this.frgtVw = false;
+    // this.rstVw = false;
+    // this.setPVw = false;
+    // this.getCaptchaText();
+  }
+
+  reset(){
+    var data = {
+      username:this.forgotForm.value.username,
+      password: this.forgotForm.value.newPassword
+    }
+
+    // if (this.forgotForm.value.newPassword == this.forgotForm.value.CnfrmPassword) {
+    //   this.userService.updateUser(data, '').subscribe((res) => {
+    //     this.loader = false
+    //   })}
+    }
+
+  validateConfirmPassword(): void {
+    setTimeout(() => this.forgotForm.controls['confirm'].updateValueAndValidity());
+  }
+
+  confirmValidator = (control: UntypedFormControl): { [s: string]: boolean } => {
+    if (!control.value) {
+      return { error: true, required: true };
+    } else if (control.value !== this.forgotForm.controls['password_md5'].value) {
+      return { confirm: true, error: true };
+    }
+    return {};
+  };
 
 }

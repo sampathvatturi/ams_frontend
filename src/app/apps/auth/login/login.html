@@ -509,9 +509,9 @@
 
         <form nz-form [formGroup]="forgotForm" class="login-form" *ngIf="settings.current_screen=='forgot'">
           <nz-form-item>
-            <nz-form-label [nzSpan]="7" nzRequired>Username</nz-form-label>
+            <nz-form-label [nzSpan]="7" nzRequired>UserName</nz-form-label>
             <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..." [nzErrorTip]="userErrorTpl">
-              <input nz-input formControlName="userName" placeholder="Username" />
+              <input nz-input formControlName="username" placeholder="User Name" />
               <ng-template #userErrorTpl let-control>
                 <ng-container *ngIf="control.hasError('required')">Please input your username!</ng-container>
                 <ng-container *ngIf="control.hasError('duplicated')">The username is redundant!</ng-container>
@@ -519,42 +519,71 @@
             </nz-form-control>
           </nz-form-item>
           <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzRequired>New Password</nz-form-label>
+            <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..." [nzErrorTip]="password">
+              <input nz-input formControlName="newPassword" placeholder="New Password" (ngModelChange)="validateConfirmPassword()" type="password"
+              autocomplete="new-password"/>
+              <ng-template #password let-control>
+                <ng-container *ngIf="control.hasError('required')">Please input your new password</ng-container>
+                <!-- <ng-container *ngIf="control.hasError('duplicated')">The username is redundant!</ng-container> -->
+              </ng-template>
+            </nz-form-control>
+          </nz-form-item>
+          <nz-form-item>
+            <nz-form-label [nzSpan]="7" nzRequired>Confirm Password</nz-form-label>
+            <nz-form-control [nzSpan]="12" nzHasFeedback nzValidatingTip="Validating..." [nzErrorTip]="passwordErrorTpl">
+              <input nz-input formControlName="confirmPassword" placeholder="Confirm Password" />
+              <ng-template #passwordErrorTpl let-control>
+                <ng-container *ngIf="control.hasError('required')">Please Confirm your password</ng-container>
+                <ng-container *ngIf="control.hasError('confirm')"
+                    >Password is inconsistent!</ng-container
+                  >
+                <!-- <ng-container *ngIf="control.hasError('duplicated')">The username is redundant!</ng-container> -->
+              </ng-template>
+            </nz-form-control>
+          </nz-form-item>
+          <!-- <nz-form-item>
             <nz-form-control nzErrorTip="Please input your PhoneNumber!" style="width: 100%;">
               <nz-input-group nzPrefixIcon="user">
                 <input type="number" onKeyPress="if(this.value.length==10) return false;" nz-input
                   formControlName="phoneNumber" placeholder="PhoneNumber" />
               </nz-input-group>
             </nz-form-control>
-          </nz-form-item>
-          <div class="row login-form-margin">
+          </nz-form-item> -->
+          <!-- <div class="row login-form-margin">
             <div class="col-lg-10 col-md-10 col-sm-10">
               <div style="background: #ececec;">
                 <img [src]="captchImg" alt="Capcha to load" style="width: 100%;
               height: 74px;">
               </div>
-            </div>
-            <div class="col-lg-1 col-md-1 col-sm-1" style="padding: 0px;">
+            </div> -->
+            <!-- <div class="col-lg-1 col-md-1 col-sm-1" style="padding: 0px;">
               <button type="button" (click)="getCaptchaText()"
                 style="background: #81348a; border: none; margin-top: 50px; color: #ffffff; padding-left: 4px; padding-right: 4px; border-radius: 4px;"><i
                   nz-icon nzType="reload" nzTheme="outline" style="display: inline-grid;"></i></button>
-            </div>
-          </div>
-          <nz-form-item class="ant-form-item">
+            </div> -->
+          <!-- </div> -->
+          <!-- <nz-form-item class="ant-form-item">
             <nz-form-label [nzSpan]="24" nzFor="rmcCtznCptch">Enter the code from the above image</nz-form-label>
             <nz-form-control [nzSpan]="24">
               <input nz-input name="rmcCtznCptch" id="rmcCtznCptch" autocomplete="off" type="text"
                 formControlName="captcha">
             </nz-form-control>
-          </nz-form-item>
-          <div nz-row *ngIf="errmsg">
+          </nz-form-item> -->
+          <!-- <div nz-row *ngIf="errmsg">
             <h6 style="color: red">{{err_msg}}</h6>
-          </div>
-          <button nz-button class="login-form-button login-form-margin btn-shade" [nzType]="'primary'"
+          </div> -->
+          <!-- <button nz-button class="login-form-button login-form-margin btn-shade" [nzType]="'primary'"
             (click)="otpsnd()" style="font-weight: 700;" [disabled]="!forgotForm.valid">Send
-            OTP</button>
-          <div nz-row>
+            OTP</button> -->
+          <!-- <div nz-row>
             <a (click)="bckToLgn()">Back to login</a>
+          </div> -->
+          <div nz-row>
+            <a class="login-form-forgot" (click)="bckToLgn()">Back to login</a>
           </div>
+          <button nz-button nzType="primary" class="login-form-button login-form-margin btn-shade"
+            [nzType]="'primary'">Reset</button>
         </form>
         <form nz-form [formGroup]="otpForm" class="login-form" *ngIf="settings.current_screen=='otp'">
           <nz-form-item class="ant-form-item">
