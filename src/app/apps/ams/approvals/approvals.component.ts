@@ -6,6 +6,7 @@ import { UserService } from 'src/app/shared/moduleservices/user.service';
 import { WorksService } from 'src/app/shared/moduleservices/works.service';
 import { TransactionDetailsService } from 'src/app/shared/moduleservices/transaction-details.service';
 import { InvoicesService } from 'src/app/shared/moduleservices/invoices.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-approvals',
@@ -22,13 +23,13 @@ export class ApprovalsComponent implements OnInit {
   isVisible = false;
   users: any = [];
   userStatusList: any = [];
-  currentTenderData: any = [];
+  currentInvoiceData: any = [];
   userStatus: any;
   user_data: any;
   currentUserId: any;
-  tenderUserStatusList: any=[];
+  invoiceUserStatusList: any=[];
   reason: any;
-  currentTenderId: any;
+  currentInvoiceId: any;
   works_info:any = [];
   allUsersApprovedStatus: boolean = false;
   noDataShow: boolean = false;
@@ -36,11 +37,22 @@ export class ApprovalsComponent implements OnInit {
 
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
 
-  columnDefs = [{ headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false},
-                { headerName: 'Tender Title', field: 'title', alignment: 'center'},
-                { headerName: 'Vendor Name', field: 'vendor_name', alignment: 'center'},
-                { headerName: 'Amount', field: 'tender_cost', alignment: 'center'},
-                { headerName: 'Status', field: 'status', alignment: 'center'},]
+  // columnDefs = [{ headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false},
+  //               { headerName: 'Tender Title', field: 'title', alignment: 'center'},
+  //               { headerName: 'Vendor Name', field: 'vendor_name', alignment: 'center'},
+  //               { headerName: 'Amount', field: 'tender_cost', alignment: 'center'},
+  //               { headerName: 'Status', field: 'status', alignment: 'center'},]
+
+  columnDefs = [
+    { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false, width:100 },
+    { headerName: 'Inv No.', field: 'invoice_number', alignment: 'center', filter: false, width:100 },
+    { headerName: 'Vendor', field: 'vendor_name', alignment: 'center', width:175 },
+    { headerName: 'Date', field: 'created_date', alignment: 'center', width:125 },
+    { headerName: 'Amount', field: 'amount', alignment: 'center', width:175 },
+    { headerName: 'Tax', field: 'tax', alignment: 'center', width:175 },
+    { headerName: 'Total', field: 'grand_total', alignment: 'center', width:175 },    
+    { headerName: 'Status', field: 'status', alignment: 'center', width:175 },
+  ];
   
 
   constructor(
@@ -49,7 +61,8 @@ export class ApprovalsComponent implements OnInit {
     private tenderService: TenderDetailsService,
     private userService: UserService,
     private works:WorksService,
-    private invoicesService: InvoicesService
+    private invoicesService: InvoicesService,
+    private datePipe: DatePipe,
   ) {}
 
   ngOnInit(): void {    
@@ -83,10 +96,8 @@ export class ApprovalsComponent implements OnInit {
   
   getVendorInvoices(action?: any): void {
     this.invoicesService.getVendorInvoices().subscribe((res) => {
-      this.invoices = res;
-      if(action) {        
-        this.getTendersData();
-      }
+      this.invoices = res; 
+      this.getInvoicesData();
     })
   }
 
@@ -119,32 +130,32 @@ export class ApprovalsComponent implements OnInit {
     console.log(this.validateForm.value);
     this.noDataShow = true;
     if(this.validateForm.value.type === 'tenders') {
-      this.getTendersData();
+      this.getInvoicesData();
       
     }
     this.isLoading = false;
   } 
 
-  getTendersData(): void {
-    this.invoicesData = this.invoices.filter((item) => item.status === this.validateForm.value.status);
-    this.invoicesData.forEach((element:any,index:any) => {
-      element['sno'] = index+1;
-    })
-
-    console.log("this.invoicesData:", this.invoicesData);
-    
+  getInvoicesData(): void {
+    // this.invoicesData = this.invoices.filter((item) => item.status === 'open');
+    this.invoicesData = this.invoices;
+    this.invoicesData.map((item, index) => {
+      item.sno = index+1,
+      item.created_date = this.datePipe.transform(item.created_date,'dd-MM-YYYY')
+    });
+    console.log("this.invoicesData:", this.invoicesData);    
   }
 
   onClickApprove(data: any): void {
-    console.log(data)
-    this.currentTenderData = data;
+    console.log("==onClickApprove==", data);
+    this.currentInvoiceData = data;
     this.userApprovalList(data);
   }
 
   userApprovalList(item: any): void {
-    console.log(item.tender_user_status)
-    this.userStatusList = item?.tender_user_status;
-    this.currentTenderId = item?.id;
+    console.log(item.invoice_user_status)
+    this.userStatusList = item?.invoice_user_status;
+    this.currentInvoiceId = item?.invoice_id;
     console.log(this.userStatusList);
     this.users.forEach((user: any) => {
       this.userStatusList.map((item: any) => {
@@ -163,18 +174,18 @@ export class ApprovalsComponent implements OnInit {
 
   handleOk(): void {
     console.log('Button ok clicked!', this.userStatus, this.userStatusList);
-    this.tenderUserStatusList=[]; 
+    this.invoiceUserStatusList=[]; 
     this.userStatusList.forEach((user: any) => {
       const obj = {
         user_id: user?.user_id,
         status: (user?.user_id === this.currentUserId) ? this.userStatus : user?.status,
         reason: (user?.user_id === this.currentUserId && this.userStatus === 'Rejected') ? this.reason : ''
       }
-      this.tenderUserStatusList.push(obj);      
+      this.invoiceUserStatusList.push(obj);      
     });
-    console.log('tenderUserStatusList :: ', this.tenderUserStatusList);
-    this.tenderUserStatusList.filter((item: any) => (item?.status==='Pending' || item?.status==='Rejected'))
-    this.updateTenderUserStatus();
+    console.log('invoiceUserStatusList :: ', this.invoiceUserStatusList);
+    this.invoiceUserStatusList.filter((item: any) => (item?.status==='Pending' || item?.status==='Rejected'))
+    this.updateInvoiceUserStatus();
   }
 
   handleCancel(): void {
@@ -183,25 +194,26 @@ export class ApprovalsComponent implements OnInit {
   }
 
   prepareUpdatePayload() {
-    this.allUsersApprovedStatus = this.tenderUserStatusList.every((item: any) => item.status === 'Approved');
-    console.log("allUsersApprovedStatus", this.allUsersApprovedStatus);
+    this.allUsersApprovedStatus = this.invoiceUserStatusList.every((item: any) => item.status === 'Approved');
+    const allUsersRejectStatus = this.invoiceUserStatusList.every((item: any) => item.status === 'Rejected');
+    console.log("allUsersApprovedStatus", this.allUsersApprovedStatus, allUsersRejectStatus);
     const payload = {
-      tender_user_status: this.tenderUserStatusList,
+      invoice_user_status: this.invoiceUserStatusList,
       updated_by: this.user_data?.user_id,
-      status: this.allUsersApprovedStatus ? 'accept' : this.currentTenderData?.status
+      status: this.allUsersApprovedStatus ? 'paid' : allUsersRejectStatus ? 'cancel' : this.currentInvoiceData?.status
     }
     return payload;
   }
 
-  updateTenderUserStatus(): void {
+  updateInvoiceUserStatus(): void {
     if (this.userStatus === 'Rejected' && !this.reason) {      
       this.notification.createNotification('error', 'Please enter a reson');
     }
     else {
-      this.tenderService.updateTenderUserStatus(this.currentTenderId, this.prepareUpdatePayload()).subscribe((res) => {
+      this.invoicesService.updateInvoiceUserStatus(this.currentInvoiceId, this.prepareUpdatePayload()).subscribe((res) => {
         this.notification.createNotification("success", res?.message);
         this.isVisible = false;
-        this.getVendorInvoices('update');
+        this.getVendorInvoices();
       })
     }
   }

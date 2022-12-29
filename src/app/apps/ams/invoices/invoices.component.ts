@@ -47,12 +47,13 @@ export class InvoicesComponent implements OnInit {
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
 
   columnDefs = [
-  { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false, width:100 },
+  { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false, width:100},
+  { headerName: 'Inv No.', field: 'invoice_number', alignment: 'center', filter: false, width:100 },
   { headerName: 'Vendor', field: 'vendor_name', alignment: 'center', width:175 },
   { headerName: 'Date', field: 'created_date', alignment: 'center', width:125 },
-  { headerName: 'Total Amount', field: 'amount', alignment: 'center', width:175 },
-  { headerName: 'Total Tax', field: 'tax', alignment: 'center', width:175 },
-  { headerName: 'Grand Total', field: 'grand_total', alignment: 'center', width:175 },
+  { headerName: 'Amount', field: 'amount', alignment: 'center', width:175 },
+  { headerName: 'Tax', field: 'tax', alignment: 'center', width:175 },
+  { headerName: 'Total', field: 'grand_total', alignment: 'center', width:175 },
   { headerName: 'Remarks', field: 'remarks', alignment: 'center', width:175 },
 ];
 
@@ -68,17 +69,17 @@ export class InvoicesComponent implements OnInit {
   ngOnInit(): void {
     this.invoiceFormValidators();
     this.getVendors();
+    this.getInvoices();
     this.user_data = sessionStorage.getItem('user_data');
     this.user_data = JSON.parse(this.user_data);
   }
   getInvoices(): void {
     this.invoice.getInvoices().subscribe((res) => {
       this.invoice_info = res;
-      this.invoice_info.forEach((elem:any,index:any) => {
-        elem['vendor_name'] = this.v_name[elem.vendor_id];
-        elem['sno'] = index+1;
-        elem.created_date = this.datePipe.transform(elem.created_date,'dd-MM-YYYY');
-      })
+      this.invoice_info.map((item, index) => {
+        item.sno = index+1,
+        item.created_date = this.datePipe.transform(item.created_date,'dd-MM-YYYY')
+      });
       console.log(this.invoice_info);
       this.isLoading = false;
     })
@@ -89,7 +90,7 @@ export class InvoicesComponent implements OnInit {
       for (let x of this.vendor_array) {
         this.v_name[x.vendor_id] = x.vendor_name;
       }
-      this.getInvoices();
+      // this.getInvoices();
     });
   }
   getInventory():void{

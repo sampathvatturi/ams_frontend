@@ -46,7 +46,7 @@
         <dxi-column [showInColumnChooser]="false"  type="buttons"
             [width]="100" cellTemplate="viewTemplate">
             <div *dxTemplate="let data of 'viewTemplate'">
-                <button  *ngIf="data.data.status === 'open'" (click)="onClickApprove(data.data)">
+                <button  class="approveBtn" *ngIf="data.data.status === 'open'" (click)="onClickApprove(data.data)">
                     Approve
                 </button>
             </div>
@@ -56,37 +56,38 @@
 </div>
 <nz-modal [(nzVisible)]="isVisible" nzWidth="700px" nzTitle="User Approvals" (nzOnCancel)="handleCancel()" (nzOnOk)="handleOk()">
   <ng-container *nzModalContent>
-
     <div nz-row>
         <div nz-col nzSpan="12">
               <div nz-row>
-                <div nz-col nzSpan="8" class="name">Tender Title: </div>
-                <div nz-col nzSpan="8">{{ currentTenderData?.title }}</div>
+                <div nz-col nzSpan="8" class="name">Invoice No.: </div>
+                <div nz-col nzSpan="8">{{ currentInvoiceData?.invoice_number }}</div>
               </div>
               <div nz-row>
                 <div nz-col nzSpan="8" class="name">Vender Name: </div>
-                <div nz-col nzSpan="8">{{ currentTenderData?.vendor_name }}</div>
+                <div nz-col nzSpan="8">{{ currentInvoiceData?.vendor_name }}</div>
               </div>        
               <div nz-row>
-                <div nz-col nzSpan="8" class="name">Tender Cost: </div>
-                <div nz-col nzSpan="8">{{ currentTenderData?.tender_cost}}</div>
+                <div nz-col nzSpan="8" class="name">Date: </div>
+                <div nz-col nzSpan="8">{{ currentInvoiceData?.created_date}}</div>
               </div>
         </div>
         <div nz-col nzSpan="12">
           <div nz-row>
-            <div nz-col nzSpan="8" class="name">Location: </div>
-            <div nz-col nzSpan="8">{{ currentTenderData?.location }}</div>
+            <div nz-col nzSpan="8" class="name">Amount: </div>
+            <div nz-col nzSpan="8">{{ currentInvoiceData?.amount }}</div>
           </div>
           <div nz-row>
-            <div nz-col nzSpan="8" class="name">Works: </div>
-            <div nz-col nzSpan="14">{{ workIdToName(currentTenderData?.work_id) }}</div>
+            <div nz-col nzSpan="8" class="name">Tax: </div>
+            <div nz-col nzSpan="14">{{ currentInvoiceData?.tax }}</div>
+          </div>
+          <div nz-row>
+            <div nz-col nzSpan="8" class="name">Total Amount: </div>
+            <div nz-col nzSpan="14">{{ currentInvoiceData?.grand_total }}</div>
           </div>        
         </div>
-    </div>
+    </div>  
 
-    
-
-    <!-- <div class="usersTable">
+    <div class="usersTable">
       <nz-table #basicTable [nzData]="userStatusList" nzShowPagination nzShowSizeChanger [nzPageSizeOptions] =[5,10,15,20]>
         <thead>
           <tr>
@@ -97,7 +98,7 @@
           </tr>
         </thead>
         <tbody>
-          <tr *ngFor="let data of userStatusList | globalTablesearch : searchText; let i = index">
+          <tr *ngFor="let data of userStatusList; let i = index">
               <td>{{ i + 1 }}</td>
               <td>{{ data?.user_full_name }}</td>
               <td >
@@ -121,6 +122,6 @@
             </tr>         
         </tbody>
     </nz-table>
-    </div>  -->
+    </div> 
   </ng-container>
 </nz-modal>

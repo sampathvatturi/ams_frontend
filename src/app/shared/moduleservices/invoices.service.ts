@@ -38,7 +38,7 @@ export class InvoicesService {
   }
 
   getInvoicesById(id: any): Observable<any> {
-    return this.apiService.getCall('/invoice/getInvoicesById' + id).pipe(
+    return this.apiService.getCall('/invoice/getInvoicesById/' + id).pipe(
       map((response: any) => {
         return response;
       })
@@ -47,6 +47,14 @@ export class InvoicesService {
 
   getVendorInvoices(): Observable<any>{
     return this.apiService.getCall('/invoice/getVendorInvoices').pipe(
+      map((response: any) => {
+        return response;
+      })
+    );
+  }
+
+  updateInvoiceUserStatus(id: any, postDataObj: any): Observable<any> {
+    return this.apiService.patchCall('/invoice/updateInvoiceUserStatus/' + id, postDataObj).pipe(
       map((response: any) => {
         return response;
       })
