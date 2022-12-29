@@ -125,16 +125,16 @@
   ::ng-deep .dx-datagrid-summary-item {
     font-weight: 600 !important;
   }
-  ::ng-deep .ant-select-multiple .ant-select-selection-item {
-    position: absolute !important;
-    color: black;
-    margin-top: 0px !important;
-    margin-right: 0px !important;
-    margin-bottom: 0px !important;
-    padding: 0 0px 0 0px !important;
-    background: #ffffff !important;
-    border: 0px solid #f0f0f0 !important;
-  }
+  // ::ng-deep .ant-select-multiple .ant-select-selection-item {
+  //   position: absolute !important;
+  //   color: black;
+  //   margin-top: 0px !important;
+  //   margin-right: 0px !important;
+  //   margin-bottom: 0px !important;
+  //   padding: 0 0px 0 0px !important;
+  //   background: #ffffff !important;
+  //   border: 0px solid #f0f0f0 !important;
+  // }
   ::ng-deep .dx-datagrid-filter-row .dx-editor-cell .dx-editor-with-menu .dx-menu {
     display: block !important;
   }

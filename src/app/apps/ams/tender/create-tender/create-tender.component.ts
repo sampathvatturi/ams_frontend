@@ -72,7 +72,6 @@ export class CreateTenderComponent implements OnInit {
   ) { }
 
   ngOnInit(): void {
-    this.isLoading = true;
     this.user_data = sessionStorage.getItem('user_data');
     this.user_data = JSON.parse(this.user_data);
     this.createTendorsFormValidators();
@@ -105,8 +104,8 @@ export class CreateTenderComponent implements OnInit {
   }
 
   getCreateTender(){
+    this.isLoading = true;
     this.tendersapi.getTenderDetails().subscribe((res)=>{
-      this.isLoading = true;
       if(res.status == 204){
         this.dataMessage = res.message
       }
