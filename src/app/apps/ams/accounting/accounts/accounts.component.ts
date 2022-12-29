@@ -28,7 +28,8 @@ export class AccountsComponent implements OnInit {
 
   columnDefs = [
     { headerName: 'S.No.', field: 'sno', width: '100', alignment: 'center', filter: false, cellTemplate: 'serialNo' },
-    { headerName: 'Account Name', field: 'name', width: '600', filter: true }
+    { headerName: 'Account Name', field: 'name', width: '500', filter: true },
+    { headerName: 'Main Accounts', field: 'main_acc', width: '100', filter: true , cellTemplate: 'main_acc',alignment:'left'}
   ]
 
   ngOnInit(): void {

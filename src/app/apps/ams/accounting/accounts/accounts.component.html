@@ -23,6 +23,12 @@
     <div *dxTemplate="let data of 'serialNo'">
       {{data.row.rowIndex + 1}}
     </div>
+    <div *dxTemplate="let data of 'main_acc'">
+      <div *ngIf="data.data.main_acc==1;else show">Main account ( For invoice debits )</div>
+      <ng-template #show>
+        <div ></div>
+      </ng-template>
+    </div>
 
     <!-- <ng-container *dxTemplate="let account of 'dataRowTemplateName'; let i = index">
             <tr >

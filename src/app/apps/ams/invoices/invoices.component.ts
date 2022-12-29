@@ -141,7 +141,7 @@ export class InvoicesComponent implements OnInit {
     this.updateBtnDisable = true;
     if (type === 'view') {
       this.updateBtnDisable = false;
-      this.drawerTitle = "View Tender"
+      this.drawerTitle = "View Invoice details"
     }
   }
 
