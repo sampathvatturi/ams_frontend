@@ -35,7 +35,7 @@
                   routerLink="/internal/ams/{{ child.path }}"
                   *ngFor="let child of item.children"
                 >
-                  <!-- <span nz-icon><i class="{{ child.icon }}"></i></span> -->
+                <span nz-icon nzType="{{child.icon}}" nzTheme="outline"></span>
                   <span>{{ child.title }}</span>
                 </li>
               </ul>
