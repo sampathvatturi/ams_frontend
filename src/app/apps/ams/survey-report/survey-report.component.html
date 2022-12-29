@@ -1,4 +1,4 @@
-<div class="ds-card grid" #container id="load" >
+<div class="ds-card grid" #container id="load">
     <dx-data-grid class="p-8 flow" id="gridContainer" [wordWrapEnabled]="true" [dataSource]="survey_info"
         [remoteOperations]="false" [allowColumnReordering]="true" [rowAlternationEnabled]="true"
         [allowColumnResizing]="true" [showColumnLines]="true" [showRowLines]="true" [showBorders]="true"
@@ -17,16 +17,24 @@
         <dxo-export [enabled]="(permissions.exprt_in==1)?true:false" [allowExportSelectedData]="true"
             fileName="Change Log"></dxo-export>
         <dxo-filter-row [visible]="true"></dxo-filter-row>
-        
-        <dxi-column [showInColumnChooser]="false" [visible]="true" type="text" alignment="center"
-        cellTemplate="snoTempelate" caption="S.No." [width]="100">
-            <div *dxTemplate="let data of 'snoTempelate'">
-                {{data.row.rowIndex + 1}}
-            </div>
-        </dxi-column>
+
+
         <dxi-column *ngFor="let f of columnDefs;let i=index" [visible]="true" [dataField]="f.field"
-            [caption]="f.headerName" [alignment]="f.alignment" [width]="f.width" [allowResizing]="false">
+            [cellTemplate]="f.cellTemplate" [caption]="f.headerName" [alignment]="f.alignment" [width]="f.width"
+            [allowResizing]="false">
         </dxi-column>
+        <div *dxTemplate="let data of 'serialNo'">
+            {{data.row.rowIndex + 1}}
+        </div>
+        <div *dxTemplate="let d of 'statusTemplate'">
+            {{d.data.status|titlecase}}
+        </div>
+        <div *dxTemplate="let d of 'startDate'">
+            {{ d.data.start_date | date : "dd-MM-YYYY"}}
+        </div>
+        <div *dxTemplate="let d of 'endDate'">
+            {{ d.data.end_date | date : "dd-MM-YYYY"}}
+        </div>
         <dxi-column [showInColumnChooser]="false" [visible]="(permissions.updt_in==1)?true:false" type="buttons"
             [width]="100" cellTemplate="viewTemplate" caption="Actions">
             <div *dxTemplate="let data of 'viewTemplate'">
@@ -46,7 +54,7 @@
     </dx-data-grid>
 </div>
 <dx-load-panel [container]="container" [visible]="isLoading" [showIndicator]="true" [position]="{ of: '#load' }"
-[showPane]="true" [shading]="true" [closeOnOutsideClick]="false" ></dx-load-panel>
+    [showPane]="true" [shading]="true" [closeOnOutsideClick]="false"></dx-load-panel>
 <nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="true" [nzWidth]="720" [nzVisible]="visible"
     [nzTitle]="drawerTitle" [nzFooter]="footerTpl" (nzOnClose)="close()" [nzClosable]="false" [nzCloseIcon]="icon"
     [nzExtra]="icon">
@@ -55,31 +63,49 @@
     </ng-template>
     <form nz-form *nzDrawerContent [formGroup]="surveyForm" class="drawer-form">
         <div>
-            <nz-form-item >
-                <nz-form-label nz-col nzSpan="5" class="required" >Name</nz-form-label>
+            <nz-form-item>
+                <nz-form-label nz-col nzSpan="5" class="required">Name</nz-form-label>
                 <nz-form-control nz-col nzSpan="10" [nzErrorTip]="name">
-                  <textarea formControlName="name" nz-input rows="2"
-                    placeholder="Enter name"></textarea>
-                  <ng-template #name let-control>
-                    <ng-container *ngIf="control.hasError('required')">Please enter  name</ng-container>
-                    <ng-container *ngIf="control.hasError('pattern')">Please enter valid input</ng-container>
-                  </ng-template>
+                    <textarea formControlName="name" nz-input rows="2" placeholder="Enter name"></textarea>
+                    <ng-template #name let-control>
+                        <ng-container *ngIf="control.hasError('required')">Please enter name</ng-container>
+                        <ng-container *ngIf="control.hasError('pattern')">Please enter valid input</ng-container>
+                    </ng-template>
                 </nz-form-control>
-              </nz-form-item>
+            </nz-form-item>
         </div>
         <div>
-            <nz-form-item >
-                <nz-form-label nz-col nzSpan="5" class="required" >Description</nz-form-label>
+            <nz-form-item>
+                <nz-form-label nz-col nzSpan="5" class="required">Description</nz-form-label>
                 <nz-form-control nz-col nzSpan="10" [nzErrorTip]="description">
-                  <textarea formControlName="description" nz-input rows="2"
-                    placeholder="Enter Tender Description"></textarea>
-                  <ng-template #description let-control>
-                    <ng-container *ngIf="control.hasError('required')">Please enter  description</ng-container>
-                    <ng-container *ngIf="control.hasError('pattern')">Please enter valid input</ng-container>
-                  </ng-template>
+                    <textarea formControlName="description" nz-input rows="2"
+                        placeholder="Enter Tender Description"></textarea>
+                    <ng-template #description let-control>
+                        <ng-container *ngIf="control.hasError('required')">Please enter description</ng-container>
+                        <ng-container *ngIf="control.hasError('pattern')">Please enter valid input</ng-container>
+                    </ng-template>
                 </nz-form-control>
-              </nz-form-item>
+            </nz-form-item>
         </div>
+        <div>
+
+            <nz-form-item>
+                <nz-form-label nz-col nzSpan="5" class="required">Start Date</nz-form-label>
+                <nz-form-control nz-col nzSpan="10" nzErrorTip="Enter Start Date">
+                    <nz-date-picker formControlName="start_date"></nz-date-picker>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+
+        <div >
+            <nz-form-item>
+                <nz-form-label nz-col nzSpan="5" class="required">End Date</nz-form-label>
+                <nz-form-control nz-col nzSpan="10" nzErrorTip="Enter End Date">
+                    <nz-date-picker formControlName="end_date"></nz-date-picker>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+
         <div>
             <nz-form-item>
                 <nz-form-label nz-col nzSpan="5" class="required">Status</nz-form-label>
@@ -88,11 +114,26 @@
                         <nz-option nzValue="open" nzLabel="Open"></nz-option>
                         <nz-option nzValue="close" nzLabel="Close"></nz-option>
                         <nz-option nzValue="inprogress" nzLabel="In Progress"></nz-option>
-                        
+
                     </nz-select>
                 </nz-form-control>
             </nz-form-item>
         </div>
+
+        <div>
+            <nz-form-item>
+              <nz-form-label nz-col nzSpan="5">Attachments</nz-form-label>
+              <nz-form-control nz-col nzSpan="10">
+                <nz-upload [nzAction]=uploadUrl [nzRemove]="handleRemove" [nzFileList]="files"
+                  (nzChange)="handleChange($event)" nzMultiple="true">
+                  <button nz-button>
+                    <span nz-icon nzType="upload"></span>
+                    Upload
+                  </button>
+                </nz-upload>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
     </form>
 
     <ng-template #footerTpl>

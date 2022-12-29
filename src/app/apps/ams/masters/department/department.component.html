@@ -29,9 +29,9 @@
             </div>
         </dxi-column>
         <dxi-column [showInColumnChooser]="false" type="button1" [width]="100" cellTemplate="EditTemplate" [allowResizing]="false" caption="Actions">
-            <div *dxTemplate="let data of 'EditTemplate'" (click)="edit('view',data.data)">
+            <div *dxTemplate="let data of 'EditTemplate'">
                 <div class="cursor-pointer tblEdtBtn">
-                    View
+                    Delete
                 </div>
             </div>
         </dxi-column>
@@ -62,14 +62,6 @@
       </nz-form-item>
     </div>
 
-    <div>
-      <nz-form-item>
-        <nz-form-label nz-col nzSpan="10" class="required">Ranking</nz-form-label>
-        <nz-form-control nz-col nzSpan="12" nzErrorTip="Please Enter Rank">
-          <input nz-input formControlName="ranking" type="number" nz-input placeholder="Please Enter Rank" />
-        </nz-form-control>
-      </nz-form-item>
-    </div>
 
     <div>
       <nz-form-item>

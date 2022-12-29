@@ -26,8 +26,6 @@ export class DepartmentComponent implements OnInit {
   columnDefs = [
     { headerName: 'S.No', field: 'sno', alignment: 'center',width:'100', filter: false},
     { headerName: 'Department Name', field: 'department_name', alignment: 'left'},
-    { headerName: 'Status', field: 'status', alignment: 'center',width:'175'},
-    { headerName: 'Ranking', field: 'ranking', alignment: 'center',width:'175'},
     ];
 
 
@@ -115,7 +113,6 @@ export class DepartmentComponent implements OnInit {
   prepareDepartmentPayload(data: any) {
     const payload = {
       department_name: data.department_name,
-      ranking: data.ranking,
       status: data.status,
       created_by: this.user_data?.user_id,
       updated_by: this.user_data?.user_id
@@ -143,7 +140,6 @@ export class DepartmentComponent implements OnInit {
   prepareUpdatePayload(data: any) {
     const payload = {
       department_name: data.department_name,
-      ranking: data.ranking,
       status: data.status,
       updated_by: this.user_data?.user_id
     }
@@ -174,7 +170,6 @@ export class DepartmentComponent implements OnInit {
       Validators.minLength(10),
       ]
       ],
-      ranking: ['', [Validators.required]],
       status: ['', [Validators.required]],
       department_code: [''],
     });

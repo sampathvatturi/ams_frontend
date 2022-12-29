@@ -2,6 +2,14 @@ import { Component, OnInit } from '@angular/core';
 import { SurveyReportService } from 'src/app/shared/moduleservices/survey-report.service';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { NotificationService } from 'src/app/shared/common/notification.service';
+import { GlobalConstants } from 'src/app/shared/common/global_constants';
+import { environment } from 'src/environments/environment';
+import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
+import { Observable } from 'rxjs';
+import { NzMessageService } from 'ng-zorro-antd/message';
+
+
+
 
 
 @Component({
@@ -21,19 +29,33 @@ export class SurveyReportComponent implements OnInit {
   submit:boolean = true;
   user_data:any = [];
   surveyId:any;
+  files:any[]=[];
+  filesDetails = {
+    name : '',
+    url:''
+  }
+  baseUrl = environment.apiUrl;
+  uploadUrl = this.baseUrl+'/upload/uploadFiles';
+  getUploadedFIlesUrl = this.baseUrl+'/upload/getUploadedFiles/';
+
 
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
 
   columnDefs = [
+    { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false,width:'100', cellTemplate:'serialNo'},
     { headerName: 'Name', alignment: 'left', field: 'name' },
     { headerName: 'Description', alignment: 'left', field: 'description' },
-    { headerName: 'Status', alignment: 'left', field: 'status' },
+    { headerName: 'Status', alignment: 'left', field: 'status',cellTemplate:'statusTemplate'},
+    { headerName: 'Start Date', alignment: 'left', field: 'start_date',width:'175', cellTemplate:'startDate'},
+    { headerName: 'End Date', alignment: 'left', field: 'end_date',width:'175',cellTemplate:'endDate'}
 
   ]
   constructor(
     private fb: UntypedFormBuilder,
     private surveyReportService:SurveyReportService,
     private notification:NotificationService,
+    private msg: NzMessageService,
+
 
   ) { }
 
@@ -52,6 +74,7 @@ export class SurveyReportComponent implements OnInit {
     this.surveyReportService.getSurveyreports().subscribe((res) => {
       if (res.length > 0) {
         this.survey_info = res;
+        
         this.isLoading = false;
 
       } else {
@@ -79,6 +102,9 @@ export class SurveyReportComponent implements OnInit {
     this.submit = true;
     this.drawerTitle = 'Add Work';
     this.visible = true;
+    this.filesDetails.name='';
+    this.filesDetails.url='';
+    this.files=[];
     this.surveyFormValidators();
     this.surveyForm.get('status')?.setValue('open');
   }
@@ -92,6 +118,18 @@ export class SurveyReportComponent implements OnInit {
     this.surveyForm.get('status')?.setValue(data.status);
     this.surveyForm.get('name')?.setValue(data.name);
     this.surveyForm.get('description')?.setValue(data.description);
+    this.surveyForm.get('start_date')?.setValue(data.start_date);
+    this.surveyForm.get('end_date')?.setValue(data.end_date);
+    if(data.attachments != null && data.attachments !=''){
+      var fileNamesArray = data.attachments.split(',');
+      if(fileNamesArray.length > 0){
+        fileNamesArray.forEach((element:any) => {
+          this.filesDetails.name=element;
+          this.filesDetails.url=this.getUploadedFIlesUrl+element;
+          this.files.push(this.filesDetails);
+        });
+      }
+    }
     this.updateBtnDisable = true;
     if (type === 'view') {
       this.updateBtnDisable = false;
@@ -100,10 +138,17 @@ export class SurveyReportComponent implements OnInit {
   }
 
   prepareSurveyPayload(data:any){
+    var fileNames:any[]=[];
+    this.files.forEach(element => {
+      fileNames.push(element.name);
+    });
     const payload = {
       name:data.name,
       description:data.description,
       status:data.status,
+      attachments: fileNames.toString(),
+      start_date:data.start_date,
+      end_date:data.end_date,
       created_by:this.user_data.user_id,
       updated_by:this.user_data?.user_id
     }
@@ -130,10 +175,17 @@ export class SurveyReportComponent implements OnInit {
   }
 
   prepareUpdatePayload(data:any){
+    var fileNames:any[]=[];
+    this.files.forEach(element => {
+      fileNames.push(element.name);
+    });
     const payload = {
       name:data.name,
       description:data.description,
       status:data.status,
+      attachments: fileNames.toString(),
+      start_date:data.start_date,
+      end_date:data.end_date,
       updated_by:this.user_data?.user_id
     }
     return payload;
@@ -160,11 +212,32 @@ export class SurveyReportComponent implements OnInit {
   close(): void {
     this.visible = false;
   }
+  handleChange(info: NzUploadChangeParam): void {
+    if (info.file.status === 'done') {
+      this.msg.success(`${info.file.name} file uploaded successfully`);
+      this.filesDetails.name = info.file.response.fileName;
+      this.filesDetails.url = this.getUploadedFIlesUrl+'/'+info.file.response.fileName;
+      this.files.push(this.filesDetails);
+    } else if (info.file.status === 'error') {
+      this.msg.error(`${info.file.name} file upload failed.`);
+    } else if(info.file.status !== 'uploading'){
+      console.log(info.file, info.fileList);
+    }
+  }
+
+  handleRemove= (file: NzUploadFile) => new Observable<boolean>((obs) => {
+    console.log(obs)
+    obs.next(false)
+  });
+
   surveyFormValidators() {
     this.surveyForm = this.fb.group({
       name:['',[Validators.required]],
       status: ['', [Validators.required]],
-      description: ['', [Validators.required]]
+      attachments: [''],
+      description: ['', [Validators.required]],
+      start_date: ['', [Validators.required]],
+      end_date: ['', [Validators.required]],
     });
   }
 }
