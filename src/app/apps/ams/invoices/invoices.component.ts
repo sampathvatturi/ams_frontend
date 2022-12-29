@@ -46,15 +46,14 @@ export class InvoicesComponent implements OnInit {
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
 
   columnDefs = [
-    { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false, width: 100, cellTemplate: 'snoTempelate' },
-    { headerName: 'Inv No.', field: 'invoice_number', alignment: 'center', filter: false, width: 100 },
+    {  headerName: 'Invoice Number', field: 'invoice_number', alignment: 'center', filter: false, width:150 },
     { headerName: 'Vendor', field: 'vendor_name', alignment: 'center', width: 175 },
     { headerName: 'Date', field: 'created_date', alignment: 'center', width: 125, cellTemplate: 'endDate' },
     { headerName: 'Amount', field: 'amount', alignment: 'center', width: 175, cellTemplate: 'Amt' },
     { headerName: 'Tax', field: 'tax', alignment: 'center', width: 175, cellTemplate: 'taxAmt' },
     { headerName: 'Total', field: 'grand_total', alignment: 'center', width: 175, cellTemplate: 'grandTotal' },
     { headerName: 'Remarks', field: 'remarks', alignment: 'center', width: 175 },
-  ];
+];
 
   constructor(
     private fb: UntypedFormBuilder,

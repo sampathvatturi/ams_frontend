@@ -20,9 +20,6 @@
     <dxi-column *ngFor="let f of columnDefs" [visible]="true" [dataField]="f.field" [cellTemplate]="f.cellTemplate"
       [caption]="f.headerName" [alignment]="f.alignment" [width]="f.width" [allowResizing]="false">
     </dxi-column>
-    <div *dxTemplate="let data of 'snoTempelate'">
-      {{data.row.rowIndex + 1}}
-    </div>
     <div *dxTemplate="let d of 'endDate'">
       {{ d.data.created_date | date : "dd-MM-YYYY"}}
     </div>
