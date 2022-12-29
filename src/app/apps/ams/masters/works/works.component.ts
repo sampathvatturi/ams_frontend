@@ -20,7 +20,7 @@ export class WorksComponent implements OnInit {
   errTip = '';
   workId:any;
   updateBtnDisable:boolean = true;
-  isLoading:boolean = true;
+  isLoading:boolean = false;
 
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
 
@@ -58,6 +58,7 @@ export class WorksComponent implements OnInit {
     }
 
     getWorks():void{
+      this.isLoading = true ;
       this.workService.getWorks().subscribe((res) =>{
         this.works_info = res;
         this.works_info.forEach((elem:any,index:any)=>{

@@ -23,7 +23,7 @@ export class UomComponent implements OnInit {
   searchText = '';
   uomId: any;
   updateBtnDisable:boolean = true;
-  isLoading : boolean = true ;
+  isLoading : boolean = false ;
 
   
 
@@ -68,6 +68,7 @@ export class UomComponent implements OnInit {
     }
 
     getUom(): void {
+      this.isLoading = true;
       this.uomService.getUoms().subscribe((res) => {
         this.uom_info = res;
         this.uom_info.forEach((element:any,index:any) => {

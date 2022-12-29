@@ -21,7 +21,7 @@ export class DepartmentComponent implements OnInit {
   searchText = '';
   departmentId: any;
   updateBtnDisable:boolean = true;
-  isLoading:boolean = true;
+  isLoading:boolean = false;
 
   columnDefs = [
     { headerName: 'S.No', field: 'sno', alignment: 'center',width:'100', filter: false},
@@ -69,12 +69,14 @@ export class DepartmentComponent implements OnInit {
   }
 
   getDepartment() {
+    this.isLoading = true;
     this.departmentService.getDepartments().subscribe((res) => {
       this.departments = res;
       this.departments.forEach((element:any,index:any) => {
         element['sno'] = index+1;
       })
-      this.isLoading = false;
+    this.isLoading = false;
+      
       
     })
   }

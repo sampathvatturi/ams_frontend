@@ -88,7 +88,7 @@ export class SurveyReportComponent implements OnInit {
 
   create(): void {
     this.submit = true;
-    this.drawerTitle = 'Add Work';
+    this.drawerTitle = 'Add Survey Report';
     this.visible = true;
     this.filesDetails.name = '';
     this.filesDetails.url = '';
@@ -101,6 +101,9 @@ export class SurveyReportComponent implements OnInit {
     this.drawerTitle = 'Edit Survey Report';
     this.visible = true;
     this.submit = false;
+    this.filesDetails.name = '';
+    this.filesDetails.url = '';
+    this.files = [];
     this.surveyFormValidators();
     this.surveyId = data?.id;
     this.surveyForm.get('status')?.setValue(data.status);
@@ -125,30 +128,31 @@ export class SurveyReportComponent implements OnInit {
     }
   }
 
-  prepareSurveyPayload(data: any) {
-    var fileNames: any[] = [];
-    this.files.forEach(element => {
-      fileNames.push(element.name);
-    });
+  prepareSurveyPayload(data:any){
+    
     const payload = {
-      name: data.name,
-      description: data.description,
-      status: data.status,
-      attachments: fileNames.toString(),
-      start_date: data.start_date,
-      end_date: data.end_date,
-      created_by: this.user_data.user_id,
-      updated_by: this.user_data?.user_id
+      name:data.name,
+      description:data.description,
+      status:data.status,
+      start_date:data.start_date,
+      end_date:data.end_date,
+      created_by:this.user_data.user_id,
+      updated_by:this.user_data?.user_id
     }
     return payload;
   }
 
   onCreateSubmit() {
-    if (this.surveyForm.valid) {
-      this.surveyReportService.createSurveyreport(this.prepareSurveyPayload(this.surveyForm.value)).subscribe((res) => {
-        this.visible = false;
-        this.getSurveyReport();
-        this.notification.createNotification("success", res?.message);
+    if (this.surveyForm.valid){
+      var fileNames: any[] = [];
+      this.files.forEach(element => {
+        fileNames.push(element.name);
+      });
+      this.surveyForm.value.attachments = fileNames.toString();
+      this.surveyReportService.createSurveyreport(this.prepareSurveyPayload(this.surveyForm.value)).subscribe((res)=>{
+          this.visible = false;
+          this.getSurveyReport();
+          this.notification.createNotification("success", res?.message);
       });
     }
     else {
@@ -162,25 +166,26 @@ export class SurveyReportComponent implements OnInit {
     }
   }
 
-  prepareUpdatePayload(data: any) {
-    var fileNames: any[] = [];
-    this.files.forEach(element => {
-      fileNames.push(element.name);
-    });
+  prepareUpdatePayload(data:any){
+    
     const payload = {
-      name: data.name,
-      description: data.description,
-      status: data.status,
-      attachments: fileNames.toString(),
-      start_date: data.start_date,
-      end_date: data.end_date,
-      updated_by: this.user_data?.user_id
+      name:data.name,
+      description:data.description,
+      status:data.status,
+      start_date:data.start_date,
+      end_date:data.end_date,
+      updated_by:this.user_data?.user_id
     }
     return payload;
   }
 
   onUpdateSubmit() {
     if (this.surveyForm.valid) {
+      var fileNames: any[] = [];
+      this.files.forEach(element => {
+        fileNames.push(element.name);
+      });
+      this.surveyForm.value.attachments = fileNames.toString();
       this.surveyReportService.updateSurveyreport(this.surveyId, this.prepareUpdatePayload(this.surveyForm.value)).subscribe((res) => {
         this.visible = false;
         this.getSurveyReport();
@@ -206,6 +211,7 @@ export class SurveyReportComponent implements OnInit {
       this.filesDetails.name = info.file.response.fileName;
       this.filesDetails.url = this.getUploadedFIlesUrl + '/' + info.file.response.fileName;
       this.files.push(this.filesDetails);
+      console.log(this.files)
     } else if (info.file.status === 'error') {
       this.msg.error(`${info.file.name} file upload failed.`);
     } else if (info.file.status !== 'uploading') {

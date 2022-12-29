@@ -23,7 +23,7 @@ export class InventoryComponent implements OnInit {
   updateId: any;
   uomData: any [] = [];
   updateBtnDisable:boolean = true;
-  isLoading : boolean = true ;
+  isLoading : boolean = false ;
 
   
   constructor(
@@ -67,6 +67,7 @@ export class InventoryComponent implements OnInit {
   ];
 
   getInventoryItems(): void {
+    this.isLoading = true;
     this.inventoryService.getInventoryItems().subscribe((res) => {
        this.inventory_info = res;
        this.inventory_info.forEach((elem:any,index:any)=>{
