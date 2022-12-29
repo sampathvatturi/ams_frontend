@@ -3,6 +3,7 @@ import { UntypedFormBuilder ,Validators,UntypedFormGroup} from '@angular/forms';
 import { getWeekYearWithOptions } from 'date-fns/fp';
 import { UomService } from 'src/app/shared/moduleservices/uom.service';
 import { NotificationService } from 'src/app/shared/common/notification.service';
+import { GlobalConstants } from 'src/app/shared/common/global_constants';
 // import { NzMessageService } from 'ng-zorro-antd/message ';
 // import { NzUploadChangeParam } from 'ng-zorro-antd/upload';
 
@@ -163,8 +164,8 @@ export class UomComponent implements OnInit {
   
     uomFormValidators(){
       this.uomForm = this.fb.group({
-        uom_name: ['',[Validators.required]],
-        uom_code: ['',[Validators.required]],
+        uom_name: ['',[Validators.required,Validators.pattern(GlobalConstants.firstLastNameRegex),Validators.minLength(3),Validators.maxLength(50)]],
+        uom_code: ['',[Validators.required,Validators.pattern(GlobalConstants.nameRegex),Validators.minLength(2),Validators.maxLength(50)]],
       });
     }
     

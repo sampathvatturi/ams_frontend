@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { NotificationService } from 'src/app/shared/common/notification.service';
 import { WorksService } from 'src/app/shared/moduleservices/works.service';
+import { GlobalConstants } from 'src/app/shared/common/global_constants';
 
 @Component({
   selector: 'app-works',
@@ -149,7 +150,7 @@ export class WorksComponent implements OnInit {
 
     worksFormValidators(){
       this.workForm = this.fb.group({
-        work_name: ['',[Validators.required]],
+        work_name: ['',[Validators.required,Validators.pattern(GlobalConstants.firstLastNameRegex),Validators.minLength(3),Validators.maxLength(50)]],
       });
     }
 }

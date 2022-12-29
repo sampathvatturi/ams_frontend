@@ -30,7 +30,7 @@
         </dxi-column>
         <dxi-column [showInColumnChooser]="false" type="button1" [width]="100" cellTemplate="EditTemplate" [allowResizing]="false" caption="Actions">
             <div *dxTemplate="let data of 'EditTemplate'">
-                <div class="cursor-pointer tblEdtBtn">
+                <div class="cursor-pointer tblEdtBtn" (click)="delete(data.data)">
                     Delete
                 </div>
             </div>

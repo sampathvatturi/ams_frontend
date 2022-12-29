@@ -41,7 +41,7 @@ export class UserAccountsComponent implements OnInit {
     { headerName: 'Email', field: 'email', alignment: 'center', width: 175 },
     { headerName: 'Phone No', field: 'phone_number', alignment: 'center', width: 175 },
     { headerName: 'Department', field: 'department_name', alignment: 'center', width: 175 },
-    { headerName: 'Role', field: 'role', alignment: 'center', width: 100 },]
+    { headerName: 'Role', field: 'role', alignment: 'center', width: 100,cellTemplate: 'roleTemplate' },]
 
   constructor(
     private fb: UntypedFormBuilder,

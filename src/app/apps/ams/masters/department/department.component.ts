@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { UntypedFormGroup, PatternValidator, UntypedFormBuilder, Validators } from '@angular/forms';
 import { DepartmentService } from 'src/app/shared/moduleservices/department.service';
 import { NotificationService } from 'src/app/shared/common/notification.service';
-// import { GlobalConstants } from 'src/app/shared/global_constants';
+import { GlobalConstants } from 'src/app/shared/common/global_constants';
 
 @Component({
   selector: 'app-department',
@@ -147,6 +147,13 @@ export class DepartmentComponent implements OnInit {
     }
     return payload;
   }
+  delete(data:any){
+    // console.log(data.department_id)
+    this.departmentService.deleteDepartment(data.department_id).subscribe((res) => {
+      this.notification.createNotification(res.status, res?.message);
+      this.getDepartment()
+    })
+  }
 
   onUpdateSubmit() {
     if (this.departmentForm.valid) {
@@ -170,6 +177,7 @@ export class DepartmentComponent implements OnInit {
       department_name: ['', [Validators.required,
       Validators.maxLength(50),
       Validators.minLength(10),
+      Validators.pattern(GlobalConstants.nameRegex)
       ]
       ],
       status: ['', [Validators.required]],

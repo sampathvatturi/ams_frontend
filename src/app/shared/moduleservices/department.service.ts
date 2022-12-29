@@ -35,11 +35,18 @@ export class DepartmentService {
     );
   }
   getDepartmentById(id: any): Observable<any> {
-    return this.apiService.getCall('/department/getDepartmentById/' + id).pipe(
+    return this.apiService.getCall('/dept/getDepartmentById/' + id).pipe(
       map((response: any) => {
         return response;
       })
     );
+  }
+  deleteDepartment(id:any):Observable<any>{
+    return this.apiService.deleteCall('/dept/deleteDept/' + id).pipe(
+      map((response: any) => {
+        return response;
+      })
+    )
   }
 
 }

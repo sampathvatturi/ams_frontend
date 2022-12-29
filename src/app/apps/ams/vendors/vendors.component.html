@@ -23,6 +23,9 @@
     <div *dxTemplate="let data of 'serialNo'">
       {{data.row.rowIndex + 1}}
     </div>
+    <div *dxTemplate="let d of 'StatusTemplate'">
+      {{d.data.status | titlecase}}
+    </div>
     <dxi-column [showInColumnChooser]="false" caption="Actions" [visible]="(permissions.updt_in==1)?true:false"
       type="buttons" [width]="100" cellTemplate="viewTemplate">
       <div *dxTemplate="let data of 'viewTemplate'">

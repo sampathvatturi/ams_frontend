@@ -52,7 +52,7 @@ export class VendorsComponent implements OnInit {
     { headerName: 'Email', alignment: 'left', field: 'email', width: 175 },
     { headerName: 'City', alignment: 'left', field: 'city', width: 175 },
     { headerName: 'GST No', alignment: 'left', field: 'gst_num', width: 175 },
-    { headerName: 'Status', alignment: 'left', field: 'status', width: 100 },
+    { headerName: 'Status', alignment: 'left', field: 'status', width: 100,cellTemplate: 'StatusTemplate'},
   ]
 
 
