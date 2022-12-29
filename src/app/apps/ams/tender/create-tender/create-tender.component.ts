@@ -50,16 +50,16 @@ export class CreateTenderComponent implements OnInit {
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
 
   columnDefs = [
-    { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false,width:'100'},
+    { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false,width:'100', cellTemplate:'serialNo'},
     { headerName: 'Tender', alignment: 'left', field: 'title',width:'175' },
     { headerName: 'Description', alignment: 'left', field: 'description',width:'175'},
     // { headerName: 'Title', alignment: 'left', field: 'title' },
     { headerName: 'Works', alignment: 'left', field: 'works',width:'175' },
     { headerName: 'Location', alignment: 'left', field: 'location',width:'175' },
-    { headerName: 'Tender Cost', alignment: 'left', field: 'tender_cost',width:'175' },
+    { headerName: 'Tender Cost', alignment: 'left', field: 'tender_cost',width:'175', cellTemplate:'tenderCost' },
     { headerName: 'status', alignment: 'left', field: 'status',width:'175' },
-    { headerName: 'Start Date', alignment: 'left', field: 'start_date',width:'175' },
-    { headerName: 'End Date', alignment: 'left', field: 'end_date',width:'175' }];
+    { headerName: 'Start Date', alignment: 'left', field: 'start_date',width:'175', cellTemplate:'startDate'},
+    { headerName: 'End Date', alignment: 'left', field: 'end_date',width:'175',cellTemplate:'endDate' }];
 
   constructor(
     private fb: UntypedFormBuilder,
@@ -107,19 +107,13 @@ export class CreateTenderComponent implements OnInit {
   getCreateTender(){
     this.tendersapi.getTenderDetails().subscribe((res)=>{
       this.isLoading = true;
-      if(res.status = 204){
+      if(res.status == 204){
         this.dataMessage = res.message
       }
       this.tenders = res;
-      this.tenders.forEach((element:any,index:any) => {
-        element['sno'] = index + 1;
+      this.tenders.forEach((element:any) => {
         element['works'] = this.workIdToName(element.work_id);
-        element.start_date = this.datePipe.transform(element.start_date,'dd-MM-YYYY');
-        element.end_date = this.datePipe.transform(element.end_date,'dd-MM-YYYY');
-      })
-
-      console.log(this.tenders)
-      
+      })      
       this.isLoading = false ;
     })
   }

@@ -17,9 +17,23 @@
         <dxo-export [enabled]="(permissions.exprt_in==1)?true:false" [allowExportSelectedData]="true"
             fileName="Change Log"></dxo-export>
         <dxo-filter-row [visible]="true"></dxo-filter-row>
-        <dxi-column *ngFor="let f of columnDefs" [visible]="true" [dataField]="f.field"
+        <dxi-column *ngFor="let f of columnDefs" [visible]="true" [dataField]="f.field" [cellTemplate]="f.cellTemplate"
             [caption]="f.headerName" [alignment]="f.alignment" [width]="f.width" [allowResizing]="false">
         </dxi-column>
+
+        <div *dxTemplate="let data of 'serialNo'">
+          {{data.row.rowIndex + 1}}
+      </div>
+        <div *dxTemplate="let d of 'startDate'">
+          {{ d.data.start_date | date : "dd-MM-YYYY"}}
+        </div>
+        <div *dxTemplate="let d of 'endDate'">
+          {{ d.data.end_date | date : "dd-MM-YYYY"}}
+        </div>
+        <div *dxTemplate="let d of 'tenderCost'">
+          {{ d.data.tender_cost | currencyIn}}
+        </div>
+
         <dxi-column [showInColumnChooser]="false" [visible]="(permissions.updt_in==1)?true:false" type="buttons"
             [width]="100" cellTemplate="viewTemplate">
             <div *dxTemplate="let data of 'viewTemplate'">

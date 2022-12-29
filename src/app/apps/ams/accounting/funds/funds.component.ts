@@ -2,7 +2,7 @@ import { Component, Inject, LOCALE_ID, OnInit } from '@angular/core';
 import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 // import { NotificationService } from 'src/app/services/auth/notification.service';
 // import { GlobalConstants } from 'src/app/shared/global_constants';
-import { DatePipe, formatDate } from '@angular/common';
+import { formatDate } from '@angular/common';
 import { FundsService } from 'src/app/shared/moduleservices/funds.service';
 import { NotificationService } from 'src/app/shared/common/notification.service';
 
@@ -33,16 +33,15 @@ export class FundsComponent implements OnInit {
     private fb: UntypedFormBuilder,
     private notification: NotificationService,
     private fundService: FundsService,
-    private datePipe: DatePipe
   ) { }
 
   columnDefs = [
-    { headerName: 'S.No.', width: '100',field:'sno', alignment:'left' },
+    { headerName: 'S.No.', width: '100',field:'sno', alignment:'left', cellTemplate:'serialNo' },
     { headerName: 'Fund Type', width: '150' ,field:'fund_type', filter: true},
     { headerName: 'Fund Description', width: '300' , filter: true, field:'fund_description'},
     { headerName: 'Transaction Mode', width: '150' , filter: true, field:'transaction_mode'},
-    { headerName: 'amount', width: '150' , filter: true, field:'fund_value'},
-    { headerName: 'Date', width: '100' , filter: true, field:'fund_released_date'},
+    { headerName: 'amount', width: '150' , filter: true, field:'fund_value',cellTemplate:'fundValue'},
+    { headerName: 'Date', width: '100' , filter: true, field:'fund_released_date',cellTemplate:'dateTemplate'},
   ]
 
 
@@ -72,10 +71,6 @@ export class FundsComponent implements OnInit {
     this.fundService.getFunds().subscribe((res) => {
       this.rowData = res;
       this.fund_info = res;
-      this.fund_info.forEach((elem:any,index:any)=>{
-        elem['sno']=index+1;
-        elem.fund_released_date = this.datePipe.transform(elem.fund_released_date,'dd-MM-YYYY');
-      })
       this.isLoading = false;
     })
   }

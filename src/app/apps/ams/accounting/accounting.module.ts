@@ -9,6 +9,7 @@ import { DxButtonModule, DxDataGridModule, DxLoadPanelModule } from 'devextreme-
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgAntdModule } from 'src/app/shared/common/ng-antd.module';
 import dxLoadPanel from 'devextreme/ui/load_panel';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 
 @NgModule({
@@ -25,7 +26,8 @@ import dxLoadPanel from 'devextreme/ui/load_panel';
     FormsModule,
     ReactiveFormsModule,
     NgAntdModule,
-    DxLoadPanelModule
+    DxLoadPanelModule,
+    SharedModule
   ]
 })
 export class AccountingModule { }

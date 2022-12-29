@@ -32,7 +32,9 @@ import { CurrencyPipe } from './pipes/currency.pipe';
         PerfectScrollbarModule,
         SearchPipe,FilterPipe,FiltergrpPipe,
         LoadingComponent,InnerLoadingComponent,PgHeaderComponent,
-        NzToolTipModule
+        NzToolTipModule,
+        CurrencyPipe,
+        GlobalTablesearchPipe
     ],
     imports: [
         RouterModule,

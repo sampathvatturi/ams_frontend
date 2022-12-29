@@ -8,6 +8,7 @@ import { CreateTenderComponent } from './create-tender/create-tender.component';
 import { DxButtonModule, DxDataGridModule, DxLoadPanelModule } from 'devextreme-angular';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgAntdModule } from 'src/app/shared/common/ng-antd.module';
+import { SharedModule } from 'src/app/shared/shared.module';
 
 
 
@@ -25,7 +26,8 @@ import { NgAntdModule } from 'src/app/shared/common/ng-antd.module';
     FormsModule,
     ReactiveFormsModule,
     NgAntdModule,
-    DxLoadPanelModule
+    DxLoadPanelModule,
+    SharedModule
   ]
 })
 export class TenderModule { }

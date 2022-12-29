@@ -16,6 +16,9 @@
     .ds-card{
         background-color: #145db6;
     }
+    .ds-card .dx-scrollable-container{
+      margin-bottom: 10px;
+    }
   
     .dx-datagrid .dx-datagid-headers .dx-header-row .dx-datagrid .dx-datagrid-headers .dx-header-filter {
       outline: none;
@@ -317,7 +320,7 @@
 //   }
 
 .flow{
-  overflow-x: scroll;
+  overflow-x: auto;
 }
 .sb_btn{
   margin-top: 10px;
