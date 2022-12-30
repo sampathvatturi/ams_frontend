@@ -153,7 +153,7 @@ export class InvoicesComponent implements OnInit {
     this.filesDetails.url = '';
     this.files = [];
     this.invoiceFormValidators();
-    this.invoiceForm.get('invoice_number')?.setValue(this.generateInvoiceNumber());
+    this.invoiceForm.get('invoice_number')?.setValue('');
     // this.invoiceForm.get('invoice_number')?.setValue(Math.floor(Math.random() * 100000));
     this.invoiceForm.get('status')?.setValue('open');
     this.invoiceForm.get('created_by')?.setValue(this.user_data.user_id);
@@ -225,7 +225,7 @@ export class InvoicesComponent implements OnInit {
   invoiceFormValidators() {
     this.invoiceForm = this.fb.group({
       vendor_id: ['', [Validators.required]],
-      invoice_number: ['', [Validators.required]],
+      invoice_number: [''],
       status: ['', [Validators.required]],
       remarks: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(200)]],
       amount: ['', [Validators.required]],
@@ -415,13 +415,13 @@ export class InvoicesComponent implements OnInit {
   });
 
 
-  generateInvoiceNumber() {
-    var lastNum: string;
-    var str: any;
-    var lastItem = this.invoice_info[this.invoice_info.length - 1];
-    lastNum = lastItem.invoice_number;
-    str = lastNum.substring(0, 7) + (parseInt(lastNum.substring(7)) + 1).toString().padStart(4, "0");
-    return str;
-  }
+  // generateInvoiceNumber() {
+  //   var lastNum: string;
+  //   var str: any;
+  //   var lastItem = this.invoice_info[this.invoice_info.length - 1];
+  //   lastNum = lastItem.invoice_number;
+  //   str = lastNum.substring(0, 7) + (parseInt(lastNum.substring(7)) + 1).toString().padStart(4, "0");
+  //   return str;
+  // }
 
 }

@@ -64,9 +64,9 @@
       <nz-form-item>
         <nz-form-label nz-col nzSpan="5" class="required">Invoice Number</nz-form-label>
         <nz-form-control nz-col nzSpan="10" [nzErrorTip]="invoiceErrorTip3">
-          <input nz-input formControlName="invoice_number" placeholder="Enter Invoice Number" readonly />
+          <input nz-input formControlName="invoice_number" placeholder="Invoice Number" readonly />
           <ng-template #invoiceErrorTip3 let-control>
-            <ng-container *ngIf="control.hasError('required')">Please Invoice Number</ng-container>
+            <!-- <ng-container *ngIf="control.hasError('required')">Please Invoice Number</ng-container> -->
             <!-- <ng-container *ngIf="control.hasError('pattern')">{{
               globalConstants.amountError
               }}</ng-container> -->
