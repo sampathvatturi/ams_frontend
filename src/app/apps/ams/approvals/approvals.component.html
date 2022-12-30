@@ -26,9 +26,9 @@
     [remoteOperations]="false" [allowColumnReordering]="true" [rowAlternationEnabled]="true"
     [allowColumnResizing]="true" [showColumnLines]="true" [showRowLines]="true" [showBorders]="true" style="width:100%"
     (onToolbarPreparing)="(permissions.insrt_in==1)?onToolbarPreparing($event):false">
-    <dxo-paging [pageSize]="5"></dxo-paging>
+    <dxo-paging [pageSize]="10"></dxo-paging>
     <dxo-scrolling columnRenderingMode="virtual"></dxo-scrolling>
-    <dxo-pager [visible]="true" [showPageSizeSelector]="true" [allowedPageSizes]="[5,10, 25, 50, 100]"
+    <dxo-pager [visible]="true" [showPageSizeSelector]="true" [allowedPageSizes]="[10, 25, 50, 100]"
       [showInfo]="true"></dxo-pager>
     <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
     <dxo-filter-panel [visible]="true"></dxo-filter-panel>
@@ -58,7 +58,7 @@
     <div *dxTemplate="let d of 'grandTotal'">
       {{ d.data.grand_total | currencyIn}}
     </div>
-    <dxi-column [showInColumnChooser]="false" type="buttons" [width]="100" cellTemplate="viewTemplate">
+    <dxi-column [showInColumnChooser]="false" type="buttons" [width]="150" cellTemplate="viewTemplate">
       <div *dxTemplate="let data of 'viewTemplate'">
         <!-- <div > -->
           <!-- <button class="approveBtn" (click)="onClickApprove(data.data)">
@@ -134,6 +134,21 @@
         <div nz-row>
           <div nz-col nzSpan="8" class="name">Total Amount: </div>
           <div nz-col nzSpan="14">{{ currentInvoiceData?.grand_total | currencyIn }}</div>
+        </div>
+      </div>
+      <div nz-col nzSpan="12">
+        <div nz-row>
+          <nz-list  nzSize="small">
+            <nz-list-header>Attachments</nz-list-header>
+            <nz-list-item *ngFor="let item of attachments">
+              <ng-container *ngIf="item.length > 0;else noitem">
+                <a [href]="getUploadedFIlesUrl+item" target="_blank">{{item}}</a>
+              </ng-container>
+              <ng-template #noitem>
+                No Attachments
+              </ng-template>
+            </nz-list-item>
+          </nz-list>
         </div>
       </div>
     </div>

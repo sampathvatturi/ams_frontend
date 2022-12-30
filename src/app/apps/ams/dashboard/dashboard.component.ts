@@ -46,7 +46,7 @@ export class DashboardComponent implements OnInit {
           mode: 'index'
       },
       scales: {
-          xAxes: [{ 
+          x: { 
               gridLines: [{
                   display: false,
               }],
@@ -56,8 +56,8 @@ export class DashboardComponent implements OnInit {
                   fontSize: 13,
                   padding: 10
               }
-          }],
-          yAxes: [{
+          },
+          y: {
               gridLines: {
                   drawBorder: false,
                   drawTicks: false,
@@ -73,7 +73,7 @@ export class DashboardComponent implements OnInit {
                   fontSize: 13,
                   padding: 10
               }  
-          }],
+          },
       }
   };
   revenueChartColors: Array<any> = [
@@ -110,7 +110,7 @@ export class DashboardComponent implements OnInit {
       responsive: true,
       maintainAspectRatio: false,
       scales: {
-          xAxes: [{
+          x: {
               display: true,
               stacked: true,
               scaleLabel: {
@@ -124,8 +124,8 @@ export class DashboardComponent implements OnInit {
                   fontSize: 13,
                   padding: 10
               }
-          }],
-          yAxes: [{
+          },
+          y: {
               display: true,
               stacked: true,
               scaleLabel: {
@@ -147,7 +147,7 @@ export class DashboardComponent implements OnInit {
                   fontSize: 13,
                   padding: 10
               }
-          }]
+          }
       }
   };
   avgProfitChartLabels: string[] = ['Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep'];

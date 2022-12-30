@@ -34,11 +34,7 @@ export class InvoicesComponent implements OnInit {
 
   // globalConstants = GlobalConstants;
   inventoryDetailsArray: any = [];
-  files: any[] = [];
-  filesDetails = {
-    name: '',
-    url: ''
-  }
+  files = [];
   baseUrl = environment.apiUrl;
   uploadUrl = this.baseUrl + '/upload/uploadFiles';
   getUploadedFIlesUrl = this.baseUrl + '/upload/getUploadedFiles/';
@@ -114,8 +110,6 @@ export class InvoicesComponent implements OnInit {
     this.submit = false;
     this.drawerTitle = 'Edit Invoice details';
     this.visible = true;
-    this.filesDetails.name = '';
-    this.filesDetails.url = '';
     this.files = [];
     this.invoiceFormValidators();
     this.invoiceId = data.invoice_id
@@ -132,9 +126,7 @@ export class InvoicesComponent implements OnInit {
       var fileNamesArray = data.attachments.split(',');
       if (fileNamesArray.length > 0) {
         fileNamesArray.forEach((element: any) => {
-          this.filesDetails.name = element;
-          this.filesDetails.url = this.getUploadedFIlesUrl + element;
-          this.files.push(this.filesDetails);
+          this.files.push({name:element,url:this.getUploadedFIlesUrl + element});
         });
       }
     }
@@ -149,9 +141,8 @@ export class InvoicesComponent implements OnInit {
     this.submit = true;
     this.drawerTitle = 'Add New Invoice';
     this.visible = true;
-    this.filesDetails.name = '';
-    this.filesDetails.url = '';
     this.files = [];
+    console.log(this.files)
     this.invoiceFormValidators();
     this.invoiceForm.get('invoice_number')?.setValue('');
     // this.invoiceForm.get('invoice_number')?.setValue(Math.floor(Math.random() * 100000));
@@ -372,27 +363,12 @@ export class InvoicesComponent implements OnInit {
     this.tot = Number(this.invoiceForm.value.amount) + Number(this.invoiceForm.value.tax);
     this.invoiceForm.get('grand_total')?.setValue(this.tot);
   }
-  //file upload
-  // file:any;
-
-  // getFile(event:any){
-  //   this.file = event.target.files[0];
-  // }
-  // sumitdata(){
-  //   let formData = new FormData();
-  //   formData.set('file', this.file);
-
-  //   this.http.post('http://localhost:4200/uploads',formData).subscribe();
-  // }
 
 
   handleChange(info: NzUploadChangeParam): void {
     if (info.file.status === 'done') {
       this.msg.success(`${info.file.name} file uploaded successfully`);
-      this.filesDetails.name = info.file.response.fileName;
-      this.filesDetails.url = this.getUploadedFIlesUrl + '/' + info.file.response.fileName;
-      this.files.push(this.filesDetails);
-      console.log(this.files)
+      this.files.push({name:info.file.response.fileName,url:this.getUploadedFIlesUrl + info.file.response.fileName});
     } else if (info.file.status === 'error') {
       this.msg.error(`${info.file.name} file upload failed.`);
     } else if (info.file.status !== 'uploading') {

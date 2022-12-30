@@ -117,7 +117,8 @@
         <nz-form-label nz-col nzSpan="5">Attachments</nz-form-label>
         <nz-form-control nz-col nzSpan="10">
           <nz-upload [nzAction]=uploadUrl [nzRemove]="handleRemove" [nzFileList]="files"
-            (nzChange)="handleChange($event)" nzMultiple="true">
+            (nzChange)="handleChange($event)"
+             nzMultiple="true">
             <button nz-button>
               <span nz-icon nzType="upload"></span>
               Upload

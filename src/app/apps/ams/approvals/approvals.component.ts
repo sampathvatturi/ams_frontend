@@ -9,6 +9,7 @@ import { InvoicesService } from 'src/app/shared/moduleservices/invoices.service'
 import { DatePipe } from '@angular/common';
 import { DepartmentService } from 'src/app/shared/moduleservices/department.service';
 import { AccountsService } from 'src/app/shared/moduleservices/accounts.service';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-approvals',
@@ -40,6 +41,10 @@ export class ApprovalsComponent implements OnInit {
   currentUserName: any;
   accounts: any = [];
   disableOkBtn: boolean = false;
+  attachments: any =[];
+  baseUrl = environment.apiUrl;
+  uploadUrl = this.baseUrl + '/upload/uploadFiles';
+  getUploadedFIlesUrl = this.baseUrl + '/upload/getUploadedFiles/';
 
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
 
@@ -51,7 +56,7 @@ export class ApprovalsComponent implements OnInit {
     { headerName: 'Amount', field: 'amount', alignment: 'center', width: 175, cellTemplate: 'Amt' },
     { headerName: 'Tax', field: 'tax', alignment: 'center', width: 175, cellTemplate: 'taxAmt' },
     { headerName: 'Total', field: 'grand_total', alignment: 'center', width: 175, cellTemplate: 'grandTotal' },
-    { headerName: 'Status', field: 'status', alignment: 'center', width: 175 },
+    { headerName: 'Status', field: 'status', alignment: 'center', width: 100 },
   ];
 
 
@@ -144,6 +149,7 @@ export class ApprovalsComponent implements OnInit {
   onClickApprove(data: any): void {
     console.log("==onClickApprove==", data);
     this.currentInvoiceData = data;
+    this.attachments = data.attachments.split(',');
     this.userApprovalList(data);
   }
 
