@@ -60,9 +60,39 @@
     </div>
     <dxi-column [showInColumnChooser]="false" type="buttons" [width]="100" cellTemplate="viewTemplate">
       <div *dxTemplate="let data of 'viewTemplate'">
-        <button class="approveBtn"  (click)="onClickApprove(data.data)">
-          Approve
-        </button>
+        <!-- <div > -->
+          <!-- <button class="approveBtn" (click)="onClickApprove(data.data)">
+            Approve
+          </button>
+        </div>
+        <ng-template #approved>
+          <button class="approvedBtn" (click)="onClickApprove(data.data)">
+            Approved
+          </button>
+        </ng-template>
+        <ng-template #rejected>
+          <button class="approvedBtn" (click)="onClickApprove(data.data)">
+            Approved
+          </button>
+        </ng-template> -->
+
+        <ng-container *ngIf="data.data.status==='open';else cancel">
+          <button class="approveBtn" (click)="onClickApprove(data.data)">
+            Approve
+          </button>
+        </ng-container>
+        <ng-template #cancel>
+            <ng-container *ngIf="data.data.status==='cancel';else approve">
+              <button class="canceledBtn" (click)="onClickApprove(data.data)">
+                Rejected
+              </button>
+            </ng-container>
+        </ng-template>
+        <ng-template #approve>
+          <button class="approvedBtn" (click)="onClickApprove(data.data)">
+            Approved
+          </button>
+        </ng-template>
       </div>
     </dxi-column>
 
@@ -114,8 +144,8 @@
         <thead>
           <tr>
             <th>S.No.</th>
-            <th>Dept Name</th>            
-            <th>User</th>
+            <th>Department Name</th>            
+            <th>Approved/Rejected by</th>
             <th>Status</th>
             <th>Reason</th>
           </tr>
@@ -128,8 +158,8 @@
             <td>
               <nz-select [(ngModel)]="userStatus" *ngIf="(data?.department_id === currentDeptId && currentInvoiceData.status !== 'paid')">
                 <nz-option nzValue="Pending" nzLabel="Pending"></nz-option>
-                <nz-option nzValue="Approved" nzLabel="Approved"></nz-option>
-                <nz-option nzValue="Rejected" nzLabel="Rejected"></nz-option>
+                <nz-option nzValue="Approved" nzLabel="Approve"></nz-option>
+                <nz-option nzValue="Rejected" nzLabel="Reject"></nz-option>
               </nz-select>
               <div *ngIf="(data?.department_id !== currentDeptId) || (data?.user_id === currentUserId && currentInvoiceData.status === 'paid')"> {{ data?.status }} </div>
             </td>

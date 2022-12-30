@@ -326,7 +326,20 @@
 }
 
 .approveBtn {
+  background-color: #594ee7;
+  padding: 6px;
+  border-radius: 3px;
+  color: #ffffff;
+}
+
+.approvedBtn {
   background-color: #52c41a;
+  padding: 6px;
+  border-radius: 3px;
+  color: #ffffff;
+}
+.canceledBtn {
+  background-color: #ff0101;
   padding: 6px;
   border-radius: 3px;
   color: #ffffff;

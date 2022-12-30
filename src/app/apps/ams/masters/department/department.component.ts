@@ -176,7 +176,7 @@ export class DepartmentComponent implements OnInit {
     this.departmentForm = this.fb.group({
       department_name: ['', [Validators.required,
       Validators.maxLength(50),
-      Validators.minLength(10),
+      Validators.minLength(3),
       Validators.pattern(GlobalConstants.nameRegex)
       ]
       ],
