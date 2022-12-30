@@ -47,7 +47,7 @@ export class WorksComponent implements OnInit {
       this.getWorks();
     }
     getPage(size:any,index:any){
-      let params = new HttpParams().append('page', `${index+1}`).append('results', `${size}`);
+      let params = new HttpParams().append('page', `${index+1}`).append('length', `${size}`);
       this.http.get('http://localhost:5000/getworks',{params}).subscribe()
       console.log(size,index+1);
     }
