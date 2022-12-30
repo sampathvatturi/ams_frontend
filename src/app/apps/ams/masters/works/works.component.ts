@@ -3,6 +3,7 @@ import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms
 import { NotificationService } from 'src/app/shared/common/notification.service';
 import { WorksService } from 'src/app/shared/moduleservices/works.service';
 import { GlobalConstants } from 'src/app/shared/common/global_constants';
+import { HttpClient, HttpParams } from '@angular/common/http';
 
 @Component({
   selector: 'app-works',
@@ -22,6 +23,8 @@ export class WorksComponent implements OnInit {
   workId:any;
   updateBtnDisable:boolean = true;
   isLoading:boolean = false;
+  pageIndex:any = 0;
+  pageSize:number = 10;
 
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
 
@@ -33,7 +36,8 @@ export class WorksComponent implements OnInit {
   constructor(
     private fb: UntypedFormBuilder,
     private notification:NotificationService,
-    private workService:WorksService
+    private workService:WorksService,
+    private http:HttpClient
     ) { }
 
     ngOnInit(): void {
@@ -42,7 +46,11 @@ export class WorksComponent implements OnInit {
       this.user_data = JSON.parse(this.user_data);
       this.getWorks();
     }
-
+    getPage(size:any,index:any){
+      let params = new HttpParams().append('page', `${index+1}`).append('results', `${size}`);
+      this.http.get('http://localhost:5000/getworks',{params}).subscribe()
+      console.log(size,index+1);
+    }
     onToolbarPreparing(e:any) {
       e.toolbarOptions.items.unshift({
         location: 'after',
