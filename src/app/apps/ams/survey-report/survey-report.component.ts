@@ -20,7 +20,7 @@ export class SurveyReportComponent implements OnInit {
   survey_info: any = [];
   surveyForm!: UntypedFormGroup;
   updateBtnDisable: boolean = false;
-  isLoading: boolean;
+  isLoading: boolean=false;
   submit: boolean = true;
   user_data: any = [];
   surveyId: any;
@@ -61,6 +61,7 @@ export class SurveyReportComponent implements OnInit {
   }
 
   getSurveyReport() {
+    this.isLoading=true;
     this.surveyReportService.getSurveyreports().subscribe((res) => {
       if (res.length > 0) {
         this.survey_info = res;

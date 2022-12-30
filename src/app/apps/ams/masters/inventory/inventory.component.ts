@@ -68,16 +68,17 @@ export class InventoryComponent implements OnInit {
   ];
 
   getInventoryItems(): void {
+    this.isLoading = true;
     this.inventoryService.getInventoryItems().subscribe((res) => {
-      if(res.status !='204'){
         this.inventory_info = res;
+        if(res !='' && res.length >=1){
+          this.isLoading = false ;
         this.inventory_info.forEach((elem:any,index:any)=>{
           elem['sno']=index+1;
         })
-        // this.isLoading = false ;
-      }else{
-        this.dataMessage = 'No Inventory Items'
-        // this.isLoading = false ;
+       }else{
+        this.isLoading = false ;
+        this.dataMessage = res.message
       }
     });
   }
