@@ -8,6 +8,7 @@ import { TransactionDetailsService } from 'src/app/shared/moduleservices/transac
 import { InvoicesService } from 'src/app/shared/moduleservices/invoices.service';
 import { DatePipe } from '@angular/common';
 import { DepartmentService } from 'src/app/shared/moduleservices/department.service';
+import { AccountsService } from 'src/app/shared/moduleservices/accounts.service';
 
 @Component({
   selector: 'app-approvals',
@@ -35,17 +36,12 @@ export class ApprovalsComponent implements OnInit {
   allUsersApprovedStatus: boolean = false;
   noDataShow: boolean = false;
   isLoading = false;
-  departments: any =[];
+  departments: any = [];
   currentDeptId: any;
   currentUserName: any;
+  accounts: any = [];
 
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
-
-  // columnDefs = [{ headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false},
-  //               { headerName: 'Tender Title', field: 'title', alignment: 'center'},
-  //               { headerName: 'Vendor Name', field: 'vendor_name', alignment: 'center'},
-  //               { headerName: 'Amount', field: 'tender_cost', alignment: 'center'},
-  //               { headerName: 'Status', field: 'status', alignment: 'center'},]
 
   columnDefs = [
     { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false, width: 100, cellTemplate: 'snoTempelate' },
@@ -67,7 +63,8 @@ export class ApprovalsComponent implements OnInit {
     private works: WorksService,
     private invoicesService: InvoicesService,
     private datePipe: DatePipe,    
-    private departmentService: DepartmentService
+    private departmentService: DepartmentService,    
+    private accountHeadService: AccountsService,
   ) { }
 
   ngOnInit(): void {
@@ -86,6 +83,7 @@ export class ApprovalsComponent implements OnInit {
     this.getWorks();
     this.getVendorInvoices();
     this.getDepartments();
+    this.getAccounts();
   }
 
   onToolbarPreparing(e: any) {
@@ -127,6 +125,12 @@ export class ApprovalsComponent implements OnInit {
     this.departmentService.getDepartments().subscribe((res) => {
       this.departments = res;
     })
+  }
+
+  getAccounts(): void {
+    this.accountHeadService.getAccountHeads().subscribe((res) => {
+      this.accounts = res;
+    });
   }
 
   workIdToName(id: any) {
@@ -209,10 +213,17 @@ export class ApprovalsComponent implements OnInit {
     this.allUsersApprovedStatus = this.invoiceUserStatusList.every((item: any) => item.status === 'Approved');
     const allUsersRejectStatus = this.invoiceUserStatusList.every((item: any) => item.status === 'Rejected');
     const mainStatus = this.invoiceUserStatusList.some((item: any) => (item?.status === 'Pending' || item?.status === 'Rejected'));
-    console.log("allUsersApprovedStatus", this.allUsersApprovedStatus, allUsersRejectStatus);
+    const vendor_acct = this.accounts.find((item) => item?.ref_id === this.currentInvoiceData?.vendor_id);
+    const main_acct = this.accounts.find((item) => item?.main_acc === 1);
+    console.log("====allUsersApprovedStatus====", this.allUsersApprovedStatus, allUsersRejectStatus, vendor_acct, main_acct);
 
     const payload = {
       invoice_user_status: this.invoiceUserStatusList,
+      amount: this.currentInvoiceData?.grand_total,
+      vendor_id: this.currentInvoiceData?.vendor_id,
+      vendor_acct_id: vendor_acct?.id,
+      vendor_name: vendor_acct?.name,
+      main_acct_id: main_acct?.id,
       updated_by: this.user_data?.user_id,
       status: this.allUsersApprovedStatus ? 'paid' : allUsersRejectStatus ? 'cancel' : mainStatus ? 'open' : this.currentInvoiceData?.status
     }
