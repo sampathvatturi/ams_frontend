@@ -102,7 +102,7 @@
 <dx-load-panel [container]="container" [visible]="isLoading" [showIndicator]="true" [position]="{ of: '#load' }"
   [showPane]="true" [shading]="true"></dx-load-panel>
 
-<nz-modal [(nzVisible)]="isVisible" nzWidth="700px" nzTitle="User Approvals" 
+<nz-modal [(nzVisible)]="isVisible" nzWidth="720px" nzTitle="User Approvals" 
   (nzOnCancel)="handleCancel()"
   (nzOnOk)="handleOk()" 
   [nzFooter]="modalFooter">
@@ -114,12 +114,12 @@
           <div nz-col nzSpan="8">{{ currentInvoiceData?.invoice_number }}</div>
         </div>
         <div nz-row>
-          <div nz-col nzSpan="8" class="name">Vender Name: </div>
-          <div nz-col nzSpan="8">{{ currentInvoiceData?.vendor_name }}</div>
-        </div>
-        <div nz-row>
           <div nz-col nzSpan="8" class="name">Date: </div>
           <div nz-col nzSpan="8">{{ currentInvoiceData?.created_date | date : "dd-MM-YYYY" }}</div>
+        </div>
+        <div nz-row>
+          <div nz-col nzSpan="8" class="name">Vender Name: </div>
+          <div nz-col nzSpan="8">{{ currentInvoiceData?.vendor_name }}</div>
         </div>
       </div>
       <div nz-col nzSpan="12">
@@ -156,17 +156,19 @@
             <td>{{ data?.department_name }}</td>
             <td>{{ data?.user_name }}</td>
             <td>
-              <nz-select [(ngModel)]="userStatus" *ngIf="(data?.department_id === currentDeptId && currentInvoiceData.status !== 'paid')">
+              <nz-select [(ngModel)]="userStatus" *ngIf="(data?.department_id === currentDeptId && currentInvoiceData.status !== 'paid' && data?.status ==='Pending')">
                 <nz-option nzValue="Pending" nzLabel="Pending"></nz-option>
                 <nz-option nzValue="Approved" nzLabel="Approve"></nz-option>
                 <nz-option nzValue="Rejected" nzLabel="Reject"></nz-option>
               </nz-select>
-              <div *ngIf="(data?.department_id !== currentDeptId) || (data?.user_id === currentUserId && currentInvoiceData.status === 'paid')"> {{ data?.status }} </div>
+              <div *ngIf="(data?.department_id !== currentDeptId) || (data?.user_id === currentUserId && currentInvoiceData.status === 'paid') || (data?.status !=='Pending')">
+                 {{ data?.status }} 
+              </div>
             </td>
             <td>{{ (userStatus==='Rejected' || data.status==='Rejected') ? data?.reason : '' }}</td>
           </tr>
           <tr>
-            <td colspan="3" *ngIf="userStatus==='Rejected'">
+            <td colspan="3" *ngIf="(userStatus==='Rejected') && (!disableOkBtn)">
               <textarea nz-input [(ngModel)]="reason" placeholder="Please enter a reason"
                 [nzAutosize]="{ minRows: 2, maxRows: 6 }"></textarea>
             </td>
@@ -177,6 +179,6 @@
   </ng-container>
   <ng-template #modalFooter>
     <button nz-button nzType="default" (click)="handleCancel()">Cancel</button>
-    <button *ngIf="currentInvoiceData.status==='open'" nz-button nzType="primary" (click)="handleOk()">Ok</button>
+    <button *ngIf="((currentInvoiceData.status==='open' || currentInvoiceData.status==='cancel') && !disableOkBtn)" nz-button nzType="primary" (click)="handleOk()">Ok</button>
   </ng-template> 
 </nz-modal>

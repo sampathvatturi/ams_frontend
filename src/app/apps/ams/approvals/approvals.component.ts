@@ -32,7 +32,6 @@ export class ApprovalsComponent implements OnInit {
   invoiceUserStatusList: any = [];
   reason: any;
   currentInvoiceId: any;
-  works_info: any = [];
   allUsersApprovedStatus: boolean = false;
   noDataShow: boolean = false;
   isLoading = false;
@@ -40,6 +39,7 @@ export class ApprovalsComponent implements OnInit {
   currentDeptId: any;
   currentUserName: any;
   accounts: any = [];
+  disableOkBtn: boolean = false;
 
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
 
@@ -80,7 +80,6 @@ export class ApprovalsComponent implements OnInit {
       status: ['open', [Validators.required]],
     });
     this.getUsers();
-    this.getWorks();
     this.getVendorInvoices();
     this.getDepartments();
     this.getAccounts();
@@ -115,12 +114,6 @@ export class ApprovalsComponent implements OnInit {
     });
   }
 
-  getWorks() {
-    this.works.getWorks().subscribe((res) => {
-      this.works_info = res;
-    })
-  }
-
   getDepartments() {
     this.departmentService.getDepartments().subscribe((res) => {
       this.departments = res;
@@ -131,19 +124,6 @@ export class ApprovalsComponent implements OnInit {
     this.accountHeadService.getAccountHeads().subscribe((res) => {
       this.accounts = res;
     });
-  }
-
-  workIdToName(id: any) {
-    let arr = id.split(',');
-    for (let index = 0; index < arr.length; index++) {
-      this.works_info.forEach((element: any) => {
-        if (element.work_id == Number(arr[index])) {
-          arr[index] = element.work_name;
-        }
-      })
-
-    }
-    return arr.join(', ');
   }
 
   submitForm(): void {
@@ -179,6 +159,7 @@ export class ApprovalsComponent implements OnInit {
         }
         if (item.department_id === this.currentDeptId) {
           this.userStatus = item?.status;
+          this.disableOkBtn = (item?.status === 'Approved' || item?.status === 'Rejected') ? true : false;
         }
       });
     });
@@ -200,7 +181,6 @@ export class ApprovalsComponent implements OnInit {
       this.invoiceUserStatusList.push(obj);
     });
     console.log('invoiceUserStatusList :: ', this.invoiceUserStatusList);
-    // this.invoiceUserStatusList.filter((item: any) => (item?.status === 'Pending' || item?.status === 'Rejected'))
     this.updateInvoiceUserStatus();
   }
 
@@ -212,7 +192,7 @@ export class ApprovalsComponent implements OnInit {
   prepareUpdatePayload() {
     this.allUsersApprovedStatus = this.invoiceUserStatusList.every((item: any) => item.status === 'Approved');
     const allUsersRejectStatus = this.invoiceUserStatusList.every((item: any) => item.status === 'Rejected');
-    const mainStatus = this.invoiceUserStatusList.some((item: any) => (item?.status === 'Pending' || item?.status === 'Rejected'));
+    const mainStatus = this.invoiceUserStatusList.some((item: any) => ( item?.status === 'Rejected'));
     const vendor_acct = this.accounts.find((item) => item?.ref_id === this.currentInvoiceData?.vendor_id);
     const main_acct = this.accounts.find((item) => item?.main_acc === 1);
     console.log("====allUsersApprovedStatus====", this.allUsersApprovedStatus, allUsersRejectStatus, vendor_acct, main_acct);
@@ -225,7 +205,7 @@ export class ApprovalsComponent implements OnInit {
       vendor_name: vendor_acct?.name,
       main_acct_id: main_acct?.id,
       updated_by: this.user_data?.user_id,
-      status: this.allUsersApprovedStatus ? 'paid' : allUsersRejectStatus ? 'cancel' : mainStatus ? 'open' : this.currentInvoiceData?.status
+      status: this.allUsersApprovedStatus ? 'paid' : allUsersRejectStatus ? 'cancel' : mainStatus ? 'cancel' : this.currentInvoiceData?.status
     }
     return payload;
   }
