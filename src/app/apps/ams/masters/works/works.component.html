@@ -5,7 +5,11 @@
         style="width:100%" (onToolbarPreparing)="(permissions.insrt_in==1)?onToolbarPreparing($event):false"
         (onContentReady)="getPage(pageSize,pageIndex)">
         <dxo-paging [(pageSize)]="pageSize" [(pageIndex)]="pageIndex"> </dxo-paging>
-        <dxo-scrolling rowRenderingMode="virtual"></dxo-scrolling>
+        <dxo-scrolling [scrollByContent]="true"
+    [scrollByThumb]="true"
+    mode="standard"
+    [useNative]="true"
+    showScrollbar="onScroll"></dxo-scrolling>
         <dxo-pager [visible]="true" [showPageSizeSelector]="true" [allowedPageSizes]="[10, 25, 50, 100]"
             [showInfo]="true"></dxo-pager>
         <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>

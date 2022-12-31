@@ -1,49 +1,56 @@
 <div class="side-nav" sideNav>
 
     <ul  nz-menu nzMode="inline" [nzInlineCollapsed]="isFolded" [nzTheme]="isSideNavDark ? 'dark' : 'light'">
-        <!-- <ng-container *ngFor="let item of menuItems2">
+        <!-- <ng-container *ngFor="let item of mainMenuItems">
             <li *ngIf="item.children.length == 0" nz-menu-item
                 nz-tooltip
                 nzTooltipPlacement="right"
-                [nzTooltipTitle]="isFolded ? item.mnu_itm_nm : ''"
-                [routerLink]="item.mnu_itm_url_tx">
-                <span nz-icon [nzType]="item.mnu_itm_icn_tx"></span>
-                <span>{{item.mnu_itm_nm}}</span>
+                [nzTooltipTitle]="isFolded ? item.title : ''"
+                [routerLink]="'/internal/ams/'+item.path">
+                <span nz-icon [nzType]="item.icon"></span>
+                <span>{{item.title}}</span>
             </li>
 
 
             <li  *ngIf="item.children.length > 0" 
-                nz-submenu [nzTitle]="item.prnt_mnu_itm_nm" 
-                [nzIcon]="item.prnt_mnu_icn_tx">
+                nz-submenu [nzTitle]="item.title" 
+                [nzIcon]="item.icon">
                 <ul>
                     <li nz-menu-item *ngFor="let subItem of item.children"
-                        [routerLink]="subItem.mnu_itm_url_tx">
-                        {{subItem.mnu_itm_nm}}
+                        [routerLink]="'/internal/ams/'+subItem.path">
+                        {{subItem.title}}
                     </li>
                 </ul>
             </li>
         </ng-container> -->
         <ng-container *ngFor="let item of mainMenuItems">
-            <li *ngIf="!item.children" nz-menu-item routerLink="/internal/ams/{{ item.path }}">
+            <li *ngIf="!item.children" nz-menu-item
+                nz-tooltip
+                nzTooltipPlacement="right"
+                [nzTooltipTitle]="isFolded ? item.title : ''"
+                routerLink="/internal/ams/{{ item.path }}">
               <span nz-icon nzType="{{item.icon}}" nzTheme="outline"></span>
               <span>{{ item.title }}</span>
             </li>
-            <li *ngIf="item.children" nz-submenu [nzTitle]="title">
-              <ul class="subMenuMargin">
+
+            <li *ngIf="item.children"
+             nz-submenu [nzTitle]="item.title"
+             [nzIcon]="item.icon">
+              <ul>
                 <li
                   nz-menu-item
                   routerLink="/internal/ams/{{ child.path }}"
                   *ngFor="let child of item.children"
                 >
-                <span nz-icon nzType="{{child.icon}}" nzTheme="outline"></span>
+                <!-- <span nz-icon nzType="{{child.icon}}" nzTheme="outline"></span> -->
                   <span>{{ child.title }}</span>
                 </li>
               </ul>
             </li>
-            <ng-template #title>
+            <!-- <ng-template #title>
               <span nz-icon nzType="{{item.icon}}" nzTheme="outline"></span>
               <span>{{ item.title }}</span>
-            </ng-template>
+            </ng-template> -->
           </ng-container>
 
 
@@ -51,8 +58,8 @@
 
     </div>   
     
-    <style>
+    <!-- <style>
       .subMenuMargin {
         margin-top: -15px;
       }
-    </style>
+    </style> -->
