@@ -8,6 +8,7 @@ import { InvoicesService } from 'src/app/shared/moduleservices/invoices.service'
 import { VendorsService } from 'src/app/shared/moduleservices/vendors.service';
 import { environment } from 'src/environments/environment';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import Swal from 'sweetalert2'
 
 @Component({
   selector: 'app-invoices',
@@ -43,22 +44,23 @@ export class InvoicesComponent implements OnInit {
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
 
   columnDefs = [
-    {  headerName: 'Invoice Number', field: 'invoice_number', alignment: 'center', filter: false, width:150 },
+    { headerName: 'Invoice Number', field: 'invoice_number', alignment: 'center', filter: false, width: 150 },
     { headerName: 'Vendor', field: 'vendor_name', alignment: 'center', width: 175 },
     { headerName: 'Date', field: 'created_date', alignment: 'center', width: 125, cellTemplate: 'endDate' },
     { headerName: 'Amount', field: 'amount', alignment: 'center', width: 175, cellTemplate: 'Amt' },
     { headerName: 'Tax', field: 'tax', alignment: 'center', width: 175, cellTemplate: 'taxAmt' },
     { headerName: 'Total', field: 'grand_total', alignment: 'center', width: 175, cellTemplate: 'grandTotal' },
     { headerName: 'Remarks', field: 'remarks', alignment: 'center', width: 175 },
-];
+    { headerName: 'Status', field: 'status', alignment: 'center', width: 100 },
+  ];
 
   constructor(
     private fb: UntypedFormBuilder,
     private notification: NotificationService,
-    private invoice: InvoicesService,
+    private invoiceService: InvoicesService,
     private vendors: VendorsService,
     private inventory: InventoryItemsService,
-    private msg : NzMessageService
+    private msg: NzMessageService
   ) { }
 
   ngOnInit(): void {
@@ -70,7 +72,7 @@ export class InvoicesComponent implements OnInit {
     this.user_data = JSON.parse(this.user_data);
   }
   getInvoices(): void {
-    this.invoice.getInvoices().subscribe((res) => {
+    this.invoiceService.getInvoices().subscribe((res) => {
       this.invoice_info = res;
       this.isLoading = false;
     })
@@ -126,7 +128,7 @@ export class InvoicesComponent implements OnInit {
       var fileNamesArray = data.attachments.split(',');
       if (fileNamesArray.length > 0) {
         fileNamesArray.forEach((element: any) => {
-          this.files.push({name:element,url:this.getUploadedFIlesUrl + element});
+          this.files.push({ name: element, url: this.getUploadedFIlesUrl + element });
         });
       }
     }
@@ -136,7 +138,43 @@ export class InvoicesComponent implements OnInit {
       this.drawerTitle = "View Invoice details"
     }
   }
-
+  cancelInvoice(type: any, data: any) {
+    console.log(data);
+    let reason;
+    Swal.fire({
+      title: data.invoice_number,
+      // showDenyButton: true,
+      showCancelButton: true,
+      confirmButtonText: 'Submit',
+      cancelButtonText: 'Close',
+      input: 'text',
+      inputPlaceholder: 'Reason',
+      inputValue: reason,
+      text: 'Are you sure you want to cancel this invoiceService',
+      inputValidator: (value) => {
+        if (!value) {
+          return 'Please Mention the Reason'
+        }
+      }
+    }).then((result) => {
+      console.log(result);
+      let postObj={
+        cancel_reason:result.value
+      }
+      console.log(postObj);
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        this.invoiceService.cancelInvoicesById(data.invoice_id,postObj).subscribe(res =>{
+          if(res.status == 'success'){
+            Swal.fire(res.message, '','success')
+             this.getInvoices();
+          }else{
+            Swal.fire(res.message, '','error')
+          }
+        })
+      }
+    })
+  }
   create(): void {
     this.submit = true;
     this.drawerTitle = 'Add New Invoice';
@@ -169,11 +207,11 @@ export class InvoicesComponent implements OnInit {
         fileNames.push(element.name);
       });
       this.invoiceForm.value.attachments = fileNames.toString();
-      this.invoice.createInvoice(this.invoiceForm.value).subscribe(res => {
+      this.invoiceService.createInvoice(this.invoiceForm.value).subscribe(res => {
         this.notification.createNotification(res.status, res.message);
         if (res.status === 'success') {
           this.visible = false;
-          this.invoice.getInvoices().subscribe((res) => (this.invoice_info = res));
+          this.invoiceService.getInvoices().subscribe((res) => (this.invoice_info = res));
         }
       });
     } else {
@@ -193,15 +231,15 @@ export class InvoicesComponent implements OnInit {
         fileNames.push(element.name);
       });
       this.invoiceForm.value.attachments = fileNames.toString();
-      this.invoice.updateInvoice(this.invoiceId,this.invoiceForm.value).subscribe((res) => {
-          if (res.status === 'success') {
-            this.notification.createNotification(res.status, res.message);
-            this.visible = false;
-            this.invoice.getInvoices().subscribe((res) => (this.invoice_info = res));
-          } else {
-            this.notification.createNotification(res.status, res.message);
-          }
-        });
+      this.invoiceService.updateInvoice(this.invoiceId, this.invoiceForm.value).subscribe((res) => {
+        if (res.status === 'success') {
+          this.notification.createNotification(res.status, res.message);
+          this.visible = false;
+          this.invoiceService.getInvoices().subscribe((res) => (this.invoice_info = res));
+        } else {
+          this.notification.createNotification(res.status, res.message);
+        }
+      });
     }
     else {
 
@@ -368,7 +406,7 @@ export class InvoicesComponent implements OnInit {
   handleChange(info: NzUploadChangeParam): void {
     if (info.file.status === 'done') {
       this.msg.success(`${info.file.name} file uploaded successfully`);
-      this.files.push({name:info.file.response.fileName,url:this.getUploadedFIlesUrl + info.file.response.fileName});
+      this.files.push({ name: info.file.response.fileName, url: this.getUploadedFIlesUrl + info.file.response.fileName });
     } else if (info.file.status === 'error') {
       this.msg.error(`${info.file.name} file upload failed.`);
     } else if (info.file.status !== 'uploading') {

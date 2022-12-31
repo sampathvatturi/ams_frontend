@@ -39,8 +39,8 @@
     <dxi-column [showInColumnChooser]="false" caption="Actions" [visible]="(permissions.updt_in==1)?true:false"
       type="buttons" [width]="100" cellTemplate="viewTemplate">
       <div *dxTemplate="let data of 'viewTemplate'">
-        <div class="tblEdtBtn" (click)="edit('data',data.data)">
-          Edit
+        <div *ngIf="data.data.status=='open'" class="tblEdtBtn" (click)="cancelInvoice('cancel',data.data)">
+          Cancel
         </div>
       </div>
     </dxi-column>
