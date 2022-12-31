@@ -5,7 +5,9 @@ import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms
 import { formatDate } from '@angular/common';
 import { FundsService } from 'src/app/shared/moduleservices/funds.service';
 import { NotificationService } from 'src/app/shared/common/notification.service';
-
+import { exportDataGrid } from 'devextreme/excel_exporter';
+import  {Workbook}  from 'exceljs';
+import { saveAs } from 'file-saver-es';
 @Component({
   selector: 'app-funds',
   templateUrl: './funds.component.html',
@@ -164,5 +166,30 @@ export class FundsComponent implements OnInit {
       fund_value: ['', [Validators.required]],
     });
   }
-
+  onExporting(e){
+    const workbook = new Workbook();
+    const worksheet = workbook.addWorksheet('funds');
+    worksheet.columns = [
+      { width: 10 }, { width: 25 }, { width: 25 }, { width: 15 }, { width: 25 }, { width: 25 },
+    ];
+    exportDataGrid({
+      component: e.component,
+      worksheet,
+      keepColumnWidths: false,
+      topLeftCell: {row: 1, column:1},
+      customizeCell:({gridCell, excelCell}) => {
+        if(gridCell.rowType == 'header' && gridCell.column.dataField == 'fund_released_date'){
+          excelCell.value = 'Date';
+        }
+        if(gridCell.column.dataField == 'fund_released_date'){
+          excelCell.value = new Date(gridCell.value).toLocaleDateString();
+        }
+      }
+    }).then(() => {
+      workbook.xlsx.writeBuffer().then((buffer: BlobPart) => {
+        saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'funds.xlsx');
+    });
+    });
+    e.cancel = true;
+  }
 }
