@@ -137,7 +137,7 @@
     <div formArrayName="inventory_details" class="dynamicForm">
       <div *ngFor="let x of inventory_details.controls; let i = index" formGroupName="{{i}}" class="mb-1" nz-row
         nzJustify="space-between" nzAlign="bottom">
-        <button nz-col [nzSpan]="1" class="border-0" nz-button nzType="default" (click)="removeInventory(i)"><span
+        <button *ngIf="showBtn" nz-col [nzSpan]="1" class="border-0" nz-button nzType="default" (click)="removeInventory(i)"><span
             nz-icon nzType="close-circle" nzTheme="outline"></span></button>
         <nz-form-item nz-col [nzSpan]="4">
           <nz-form-label *ngIf="i === 0" class="required">Item</nz-form-label>
@@ -179,19 +179,19 @@
         <nz-form-item nz-col [nzSpan]="3">
           <nz-form-label *ngIf="i === 0">Amt</nz-form-label>
           <nz-form-control>
-            <input nz-input formControlName="amt" placeholder="Amount" (keyup)="change(i)" readonly />
+            <input nz-input formControlName="amt" placeholder="Amount" readonly />
           </nz-form-control>
         </nz-form-item>
         <nz-form-item nz-col [nzSpan]="2">
           <nz-form-label *ngIf="i === 0">Tax Amt</nz-form-label>
           <nz-form-control>
-            <input nz-input formControlName="taxAmt" placeholder="Tax amount" (keyup)="change(i)" readonly />
+            <input nz-input formControlName="taxAmt" placeholder="Tax amount" readonly />
           </nz-form-control>
         </nz-form-item>
         <nz-form-item nz-col [nzSpan]="3">
           <nz-form-label *ngIf="i === 0">Total</nz-form-label>
           <nz-form-control>
-            <input nz-input formControlName="total" placeholder="Total" (keyup)="change(i)" readonly />
+            <input nz-input formControlName="total" placeholder="Total" readonly />
           </nz-form-control>
         </nz-form-item>
 
@@ -204,7 +204,7 @@
       <nz-form-item>
         <nz-form-label nz-col nzSpan="5">Total Amount</nz-form-label>
         <nz-form-control nz-col nzSpan="10">
-          <input nz-input formControlName="amount" placeholder="Enter Amount" (keyup)="stable()" readonly />
+          <input nz-input formControlName="amount" placeholder="Enter Amount" readonly />
         </nz-form-control>
       </nz-form-item>
     </div>
@@ -213,7 +213,7 @@
       <nz-form-item>
         <nz-form-label nz-col nzSpan="5">Total Tax Amount</nz-form-label>
         <nz-form-control nz-col nzSpan="10">
-          <input nz-input formControlName="tax" placeholder="Enter Tax" (keyup)="stable()" readonly />
+          <input nz-input formControlName="tax" placeholder="Enter Tax" readonly />
         </nz-form-control>
       </nz-form-item>
     </div>
@@ -222,7 +222,7 @@
       <nz-form-item>
         <nz-form-label nz-col nzSpan="5">Grand Total</nz-form-label>
         <nz-form-control nz-col nzSpan="10">
-          <input nz-input formControlName="grand_total" placeholder="Enter Total" (keyup)="stable()" readonly />
+          <input nz-input formControlName="grand_total" placeholder="Enter Total" readonly />
         </nz-form-control>
       </nz-form-item>
     </div>

@@ -142,6 +142,8 @@ export class InvoicesComponent implements OnInit {
   }
  
   create(): void {
+    this.showBtn = true;
+    this.updateBtnDisable = true;
     this.submit = true;
     this.isDisabled = false;
     this.uploadDisabled = false;
@@ -323,18 +325,18 @@ export class InvoicesComponent implements OnInit {
     return arr
   }
 
-  stable() {
-    let totalTax = 0;
-    let totalAmt = 0;
-    for (let i of this.invoiceForm.value.inventory_details) {
-      totalTax += i.taxAmt;
-      totalAmt += i.amt
-    }
-    this.invoiceForm.get('tax')?.setValue(totalTax);
-    this.invoiceForm.get('amount')?.setValue(totalAmt);
-    this.tot = Number(this.invoiceForm.value.amount) + Number(this.invoiceForm.value.tax);
-    this.invoiceForm.get('grand_total')?.setValue(this.tot);
-  }
+  // stable() {
+  //   let totalTax = 0;
+  //   let totalAmt = 0;
+  //   for (let i of this.invoiceForm.value.inventory_details) {
+  //     totalTax += i.taxAmt;
+  //     totalAmt += i.amt
+  //   }
+  //   this.invoiceForm.get('tax')?.setValue(totalTax);
+  //   this.invoiceForm.get('amount')?.setValue(totalAmt);
+  //   this.tot = Number(this.invoiceForm.value.amount) + Number(this.invoiceForm.value.tax);
+  //   this.invoiceForm.get('grand_total')?.setValue(this.tot);
+  // }
 
   handleChange(info: NzUploadChangeParam): void {
     if (info.file.status === 'done') {
