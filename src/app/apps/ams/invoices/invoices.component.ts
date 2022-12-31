@@ -358,7 +358,6 @@ export class InvoicesComponent implements OnInit {
   });
 
   cancelInvoice(type: any, data: any) {
-    console.log(data);
     let reason;
     Swal.fire({
       title: data.invoice_number,

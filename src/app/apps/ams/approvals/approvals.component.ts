@@ -45,6 +45,7 @@ export class ApprovalsComponent implements OnInit {
   baseUrl = environment.apiUrl;
   uploadUrl = this.baseUrl + '/upload/uploadFiles';
   getUploadedFIlesUrl = this.baseUrl + '/upload/getUploadedFiles/';
+  status:any;
 
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
 
@@ -55,8 +56,7 @@ export class ApprovalsComponent implements OnInit {
     { headerName: 'Date', field: 'created_date', alignment: 'center', width: 125, cellTemplate: 'createDate' },
     { headerName: 'Amount', field: 'amount', alignment: 'center', width: 175, cellTemplate: 'Amt' },
     { headerName: 'Tax', field: 'tax', alignment: 'center', width: 175, cellTemplate: 'taxAmt' },
-    { headerName: 'Total', field: 'grand_total', alignment: 'center', width: 175, cellTemplate: 'grandTotal' },
-    { headerName: 'Status', field: 'status', alignment: 'center', width: 100 },
+    { headerName: 'Total', field: 'grand_total', alignment: 'center', width: 175, cellTemplate: 'grandTotal' }
   ];
 
 
@@ -211,7 +211,7 @@ export class ApprovalsComponent implements OnInit {
       vendor_name: vendor_acct?.name,
       main_acct_id: main_acct?.id,
       updated_by: this.user_data?.user_id,
-      status: this.allUsersApprovedStatus ? 'paid' : allUsersRejectStatus ? 'cancel' : mainStatus ? 'cancel' : this.currentInvoiceData?.status
+      status: this.allUsersApprovedStatus ? 'paid' : allUsersRejectStatus ? 'reject' : mainStatus ? 'reject' : this.currentInvoiceData?.status
     }
     return payload;
   }

@@ -62,7 +62,7 @@
     <div *dxTemplate="let d of 'grandTotal'">
       {{ d.data.grand_total | currencyIn}}
     </div>
-    <dxi-column [showInColumnChooser]="false" type="buttons" [width]="150" cellTemplate="viewTemplate">
+    <dxi-column [showInColumnChooser]="false" type="buttons" [width]="150" cellTemplate="viewTemplate" caption="Action">
       <div *dxTemplate="let data of 'viewTemplate'">
         <!-- <div > -->
           <!-- <button class="approveBtn" (click)="onClickApprove(data.data)">
@@ -80,22 +80,29 @@
           </button>
         </ng-template> -->
 
-        <ng-container *ngIf="data.data.status==='open';else cancel">
+        <ng-container *ngIf="data.data.status==='open';else reject">
           <button class="approveBtn" (click)="onClickApprove(data.data)">
             Approve
           </button>
         </ng-container>
-        <ng-template #cancel>
-            <ng-container *ngIf="data.data.status==='cancel';else approve">
-              <button class="canceledBtn" (click)="onClickApprove(data.data)">
+        <ng-template #reject>
+            <ng-container *ngIf="data.data.status==='reject';else paid">
+              <button class="rejectedBtn" (click)="onClickApprove(data.data)">
                 Rejected
               </button>
             </ng-container>
         </ng-template>
-        <ng-template #approve>
-          <button class="approvedBtn" (click)="onClickApprove(data.data)">
-            Approved
-          </button>
+        <ng-template #paid>
+          <ng-container *ngIf="data.data.status==='paid';else cancel">
+            <button class="approvedBtn" (click)="onClickApprove(data.data)">
+              Approved
+            </button>
+          </ng-container>
+        </ng-template>
+        <ng-template #cancel>
+            <button class="cancelledBtn" (click)="onClickApprove(data.data)">
+              Cancelled
+            </button>
         </ng-template>
       </div>
     </dxi-column>
@@ -157,7 +164,7 @@
       </div>
     </div>
     <nz-divider nzPlain></nz-divider>      
-    <div class="usersTable">
+    <div class="usersTable" *ngIf="currentInvoiceData.status=='open' || currentInvoiceData.status=='reject' || currentInvoiceData.status=='paid' ;else cancel">
       <nz-table #basicTable [nzData]="userStatusList" nzShowPagination nzShowSizeChanger
         [nzPageSizeOptions]=[5,10,15,20]>
         <thead>
@@ -195,6 +202,9 @@
         </tbody>
       </nz-table>
     </div>
+    <ng-template #cancel>
+        <b>Reason : {{currentInvoiceData.cancel_reason}}</b>
+    </ng-template>
   </ng-container>
   <ng-template #modalFooter>
     <button nz-button nzType="default" (click)="handleCancel()">Cancel</button>
