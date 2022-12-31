@@ -46,7 +46,7 @@
     </dxi-column>
     <dxi-column [showInColumnChooser]="false" caption="Actions" type="button1" [width]="100"
       cellTemplate="EditTemplate">
-      <div *dxTemplate="let data of 'EditTemplate'" (click)="edit('view',data.data)">
+      <div *dxTemplate="let data of 'EditTemplate'" (click)="view('view',data.data)">
         <div class="cursor-pointer tblEdtBtn">
           View
         </div>
@@ -122,7 +122,7 @@
         <nz-form-control nz-col nzSpan="10">
           <nz-upload [nzAction]=uploadUrl [nzRemove]="handleRemove" [nzFileList]="files"
             (nzChange)="handleChange($event)"
-             nzMultiple="true">
+             nzMultiple="true" [nzDisabled]="uploadDisabled">
             <button nz-button>
               <span nz-icon nzType="upload"></span>
               Upload
@@ -196,7 +196,7 @@
         </nz-form-item>
 
       </div>
-      <button type="button" nz-button nzType="default" (click)="addInvertory()" class="mt-2">Add Item</button>
+      <button type="button" nz-button nzType="default" *ngIf="showBtn"  (click)="addInvertory()" class="mt-2">Add Item</button>
     </div>
     <nz-divider></nz-divider>
 
@@ -230,13 +230,13 @@
 
   <ng-template #footerTpl>
     <div style="float: right">
-      <button nz-button style="margin-right: 8px" (click)="close()">
+      <button nz-button *ngIf="updateBtnDisable" style="margin-right: 8px" (click)="close()">
         Cancel
       </button>
       <button nz-button *ngIf="submit" nzType="primary" (click)="onSubmit()">
         Submit
       </button>
-      <button nz-button *ngIf="!submit" nzType="primary" (click)="onUpdate()">
+      <button nz-button *ngIf="!submit && updateBtnDisable" nzType="primary" (click)="onUpdate()">
         Update
       </button>
     </div>

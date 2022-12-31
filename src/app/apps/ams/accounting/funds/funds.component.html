@@ -36,21 +36,7 @@
         </div>
 
 
-        <dxi-column [showInColumnChooser]="false" [visible]="(permissions.updt_in==1)?true:false" type="buttons"
-        [width]="100" cellTemplate="viewTemplate">
-        <div *dxTemplate="let data of 'viewTemplate'">
-            <div class="tblEdtBtn" (click)="edit('edit',data.data)">
-                Edit Fund
-            </div>
-        </div>
-    </dxi-column>
-    <dxi-column [showInColumnChooser]="false" type="button1" [width]="100" cellTemplate="EditTemplate">
-        <div *dxTemplate="let data of 'EditTemplate'" (click)="edit('view',data.data)">
-            <div class="cursor-pointer tblEdtBtn">
-                View Fund
-            </div>
-        </div>
-    </dxi-column>
+        
     </dx-data-grid>
 </div>
 <dx-load-panel [container]="container" [visible]="isLoading" [showIndicator]="true" [position]="{ of: '#load' }"

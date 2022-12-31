@@ -25,6 +25,7 @@ export class InventoryComponent implements OnInit {
   updateBtnDisable:boolean = true;
   isLoading : boolean = true ;
   dataMessage = '';
+  isDisabled:boolean = false;
 
   
   constructor(
@@ -128,19 +129,30 @@ export class InventoryComponent implements OnInit {
 
   edit(type:any,data: any) {
     this.submit = false;
-    this.drawerTitle = 'Edit Invetory Details';
     this.visible = true;
-    this.updateId = data?.item_id;
-    this.inventoryFormValidators();
-    this.inventoryForm.get('item_id')?.setValue(data.item_id);
-    this.inventoryForm.get('item_name')?.setValue(data.item_name);
-    this.inventoryForm.get('uom_id')?.setValue(data.uom_id);
-    this.inventoryForm.get('price')?.setValue(data.price);
-    this.inventoryForm.get('tax')?.setValue(data.tax);
-    this.updateBtnDisable = true;
+    if (type == 'edit'){
+      this.isDisabled = false;
+      this.drawerTitle = 'Edit Invetory Details';
+      this.updateId = data?.item_id;
+      this.inventoryFormValidators();
+      this.inventoryForm.get('item_id')?.setValue(data.item_id);
+      this.inventoryForm.get('item_name')?.setValue(data.item_name);
+      this.inventoryForm.get('uom_id')?.setValue(data.uom_id);
+      this.inventoryForm.get('price')?.setValue(data.price);
+      this.inventoryForm.get('tax')?.setValue(data.tax);
+      this.updateBtnDisable = true;
+    }
+    
     if (type === 'view'){
+      this.isDisabled = true;
       this.updateBtnDisable = false;
       this.drawerTitle = 'View Inventory Details';
+      this.inventoryFormValidators();
+      this.inventoryForm.get('item_id')?.setValue(data.item_id);
+      this.inventoryForm.get('item_name')?.setValue(data.item_name);
+      this.inventoryForm.get('uom_id')?.setValue(data.uom_id);
+      this.inventoryForm.get('price')?.setValue(data.price);
+      this.inventoryForm.get('tax')?.setValue(data.tax);
     }
   }
 
@@ -181,10 +193,10 @@ export class InventoryComponent implements OnInit {
   inventoryFormValidators() {
     this.inventoryForm = this.fb.group({
       item_id: [''],
-      item_name: ['', [Validators.required,Validators.minLength(3),Validators.maxLength(50)]],
-      uom_id: ['', [Validators.required]],
-      price: ['', [Validators.required]],
-      tax: ['', [Validators.required]]
+      item_name: [{value:'',disabled:this.isDisabled}, [Validators.required,Validators.minLength(3),Validators.maxLength(50)]],
+      uom_id: [{value:'',disabled:this.isDisabled}, [Validators.required]],
+      price: [{value:'',disabled:this.isDisabled}, [Validators.required]],
+      tax: [{value:'',disabled:this.isDisabled}, [Validators.required]]
     });
   }
 

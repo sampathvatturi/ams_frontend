@@ -28,6 +28,7 @@ export class VendorsComponent implements OnInit {
   vendorId: any;
   updateBtnDisable: boolean = true;
   isLoading: boolean = true;
+  isDisabled:boolean = false;
 
   constructor(private fb: UntypedFormBuilder,
     // private api: ApiService,
@@ -81,31 +82,51 @@ export class VendorsComponent implements OnInit {
 
   edit(type: any, data: any) {
     this.submit = false;
-    this.drawerTitle = 'Edit Vendor Details';
     this.visible = true;
+    this.drawerTitle = 'Edit Vendor Details';
     this.mode = false;
-    this.vendorId = data?.vendor_id;
-    this.vendorFormValidators();
-    this.vendorForm.get('vendor_name')?.setValue(data?.vendor_name);
-    this.vendorForm.get('address')?.setValue(data?.address);
-    this.vendorForm.get('city')?.setValue(data?.city);
-    this.vendorForm.get('state')?.setValue(data?.state);
-    this.vendorForm.get('district')?.setValue(data?.district);
-    this.vendorForm.get('phone_number')?.setValue(data?.phone_number);
-    this.vendorForm.get('gst_num')?.setValue(data?.gst_num);
-    this.vendorForm.get('status')?.setValue(data?.status);
-    this.vendorForm.get('user_name')?.disable();
-    this.vendorForm.get('password_md5')?.disable();
-    this.vendorForm.get('email')?.disable();
-    this.vendorForm.get('confirm')?.disable();
-    this.updateBtnDisable = true;
+    if (type == 'edit'){
+      this.isDisabled = false;
+      this.vendorId = data?.vendor_id;
+      this.vendorFormValidators();
+      this.vendorForm.get('vendor_name')?.setValue(data?.vendor_name);
+      this.vendorForm.get('address')?.setValue(data?.address);
+      this.vendorForm.get('city')?.setValue(data?.city);
+      this.vendorForm.get('state')?.setValue(data?.state);
+      this.vendorForm.get('district')?.setValue(data?.district);
+      this.vendorForm.get('phone_number')?.setValue(data?.phone_number);
+      this.vendorForm.get('gst_num')?.setValue(data?.gst_num);
+      this.vendorForm.get('status')?.setValue(data?.status);
+      this.vendorForm.get('user_name')?.disable();
+      this.vendorForm.get('password_md5')?.disable();
+      this.vendorForm.get('email')?.disable();
+      this.vendorForm.get('confirm')?.disable();
+      this.updateBtnDisable = true;
+    }
+    
     if (type === 'view') {
+      this.isDisabled = true;
       this.updateBtnDisable = false;
       this.drawerTitle = 'View Vendor';
+      this.vendorFormValidators();
+      this.vendorForm.get('vendor_name')?.setValue(data?.vendor_name);
+      this.vendorForm.get('address')?.setValue(data?.address);
+      this.vendorForm.get('city')?.setValue(data?.city);
+      this.vendorForm.get('state')?.setValue(data?.state);
+      this.vendorForm.get('district')?.setValue(data?.district);
+      this.vendorForm.get('phone_number')?.setValue(data?.phone_number);
+      this.vendorForm.get('gst_num')?.setValue(data?.gst_num);
+      this.vendorForm.get('status')?.setValue(data?.status);
+      this.vendorForm.get('user_name')?.disable();
+      this.vendorForm.get('password_md5')?.disable();
+      this.vendorForm.get('email')?.disable();
+      this.vendorForm.get('confirm')?.disable();
+
     }
   }
   create(): void {
     this.submit = true;
+    this.isDisabled = false;
     this.drawerTitle = 'Add Vendor';
     this.visible = true;
     this.mode = true;
@@ -191,18 +212,18 @@ export class VendorsComponent implements OnInit {
 
   vendorFormValidators() {
     this.vendorForm = this.fb.group({
-      vendor_name: ['', [Validators.required, Validators.maxLength(50), Validators.minLength(3)]],
-      phone_number: ['', [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
-      address: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(150)]],
-      status: ['', [Validators.required]],
+      vendor_name: [{value:'',disabled:this.isDisabled}, [Validators.required, Validators.maxLength(50), Validators.minLength(3)]],
+      phone_number: [{value:'',disabled:this.isDisabled}, [Validators.required, Validators.minLength(10), Validators.maxLength(10)]],
+      address: [{value:'',disabled:this.isDisabled}, [Validators.required, Validators.minLength(3), Validators.maxLength(150)]],
+      status: [{value:'',disabled:this.isDisabled}, [Validators.required]],
       user_name: ['', [Validators.required, Validators.maxLength(50), Validators.minLength(3)]],
       password_md5: ['', [Validators.required, Validators.minLength(5)]],
       confirm: ['', [this.confirmValidator]],
       email: [null, [Validators.required]],
-      city: ['', [Validators.required, Validators.maxLength(50), Validators.minLength(3)]],
-      district: ['', [Validators.required, Validators.maxLength(50), Validators.minLength(3)]],
-      state: ['', [Validators.required, Validators.maxLength(50), Validators.minLength(3)]],
-      gst_num: ['', [Validators.required, Validators.maxLength(50), Validators.minLength(3)]],
+      city: [{value:'',disabled:this.isDisabled}, [Validators.required, Validators.maxLength(50), Validators.minLength(3)]],
+      district: [{value:'',disabled:this.isDisabled}, [Validators.required, Validators.maxLength(50), Validators.minLength(3)]],
+      state: [{value:'',disabled:this.isDisabled}, [Validators.required, Validators.maxLength(50), Validators.minLength(3)]],
+      gst_num: [{value:'',disabled:this.isDisabled}, [Validators.required, Validators.maxLength(50), Validators.minLength(3)]],
     });
   }
   validateConfirmPassword(): void {

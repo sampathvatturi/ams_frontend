@@ -172,7 +172,7 @@
             [nzAction] = uploadUrl
             [nzRemove]="handleRemove"
             [nzFileList]="files"
-              (nzChange)="handleChange($event)" nzMultiple="true">
+              (nzChange)="handleChange($event)" nzMultiple="true" [nzDisabled]="uploadDisable">
               <button nz-button>
                 <span nz-icon nzType="upload"></span>
                 Upload
@@ -186,7 +186,7 @@
 
     <ng-template #footerTpl>
       <div style="float: right">
-        <button nz-button style="margin-right: 8px" (click)="close()">
+        <button nz-button *ngIf="updateBtnDisable" style="margin-right: 8px" (click)="close()">
           Cancel
         </button>
         <button nz-button *ngIf="submit" nzType="primary" (click)="onCreateSubmit()">

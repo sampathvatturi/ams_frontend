@@ -45,7 +45,9 @@ export class CreateTenderComponent implements OnInit {
   uploadUrl = this.baseUrl+'/upload/uploadFiles';
   getUploadedFIlesUrl = this.baseUrl+'/upload/getUploadedFiles/';
   isLoading : boolean = false ;
+  isDisabled:boolean = false;
   dataMessage = 'Loading';
+  uploadDisable:boolean = false;
 
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
 
@@ -131,6 +133,8 @@ export class CreateTenderComponent implements OnInit {
   
 
   create(){
+    this.isDisabled = false;
+    this.uploadDisable = false;
     this.submit = true;
     this.drawerTitle = 'Add Tender';
     this.visible = true;
@@ -143,8 +147,12 @@ export class CreateTenderComponent implements OnInit {
 
   edit(type:any,data:any){
     this.submit = false;
-    this.drawerTitle = 'Edit Tender Form';
     this.visible = true;
+
+    if (type === 'edit'){
+      this.isDisabled = false;
+      this.uploadDisable = false;
+    this.drawerTitle = 'Edit Tender Form';
     this.createTendorsFormValidators();
     this.tenderId = data?.id;
     this.createTenderForm.get('description')?.setValue(data.description);
@@ -167,9 +175,34 @@ export class CreateTenderComponent implements OnInit {
       }
     }
     this.updateBtnDisable = true;
+    }
     if (type === 'view'){
+      this.isDisabled = true;
+      this.uploadDisable = true;
       this.updateBtnDisable = false;
       this.drawerTitle = 'View Tender Details';
+    this.createTendorsFormValidators();
+    this.tenderId = data?.id;
+    this.createTenderForm.get('description')?.setValue(data.description);
+    this.createTenderForm.get('title')?.setValue(data.title);
+    this.createTenderForm.get('work_id')?.setValue(data.work_id.split(',').map(Number));
+    this.createTenderForm.get('location')?.setValue(data.location);
+    this.createTenderForm.get('tender_cost')?.setValue(data.tender_cost);
+    this.createTenderForm.get('status')?.setValue(data.status);
+    this.createTenderForm.get('start_date')?.setValue(data.start_date);
+    this.createTenderForm.get('end_date')?.setValue(data.end_date);
+    this.createTenderForm.get('updated_by')?.setValue(this.user_data.user_id);
+    if(data.attachments != null && data.attachments !=''){
+      var fileNamesArray = data.attachments.split(',');
+      if(fileNamesArray.length > 0){
+        fileNamesArray.forEach((element:any) => {
+          this.filesDetails.name=element;
+          this.filesDetails.url=this.getUploadedFIlesUrl+element;
+          this.files.push(this.filesDetails);
+        });
+      }
+    }
+
     }
   }
 
@@ -296,16 +329,16 @@ export class CreateTenderComponent implements OnInit {
 
   createTendorsFormValidators() {
     this.createTenderForm = this.fb.group({
-      tender_id:[''],
-      description: [null, [Validators.required, Validators.pattern(GlobalConstants.addressRegex)]],
-      title: [null, [Validators.required, Validators.pattern(GlobalConstants.firstLastNameRegex)]],
-      work_id: [[], [Validators.required]],
-      location: [null, [Validators.required, Validators.pattern(GlobalConstants.addressRegex)]],
-      tender_cost: [null, [Validators.required]],
-      status: ['open'],
+      tender_id:[{value:null,disabled:this.isDisabled}],
+      description: [{value:null,disabled:this.isDisabled}, [Validators.required, Validators.pattern(GlobalConstants.addressRegex)]],
+      title: [{value:null,disabled:this.isDisabled}, [Validators.required, Validators.pattern(GlobalConstants.firstLastNameRegex)]],
+      work_id: [{value:[],disabled:this.isDisabled}, [Validators.required]],
+      location: [{value:null,disabled:this.isDisabled}, [Validators.required, Validators.pattern(GlobalConstants.addressRegex)]],
+      tender_cost: [{value:null,disabled:this.isDisabled}, [Validators.required]],
+      status: [{value:'open',disabled:this.isDisabled}],
       attachments: [''],
-      start_date: [null,[Validators.required]],
-      end_date: [null,[Validators.required]],
+      start_date: [{value:null,disabled:this.isDisabled},[Validators.required]],
+      end_date: [{value:null,disabled:this.isDisabled},[Validators.required]],
       created_by:[this.user_data?.user_id],
       updated_by:[this.user_data?.user_id]
     });

@@ -83,25 +83,7 @@ export class FundsComponent implements OnInit {
     this.fundsForm.get('fund_type')?.setValue('state');
   }
 
-  edit(type:any,data: any) {
-    this.submit = false;
-    this.drawerTitle = 'Edit Fund Details';
-    this.visible = true;
-    this.fundId = data?.fund_id;
-    this.editAmount = data?.fund_value;
-    this.fundsFormValidators();
-    this.fundsForm.get('fund_type')?.setValue(data.fund_type);
-    this.fundsForm.get('fund_description')?.setValue(data.fund_description);
-    this.fundsForm.get('transaction_mode')?.setValue(data.transaction_mode);
-    this.fundsForm.get('fund_value')?.setValue(data.fund_value);
-    this.fundsForm.get('fund_released_date')?.setValue(data.fund_released_date);
-    this.fundsForm.get('created_by')?.setValue(this.user_data.user_id);
-    this.fundsForm.get('updated_by')?.setValue(this.user_data.user_id);
-    this.updateBtnDisable = true;
-    if (type === 'view'){
-      this.updateBtnDisable = false;
-    }
-  }
+  
 
   close(): void {
     this.visible = false;

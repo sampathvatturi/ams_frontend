@@ -32,6 +32,7 @@ export class InvoicesComponent implements OnInit {
   searchText = '';
   tot: any;
   updateBtnDisable: boolean = true;
+  showBtn:boolean = true;
 
   // globalConstants = GlobalConstants;
   inventoryDetailsArray: any = [];
@@ -41,6 +42,8 @@ export class InvoicesComponent implements OnInit {
   getUploadedFIlesUrl = this.baseUrl + '/upload/getUploadedFiles/';
   invoiceId: any;
   isLoading: boolean = true;
+  isDisabled:boolean = false;
+  uploadDisabled:boolean = false;
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
 
   columnDefs = [
@@ -108,9 +111,12 @@ export class InvoicesComponent implements OnInit {
     });
   }
 
-  edit(type: any, data: any) {
+  view(type: any, data: any) {
+    this.isDisabled = true;
+    this.uploadDisabled = true;
+    this.showBtn = false
     this.submit = false;
-    this.drawerTitle = 'Edit Invoice details';
+    this.drawerTitle = 'View Invoice details';
     this.visible = true;
     this.files = [];
     this.invoiceFormValidators();
@@ -132,15 +138,13 @@ export class InvoicesComponent implements OnInit {
         });
       }
     }
-    this.updateBtnDisable = true;
-    if (type === 'view') {
-      this.updateBtnDisable = false;
-      this.drawerTitle = "View Invoice details"
-    }
+    this.updateBtnDisable = false;
   }
  
   create(): void {
     this.submit = true;
+    this.isDisabled = false;
+    this.uploadDisabled = false;
     this.drawerTitle = 'Add New Invoice';
     this.visible = true;
     this.files = [];
@@ -215,18 +219,18 @@ export class InvoicesComponent implements OnInit {
   }
   invoiceFormValidators() {
     this.invoiceForm = this.fb.group({
-      vendor_id: ['', [Validators.required]],
-      invoice_number: [''],
-      status: ['', [Validators.required]],
-      remarks: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(200)]],
+      vendor_id: [{value:'',disabled:this.isDisabled}, [Validators.required]],
+      invoice_number: [{value:'',disabled:this.isDisabled}],
+      status: [{value:'',disabled:this.isDisabled}, [Validators.required]],
+      remarks: [{value:'',disabled:this.isDisabled}, [Validators.required, Validators.minLength(5), Validators.maxLength(200)]],
       amount: ['', [Validators.required]],
       inventory_details: this.fb.array([
         this.fb.group({
-          item: ['', [Validators.required]],
-          quantity: [null, [Validators.required]],
-          uom: [null, [Validators.required]],
-          price: [null, [Validators.required]],
-          taxPercent: [null, [Validators.required]],
+          item: [{value:'',disabled:this.isDisabled}, [Validators.required]],
+          quantity: [{value:null,disabled:this.isDisabled}, [Validators.required]],
+          uom: [{value:null,disabled:this.isDisabled}, [Validators.required]],
+          price: [{value:null,disabled:this.isDisabled}, [Validators.required]],
+          taxPercent: [{value:null,disabled:this.isDisabled}, [Validators.required]],
           amt: [0],
           taxAmt: [0],
           total: [0],

@@ -20,7 +20,7 @@ export class SurveyReportComponent implements OnInit {
   survey_info: any = [];
   surveyForm!: UntypedFormGroup;
   updateBtnDisable: boolean = false;
-  isLoading: boolean=false;
+  isLoading: boolean = false;
   submit: boolean = true;
   user_data: any = [];
   surveyId: any;
@@ -32,6 +32,8 @@ export class SurveyReportComponent implements OnInit {
   baseUrl = environment.apiUrl;
   uploadUrl = this.baseUrl + '/upload/uploadFiles';
   getUploadedFIlesUrl = this.baseUrl + '/upload/getUploadedFiles/';
+  isDisabled: boolean = false;
+  upload:boolean = false;
 
 
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
@@ -61,7 +63,7 @@ export class SurveyReportComponent implements OnInit {
   }
 
   getSurveyReport() {
-    this.isLoading=true;
+    this.isLoading = true;
     this.surveyReportService.getSurveyreports().subscribe((res) => {
       if (res.length > 0) {
         this.survey_info = res;
@@ -88,7 +90,9 @@ export class SurveyReportComponent implements OnInit {
   }
 
   create(): void {
+    this.isDisabled = false;
     this.submit = true;
+    this.upload = false
     this.drawerTitle = 'Add Survey Report';
     this.visible = true;
     this.filesDetails.name = '';
@@ -99,62 +103,91 @@ export class SurveyReportComponent implements OnInit {
   }
 
   edit(type: any, data: any) {
-    this.drawerTitle = 'Edit Survey Report';
     this.visible = true;
     this.submit = false;
-    this.filesDetails.name = '';
-    this.filesDetails.url = '';
-    this.files = [];
-    this.surveyFormValidators();
-    this.surveyId = data?.id;
-    this.surveyForm.get('status')?.setValue(data.status);
-    this.surveyForm.get('name')?.setValue(data.name);
-    this.surveyForm.get('description')?.setValue(data.description);
-    this.surveyForm.get('start_date')?.setValue(data.start_date);
-    this.surveyForm.get('end_date')?.setValue(data.end_date);
-    if (data.attachments != null && data.attachments != '') {
-      var fileNamesArray = data.attachments.split(',');
-      if (fileNamesArray.length > 0) {
-        fileNamesArray.forEach((element: any) => {
-          this.filesDetails.name = element;
-          this.filesDetails.url = this.getUploadedFIlesUrl + element;
-          this.files.push(this.filesDetails);
-        });
+    if (type == 'edit') {
+      this.isDisabled = false;
+      this.upload = false;
+      this.drawerTitle = 'Edit Survey Report';
+      this.filesDetails.name = '';
+      this.filesDetails.url = '';
+      this.files = [];
+      this.surveyFormValidators();
+      this.surveyId = data?.id;
+      this.surveyForm.get('status')?.setValue(data.status);
+      this.surveyForm.get('name')?.setValue(data.name);
+      this.surveyForm.get('description')?.setValue(data.description);
+      this.surveyForm.get('start_date')?.setValue(data.start_date);
+      this.surveyForm.get('end_date')?.setValue(data.end_date);
+      if (data.attachments != null && data.attachments != '') {
+        var fileNamesArray = data.attachments.split(',');
+        if (fileNamesArray.length > 0) {
+          fileNamesArray.forEach((element: any) => {
+            this.filesDetails.name = element;
+            this.filesDetails.url = this.getUploadedFIlesUrl + element;
+            this.files.push(this.filesDetails);
+          });
+        }
       }
+      this.updateBtnDisable = true;
+
     }
-    this.updateBtnDisable = true;
+
     if (type === 'view') {
+      this.isDisabled = true;
+      this.upload = true;
       this.updateBtnDisable = false;
       this.drawerTitle = 'View Survey Report';
+      this.filesDetails.name = '';
+      this.filesDetails.url = '';
+      this.files = [];
+      this.surveyFormValidators();
+      this.surveyId = data?.id;
+      this.surveyForm.get('status')?.setValue(data.status);
+      this.surveyForm.get('name')?.setValue(data.name);
+      this.surveyForm.get('description')?.setValue(data.description);
+      this.surveyForm.get('start_date')?.setValue(data.start_date);
+      this.surveyForm.get('end_date')?.setValue(data.end_date);
+      if (data.attachments != null && data.attachments != '') {
+        var fileNamesArray = data.attachments.split(',');
+        if (fileNamesArray.length > 0) {
+          fileNamesArray.forEach((element: any) => {
+            this.filesDetails.name = element;
+            this.filesDetails.url = this.getUploadedFIlesUrl + element;
+            this.files.push(this.filesDetails);
+          });
+        }
+      }
+
     }
   }
 
-  prepareSurveyPayload(data:any){
-    
+  prepareSurveyPayload(data: any) {
+
     const payload = {
-      name:data.name,
-      description:data.description,
-      status:data.status,
-      start_date:data.start_date,
-      end_date:data.end_date,
-      created_by:this.user_data.user_id,
-      updated_by:this.user_data?.user_id,
-      attachments:data.attachments
+      name: data.name,
+      description: data.description,
+      status: data.status,
+      start_date: data.start_date,
+      end_date: data.end_date,
+      created_by: this.user_data.user_id,
+      updated_by: this.user_data?.user_id,
+      attachments: data.attachments
     }
     return payload;
   }
 
   onCreateSubmit() {
-    if (this.surveyForm.valid){
+    if (this.surveyForm.valid) {
       var fileNames: any[] = [];
       this.files.forEach(element => {
         fileNames.push(element.name);
       });
       this.surveyForm.value.attachments = fileNames.toString();
-      this.surveyReportService.createSurveyreport(this.prepareSurveyPayload(this.surveyForm.value)).subscribe((res)=>{
-          this.visible = false;
-          this.getSurveyReport();
-          this.notification.createNotification("success", res?.message);
+      this.surveyReportService.createSurveyreport(this.prepareSurveyPayload(this.surveyForm.value)).subscribe((res) => {
+        this.visible = false;
+        this.getSurveyReport();
+        this.notification.createNotification("success", res?.message);
       });
     }
     else {
@@ -168,15 +201,15 @@ export class SurveyReportComponent implements OnInit {
     }
   }
 
-  prepareUpdatePayload(data:any){
+  prepareUpdatePayload(data: any) {
     const payload = {
-      name:data.name,
-      description:data.description,
-      status:data.status,
-      start_date:data.start_date,
-      end_date:data.end_date,
-      updated_by:this.user_data?.user_id,
-      attachments:data.attachments
+      name: data.name,
+      description: data.description,
+      status: data.status,
+      start_date: data.start_date,
+      end_date: data.end_date,
+      updated_by: this.user_data?.user_id,
+      attachments: data.attachments
     }
     return payload;
   }
@@ -228,12 +261,12 @@ export class SurveyReportComponent implements OnInit {
 
   surveyFormValidators() {
     this.surveyForm = this.fb.group({
-      name: ['', [Validators.required]],
-      status: ['', [Validators.required]],
+      name: [{ value: '', disabled: this.isDisabled }, [Validators.required]],
+      status: [{ value: '', disabled: this.isDisabled }, [Validators.required]],
       attachments: [''],
-      description: ['', [Validators.required]],
-      start_date: ['', [Validators.required]],
-      end_date: ['', [Validators.required]],
+      description: [{ value: '', disabled: this.isDisabled }, [Validators.required]],
+      start_date: [{ value: '', disabled: this.isDisabled }, [Validators.required]],
+      end_date: [{ value: '', disabled: this.isDisabled }, [Validators.required]],
     });
   }
 }

@@ -70,7 +70,7 @@
             <nz-form-item>
                 <nz-form-label nz-col nzSpan="5" class="required">Name</nz-form-label>
                 <nz-form-control nz-col nzSpan="10" [nzErrorTip]="name">
-                    <textarea formControlName="name" nz-input rows="2" placeholder="Enter name"></textarea>
+                    <input type="text" nz-input  formControlName="name" placeholder="Enter name" />
                     <ng-template #name let-control>
                         <ng-container *ngIf="control.hasError('required')">Please enter name</ng-container>
                         <ng-container *ngIf="control.hasError('pattern')">Please enter valid input</ng-container>
@@ -129,7 +129,7 @@
               <nz-form-label nz-col nzSpan="5">Attachments</nz-form-label>
               <nz-form-control nz-col nzSpan="10">
                 <nz-upload [nzAction]=uploadUrl [nzRemove]="handleRemove" [nzFileList]="files"
-                  (nzChange)="handleChange($event)" nzMultiple="true">
+                  (nzChange)="handleChange($event)" nzMultiple="true" [nzDisabled]="upload">
                   <button nz-button>
                     <span nz-icon nzType="upload"></span>
                     Upload
@@ -142,7 +142,7 @@
 
     <ng-template #footerTpl>
         <div style="float: right">
-            <button nz-button style="margin-right: 8px" (click)="close()">
+            <button nz-button *ngIf="updateBtnDisable" style="margin-right: 8px" (click)="close()">
                 Cancel
             </button>
             <button nz-button *ngIf="submit" nzType="primary" (click)="onCreateSubmit()">

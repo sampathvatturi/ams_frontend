@@ -25,6 +25,8 @@ export class UomComponent implements OnInit {
   uomId: any;
   updateBtnDisable:boolean = true;
   isLoading : boolean = false ;
+  isDisabled:boolean = false;
+
 
   
 
@@ -80,6 +82,7 @@ export class UomComponent implements OnInit {
       
     }
     create(): void {
+      this.isDisabled = false;
       this.submit = true;
       this.drawerTitle = 'Add Uom';
       this.visible = true;
@@ -88,19 +91,30 @@ export class UomComponent implements OnInit {
   
     edit(type: any, data: any) {
       this.submit = false;
-      this.drawerTitle = 'Edit Uom Details';
       this.visible = true;
       this.uomId = data?.uom_id;
-      this.uomFormValidators();
-      this.uomForm.get('uom_code')?.setValue(data?.uom_code);
-      this.uomForm.get('uom_name')?.setValue(data?.uom_name);
-      this.updateBtnDisable = true;
-      if(type === "view") {
-        this.updateBtnDisable = false;
+      
+      if (type == 'edit'){
+        this.isDisabled = false;
+        this.drawerTitle = 'Edit Uom Details';
+        this.updateBtnDisable = true;
+        this.uomFormValidators();
+        this.uomForm.get('uom_code')?.setValue(data?.uom_code);
+        this.uomForm.get('uom_name')?.setValue(data?.uom_name);
+        
+      }
+      if (type == 'view'){
+        this.isDisabled = true;
         this.drawerTitle = 'View Uom Details';
+        this.updateBtnDisable = false;
+        this.uomFormValidators();
+        this.uomForm.get('uom_code')?.setValue(data?.uom_code);
+        this.uomForm.get('uom_name')?.setValue(data?.uom_name);
       }
       
     }
+
+  
   
     close(): void {
       this.visible = false;
@@ -164,8 +178,8 @@ export class UomComponent implements OnInit {
   
     uomFormValidators(){
       this.uomForm = this.fb.group({
-        uom_name: ['',[Validators.required,Validators.pattern(GlobalConstants.firstLastNameRegex),Validators.minLength(3),Validators.maxLength(50)]],
-        uom_code: ['',[Validators.required,Validators.pattern(GlobalConstants.nameRegex),Validators.minLength(2),Validators.maxLength(50)]],
+        uom_name: [{value:'',disabled:this.isDisabled},[Validators.required,Validators.pattern(GlobalConstants.firstLastNameRegex),Validators.minLength(3),Validators.maxLength(50)]],
+        uom_code: [{value:'',disabled:this.isDisabled},[Validators.required,Validators.pattern(GlobalConstants.nameRegex),Validators.minLength(2),Validators.maxLength(50)]],
       });
     }
     

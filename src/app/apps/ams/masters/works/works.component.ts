@@ -25,6 +25,7 @@ export class WorksComponent implements OnInit {
   isLoading:boolean = false;
   pageIndex:any = 0;
   pageSize:number = 10;
+  isDisabled:boolean = false;
 
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
 
@@ -78,25 +79,49 @@ export class WorksComponent implements OnInit {
     }
 
     create(): void {
+      this.isDisabled = false;
       this.submit = true;
       this.drawerTitle = 'Add Work';
       this.visible = true;
       this.worksFormValidators();
+      
     }
+
+    
 
     edit(type:any,data: any) {
       this.submit = false;
-      this.drawerTitle = 'Edit Work Details';
-      this.visible = true;
       this.workId = data?.work_id;
-      this.worksFormValidators();
-      this.workForm.get('work_name')?.setValue(data.work_name);
-      this.updateBtnDisable = true;
-      if (type === 'view'){
+      this.visible = true;
+   
+      if (type == 'edit'){
+        this.isDisabled = false;
+        this.drawerTitle = 'Edit Work Details';
+        this.updateBtnDisable = true;
+        this.worksFormValidators();
+        this.workId = data?.work_id;
+        this.workForm.get('work_name')?.setValue(data.work_name);
+      }
+      if(type == 'view'){
+        this.isDisabled = true;
+        this.drawerTitle = 'View Work Details';
         this.updateBtnDisable = false;
-        this.drawerTitle = 'View Work Details'
+        this.worksFormValidators();
+        this.workForm.get('work_name')?.setValue(data.work_name);
       }
     }
+
+    // view(data:any){
+    //   this.isDisabled = true;
+    //   this.submit = false;
+    //   this.drawerTitle = 'View Work Details';
+    //   this.visible = true;
+    //   this.workId = data?.work_id;
+    //   this.worksFormValidators();
+    //   this.workForm.get('work_name')?.setValue(data.work_name);
+    //   this.updateBtnDisable = false;
+      
+    // }
 
     close(): void {
       this.visible = false;
@@ -158,7 +183,7 @@ export class WorksComponent implements OnInit {
 
     worksFormValidators(){
       this.workForm = this.fb.group({
-        work_name: ['',[Validators.required,Validators.pattern(GlobalConstants.firstLastNameRegex),Validators.minLength(3),Validators.maxLength(50)]],
+        work_name: [{value:'',disabled:this.isDisabled},[Validators.required,Validators.pattern(GlobalConstants.firstLastNameRegex),Validators.minLength(3),Validators.maxLength(50)]],
       });
     }
 }

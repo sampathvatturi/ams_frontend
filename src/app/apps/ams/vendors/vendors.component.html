@@ -231,7 +231,7 @@
 
   <ng-template #footerTpl>
     <div style="float: right">
-      <button nz-button style="margin-right: 8px" (click)="close()">
+      <button nz-button  *ngIf="updateBtnDisable" style="margin-right: 8px" (click)="close()">
         Cancel
       </button>
       <button nz-button *ngIf="submit" nzType="primary" (click)="onCreateSubmit()">

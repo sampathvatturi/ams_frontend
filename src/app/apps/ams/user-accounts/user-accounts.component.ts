@@ -33,6 +33,7 @@ export class UserAccountsComponent implements OnInit {
   userRole: any;
   updateBtnDisable: boolean = true;
   isLoading: boolean;
+  isDisabled:boolean = false;
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
   columnDefs = [
     { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false, width: 100, cellTemplate: 'serialNo' },
@@ -154,13 +155,47 @@ export class UserAccountsComponent implements OnInit {
     return userPayload;
   }
 
-  edit(type: any, data: any) {
+  // edit(type: any, data: any) {
+  //   this.updateUserId = data?.user_id;
+  //   this.userRole = data?.role;
+  //   this.userFormFieldsConfig();
+  //   this.getUserById(this.updateUserId);
+  //   this.submit = false;
+  //   this.visible = true;
+  //   this.drawerTitle = 'Edit User Details';
+  //   this.createUserForm.get('first_name')?.setValue(data?.first_name);
+  //   this.createUserForm.get('last_name')?.setValue(data?.last_name);
+  //   this.createUserForm.get('email')?.setValue(data?.email);
+  //   this.createUserForm.get('user_name')?.setValue(data?.user_name);
+  //   this.createUserForm.get('phone_number')?.setValue(data.phone_number);
+  //   this.createUserForm.get('department_id')?.setValue(data?.department_id?.toString());
+  //   this.createUserForm.get('address')?.setValue(data?.address);
+  //   this.createUserForm.get('city')?.setValue(data?.city);
+  //   this.createUserForm.get('district')?.setValue(data?.district);
+  //   this.createUserForm.get('role')?.setValue(data?.role);
+  //   this.createUserForm.get('status')?.setValue(data?.status);
+  //   this.createUserForm.get('user_name')?.disable();
+  //   this.createUserForm.get('email')?.disable();
+  //   if (this.userRole === 'vendor') {
+  //     this.createUserForm.get('last_name')?.disable();
+  //     this.createUserForm.get('department_id')?.disable();
+  //   }
+  //   this.updateBtnDisable = true;
+  //   if (type === 'view') {
+  //     this.updateBtnDisable = false;
+  //   }
+  // }
+
+  edit(type:any,data: any) {
+    this.submit = false;
+    this.visible = true;
+ 
+    if (type == 'edit'){
+    this.isDisabled = false;
     this.updateUserId = data?.user_id;
     this.userRole = data?.role;
     this.userFormFieldsConfig();
     this.getUserById(this.updateUserId);
-    this.submit = false;
-    this.visible = true;
     this.drawerTitle = 'Edit User Details';
     this.createUserForm.get('first_name')?.setValue(data?.first_name);
     this.createUserForm.get('last_name')?.setValue(data?.last_name);
@@ -180,10 +215,38 @@ export class UserAccountsComponent implements OnInit {
       this.createUserForm.get('department_id')?.disable();
     }
     this.updateBtnDisable = true;
-    if (type === 'view') {
+    }
+    if(type == 'view'){
+      this.isDisabled = true;
+      this.drawerTitle = 'View User Details';
       this.updateBtnDisable = false;
+
+      this.updateUserId = data?.user_id;
+    this.userRole = data?.role;
+    this.userFormFieldsConfig();
+    this.getUserById(this.updateUserId);
+    this.drawerTitle = 'View User Details';
+    this.createUserForm.get('first_name')?.setValue(data?.first_name);
+    this.createUserForm.get('last_name')?.setValue(data?.last_name);
+    this.createUserForm.get('email')?.setValue(data?.email);
+    this.createUserForm.get('user_name')?.setValue(data?.user_name);
+    this.createUserForm.get('phone_number')?.setValue(data.phone_number);
+    this.createUserForm.get('department_id')?.setValue(data?.department_id?.toString());
+    this.createUserForm.get('address')?.setValue(data?.address);
+    this.createUserForm.get('city')?.setValue(data?.city);
+    this.createUserForm.get('district')?.setValue(data?.district);
+    this.createUserForm.get('role')?.setValue(data?.role);
+    this.createUserForm.get('status')?.setValue(data?.status);
+    this.createUserForm.get('user_name')?.disable();
+    this.createUserForm.get('email')?.disable();
+    if (this.userRole === 'vendor') {
+      this.createUserForm.get('last_name')?.disable();
+      this.createUserForm.get('department_id')?.disable();
+    }
+      
     }
   }
+
 
   prepareUpdateUserPayload(data: any) {
     const userPayload = {
@@ -227,14 +290,14 @@ export class UserAccountsComponent implements OnInit {
 
   userFormFieldsConfig() {
     this.createUserForm = this.fb.group({
-      first_name: [null,
+      first_name: [{value:null,disabled:this.isDisabled},
         [
           Validators.required,
           Validators.minLength(3),
           Validators.maxLength(50),
         ],
       ],
-      last_name: [null,
+      last_name: [{value:null,disabled:this.isDisabled},
         [
           Validators.required,
           Validators.minLength(3),
@@ -251,25 +314,25 @@ export class UserAccountsComponent implements OnInit {
       ],
       password_md5: [null, [Validators.required]],
       cnfrm_password_md5: [null, [this.confirmValidator]],
-      phone_number: [null,
+      phone_number: [{value:null,disabled:this.isDisabled},
         [
           Validators.required,
           Validators.minLength(10),
           Validators.maxLength(10),
         ],
       ],
-      department_id: [null, [Validators.required]],
-      address: [null,
+      department_id: [{value:null,disabled:this.isDisabled}, [Validators.required]],
+      address: [{value:null,disabled:this.isDisabled},
         [
           Validators.required,
           Validators.minLength(5),
           Validators.maxLength(150),
         ],
       ],
-      city: [null, [Validators.required]],
-      district: [null, [Validators.required]],
-      role: ['user', [Validators.required]],
-      status: ['active', [Validators.required]]
+      city: [{value:null,disabled:this.isDisabled}, [Validators.required]],
+      district: [{value:null,disabled:this.isDisabled}, [Validators.required]],
+      role: [{value:'user',disabled:this.isDisabled}, [Validators.required]],
+      status: [{value:'active',disabled:this.isDisabled}, [Validators.required]]
     });
   }
 
