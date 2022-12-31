@@ -45,7 +45,7 @@ export class InvoicesService {
     );
   }
   cancelInvoicesById(id: any,postDataObj: any): Observable<any> {
-    return this.apiService.postCall('invoice/cancelInvoice/' + id, postDataObj).pipe(
+    return this.apiService.postCall('/invoice/cancelInvoice/' + id, postDataObj).pipe(
       map((response: any) => {
         return response;
       })

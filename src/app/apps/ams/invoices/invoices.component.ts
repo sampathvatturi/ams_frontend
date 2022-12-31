@@ -150,7 +150,7 @@ export class InvoicesComponent implements OnInit {
       input: 'text',
       inputPlaceholder: 'Reason',
       inputValue: reason,
-      text: 'Are you sure you want to cancel this invoiceService',
+      text: 'Are you sure you want to cancel this invoice ?',
       inputValidator: (value) => {
         if (!value) {
           return 'Please Mention the Reason'
@@ -162,7 +162,6 @@ export class InvoicesComponent implements OnInit {
         cancel_reason:result.value
       }
       console.log(postObj);
-      /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
         this.invoiceService.cancelInvoicesById(data.invoice_id,postObj).subscribe(res =>{
           if(res.status == 'success'){
