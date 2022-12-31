@@ -44,14 +44,7 @@ export class InvoicesService {
       })
     );
   }
-  cancelInvoicesById(id: any,postDataObj: any): Observable<any> {
-    return this.apiService.postCall('invoice/cancelInvoice/' + id, postDataObj).pipe(
-      map((response: any) => {
-        return response;
-      })
-    );
-  }
-
+  
   getVendorInvoices(): Observable<any>{
     return this.apiService.getCall('/invoice/getVendorInvoices').pipe(
       map((response: any) => {
@@ -62,6 +55,14 @@ export class InvoicesService {
 
   updateInvoiceUserStatus(id: any, postDataObj: any): Observable<any> {
     return this.apiService.patchCall('/invoice/updateInvoiceUserStatus/' + id, postDataObj).pipe(
+      map((response: any) => {
+        return response;
+      })
+    );
+  }
+
+  cancelInvoicesById(id: any,postDataObj: any): Observable<any> {
+    return this.apiService.patchCall('/invoice/cancelInvoice/' + id, postDataObj).pipe(
       map((response: any) => {
         return response;
       })

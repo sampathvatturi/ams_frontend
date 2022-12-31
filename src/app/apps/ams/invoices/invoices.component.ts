@@ -138,43 +138,7 @@ export class InvoicesComponent implements OnInit {
       this.drawerTitle = "View Invoice details"
     }
   }
-  cancelInvoice(type: any, data: any) {
-    console.log(data);
-    let reason;
-    Swal.fire({
-      title: data.invoice_number,
-      // showDenyButton: true,
-      showCancelButton: true,
-      confirmButtonText: 'Submit',
-      cancelButtonText: 'Close',
-      input: 'text',
-      inputPlaceholder: 'Reason',
-      inputValue: reason,
-      text: 'Are you sure you want to cancel this invoiceService',
-      inputValidator: (value) => {
-        if (!value) {
-          return 'Please Mention the Reason'
-        }
-      }
-    }).then((result) => {
-      console.log(result);
-      let postObj={
-        cancel_reason:result.value
-      }
-      console.log(postObj);
-      /* Read more about isConfirmed, isDenied below */
-      if (result.isConfirmed) {
-        this.invoiceService.cancelInvoicesById(data.invoice_id,postObj).subscribe(res =>{
-          if(res.status == 'success'){
-            Swal.fire(res.message, '','success')
-             this.getInvoices();
-          }else{
-            Swal.fire(res.message, '','error')
-          }
-        })
-      }
-    })
-  }
+ 
   create(): void {
     this.submit = true;
     this.drawerTitle = 'Add New Invoice';
@@ -191,8 +155,6 @@ export class InvoicesComponent implements OnInit {
     this.invoiceForm.get('amount')?.setValue(0);
     this.invoiceForm.get('tax')?.setValue(0);
   }
-
-
 
   close(): void {
     this.visible = false;
@@ -295,13 +257,7 @@ export class InvoicesComponent implements OnInit {
     })
     return result;
   }
-  // selectVendor() {
-  //   this.tender_array.forEach((element: any) => {
-  //     if(element.id == this.invoiceForm.value.tender_id){
-  //       this.invoiceForm.get('vendor_id')?.setValue(element.vendor_id.toString());
-  //     }
-  //   });
-  // }
+
   //dynamic form fields
   get inventory_details() {
     return this.invoiceForm.get("inventory_details") as UntypedFormArray
@@ -356,39 +312,13 @@ export class InvoicesComponent implements OnInit {
     this.tot = Number(this.invoiceForm.value.amount) + Number(this.invoiceForm.value.tax);
     this.invoiceForm.get('grand_total')?.setValue(this.tot);
   }
-  // autoselect(i: any) {
-  //   let item = this.inventory_details.value[i].item;
-  //   let count =0;
-  //   this.inventory_details.value.forEach((elem: any) =>{
-  //     if(elem.item == item) count++;
-  //   });
-  //   if(count > 1 && !this.inventory_details.value.uom){
-  //     // this.inventory_details.patchValue(this.setindex(i, { item:'' }));
-  //     this.inventory_details.patchValue(this.setindex(i, { quantity:null }));
-  //      this.inventory_details.patchValue(this.setindex(i, { uom: null }));
-  //      this.inventory_details.patchValue(this.setindex(i, { price: null }));
-  //      this.inventory_details.patchValue(this.setindex(i, { taxPercent: null}));
-  //     return this.notification.createNotification('error','Item already exists, Please select another')
-  //    } else{
-  //      let singleArr: any = [];
-  //      singleArr = this.inventory_array.filter((elem: any) => elem.item_id == item);
-  //      this.inventory_details.patchValue(this.setindex(i, { quantity:null }));
-  //      this.inventory_details.patchValue(this.setindex(i, { uom: singleArr[0].uom_name }));
-  //      this.inventory_details.patchValue(this.setindex(i, { price: singleArr[0].price }));
-  //      this.inventory_details.patchValue(this.setindex(i, { taxPercent: singleArr[0].tax }));
-  //    }
-
-  // this.updated_inventory.forEach((elem: any, index: any) => {
-  //   if (elem.item_id == item )  {
-  //     this.updated_inventory.splice(index, 1)
-  //   }
-  // });
-  // }
+  
   setindex(i: any, data: any) {
     let arr = [];
     arr[i] = data;
     return arr
   }
+
   stable() {
     let totalTax = 0;
     let totalAmt = 0;
@@ -401,7 +331,6 @@ export class InvoicesComponent implements OnInit {
     this.tot = Number(this.invoiceForm.value.amount) + Number(this.invoiceForm.value.tax);
     this.invoiceForm.get('grand_total')?.setValue(this.tot);
   }
-
 
   handleChange(info: NzUploadChangeParam): void {
     if (info.file.status === 'done') {
@@ -428,14 +357,39 @@ export class InvoicesComponent implements OnInit {
     // this.http.post('http://localhost:8080/upload/deleteFile')
   });
 
-
-  // generateInvoiceNumber() {
-  //   var lastNum: string;
-  //   var str: any;
-  //   var lastItem = this.invoice_info[this.invoice_info.length - 1];
-  //   lastNum = lastItem.invoice_number;
-  //   str = lastNum.substring(0, 7) + (parseInt(lastNum.substring(7)) + 1).toString().padStart(4, "0");
-  //   return str;
-  // }
+  cancelInvoice(type: any, data: any) {
+    console.log(data);
+    let reason;
+    Swal.fire({
+      title: data.invoice_number,
+      showCancelButton: true,
+      confirmButtonText: 'Submit',
+      cancelButtonText: 'Close',
+      input: 'text',
+      inputPlaceholder: 'Reason',
+      inputValue: reason,
+      text: 'Are you sure you want to cancel this invoiceService',
+      inputValidator: (value) => {
+        if (!value) {
+          return 'Please Mention the Reason'
+        }
+      }
+    }).then((result) => {
+      let postObj={
+        cancel_reason:result.value
+      }
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        this.invoiceService.cancelInvoicesById(data.invoice_id,postObj).subscribe(res =>{
+          if(res.status == 'success'){
+            Swal.fire(res.message, '','success')
+             this.getInvoices();
+          }else{
+            Swal.fire(res.message, '','error')
+          }
+        })
+      }
+    })
+  }
 
 }
