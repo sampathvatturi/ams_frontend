@@ -286,6 +286,7 @@ export class UserAccountsComponent implements OnInit {
 
   close(): void {
     this.visible = false;
+    this.updateBtnDisable = true;
   }
 
   userFormFieldsConfig() {

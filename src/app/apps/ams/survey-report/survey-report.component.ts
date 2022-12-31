@@ -239,6 +239,7 @@ export class SurveyReportComponent implements OnInit {
 
   close(): void {
     this.visible = false;
+    this.updateBtnDisable = true;
   }
   handleChange(info: NzUploadChangeParam): void {
     if (info.file.status === 'done') {

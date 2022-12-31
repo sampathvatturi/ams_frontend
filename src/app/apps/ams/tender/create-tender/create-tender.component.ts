@@ -208,6 +208,7 @@ export class CreateTenderComponent implements OnInit {
 
   close(){
     this.visible = false;
+    this.updateBtnDisable = true;
   }
 
   prepareCreateTendorPayload(data: any) {

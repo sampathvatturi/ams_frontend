@@ -188,6 +188,7 @@ export class InventoryComponent implements OnInit {
 
   close(): void {
     this.visible = false;
+    this.updateBtnDisable = true;
   }
 
   inventoryFormValidators() {

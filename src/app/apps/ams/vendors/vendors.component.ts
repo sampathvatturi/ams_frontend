@@ -136,6 +136,7 @@ export class VendorsComponent implements OnInit {
 
   close(): void {
     this.visible = false;
+    this.updateBtnDisable = true;
   }
 
   prepareVendorPayload(data: any) {

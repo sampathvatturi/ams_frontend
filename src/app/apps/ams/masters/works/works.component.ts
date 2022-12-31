@@ -125,6 +125,7 @@ export class WorksComponent implements OnInit {
 
     close(): void {
       this.visible = false;
+      this.updateBtnDisable = true;
     }
 
     prepareWorksPayload(data:any){

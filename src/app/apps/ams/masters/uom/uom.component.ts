@@ -118,6 +118,7 @@ export class UomComponent implements OnInit {
   
     close(): void {
       this.visible = false;
+      this.updateBtnDisable = true;
     }
   
     prepareUomPayload(data: any) {
