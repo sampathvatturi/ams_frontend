@@ -99,7 +99,9 @@ export class ExpenditureComponent implements OnInit {
   }
 
   create(): void {
+    this.uploadDisabled = false;
     this.isDisabled = false;
+    this.readOnly = false;
     this.submit = true;
     this.drawerTitle = 'Add Expenditure';
     this.visible = true;
