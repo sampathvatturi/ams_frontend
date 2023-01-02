@@ -59,13 +59,13 @@
       </nz-form-control>
     </nz-form-item>
 
-    <button nz-button nzType="primary" nz-col nzSpan="4">
+    <button nz-button nzType="primary" nz-col nzSpan="4" (click)="submit()">
       Submit
     </button>
   </form>
 </div>
 <div class="ds-card grid" id="load" #container>
-  <dx-data-grid class="p-8 flow" id="gridContainer" [wordWrapEnabled]="true" [dataSource]="invoicesData"
+  <dx-data-grid class="p-8 flow" id="gridContainer" [wordWrapEnabled]="true" [dataSource]="approvalData"
     [remoteOperations]="false" [allowColumnReordering]="true" [rowAlternationEnabled]="true"
     [allowColumnResizing]="true" [showColumnLines]="true" [showRowLines]="true" [showBorders]="true" style="width:100%"
     (onToolbarPreparing)="(permissions.insrt_in==1)?onToolbarPreparing($event):false">

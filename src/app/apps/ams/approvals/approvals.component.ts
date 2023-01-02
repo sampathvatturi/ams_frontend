@@ -48,19 +48,16 @@ export class ApprovalsComponent implements OnInit {
   getUploadedFIlesUrl = this.baseUrl + '/upload/getUploadedFiles/';
   status:any;
   currDate = new Date();
+  columnDefs:any = [];
+  approvalData:any = [];
+  expenseData:any = [];
 
 
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
 
-  columnDefs = [
-    { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false, width: 100, cellTemplate: 'snoTempelate' },
-    { headerName: 'Inv No.', field: 'invoice_number', alignment: 'center', filter: false, width: 100 },
-    { headerName: 'Vendor', field: 'vendor_name', alignment: 'center', width: 175 },
-    { headerName: 'Date', field: 'created_date', alignment: 'center', width: 125, cellTemplate: 'createDate' },
-    { headerName: 'Amount', field: 'amount', alignment: 'center', width: 175, cellTemplate: 'Amt' },
-    { headerName: 'Tax', field: 'tax', alignment: 'center', width: 175, cellTemplate: 'taxAmt' },
-    { headerName: 'Total', field: 'grand_total', alignment: 'center', width: 175, cellTemplate: 'grandTotal' }
-  ];
+
+  
+  
 
 
   constructor(
@@ -107,6 +104,33 @@ export class ApprovalsComponent implements OnInit {
         }
       }
     });
+  }
+
+  submit(){
+    if (this.approvalFilterForm.value.type === 'expenses'){
+      this.approvalData = this.expenseData;
+      this.columnDefs = [
+        { headerName: 'Invoice Number', field: 'invoice_number', alignment: 'center', filter: false, width: 150 },
+        { headerName: 'Desctiption', field: 'description', alignment: 'center', width: 175 },
+        { headerName: 'Category', field: 'category', alignment: 'center', width: 125, },
+        { headerName: 'Amount', field: 'amount', alignment: 'center', width: 175, },
+        { headerName: 'Tax', field: 'tax', alignment: 'center', width: 175, },
+        { headerName: 'Total', field: 'total', alignment: 'center', width: 175, },
+      ];
+    }
+
+    if (this.approvalFilterForm.value.type === 'invoice'){
+      this.approvalData = this.invoicesData
+      this.columnDefs = [
+        { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false, width: 100, cellTemplate: 'snoTempelate' },
+        { headerName: 'Inv No.', field: 'invoice_number', alignment: 'center', filter: false, width: 100 },
+        { headerName: 'Vendor', field: 'vendor_name', alignment: 'center', width: 175 },
+        { headerName: 'Date', field: 'created_date', alignment: 'center', width: 125, cellTemplate: 'createDate' },
+        { headerName: 'Amount', field: 'amount', alignment: 'center', width: 175, cellTemplate: 'Amt' },
+        { headerName: 'Tax', field: 'tax', alignment: 'center', width: 175, cellTemplate: 'taxAmt' },
+        { headerName: 'Total', field: 'grand_total', alignment: 'center', width: 175, cellTemplate: 'grandTotal' }
+      ];
+    }
   }
 
   getVendorInvoices(action?: any): void {
