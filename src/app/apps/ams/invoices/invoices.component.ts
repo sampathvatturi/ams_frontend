@@ -34,6 +34,7 @@ export class InvoicesComponent implements OnInit {
   tot: any;
   updateBtnDisable: boolean = true;
   showBtn:boolean = true;
+  readOnly: boolean = false;
 
   // globalConstants = GlobalConstants;
   inventoryDetailsArray: any = [];
@@ -114,6 +115,9 @@ export class InvoicesComponent implements OnInit {
   }
 
   view(type: any, data: any) {
+    console.log(data.inventory_details);
+    let inv_D = data.inventory_details;
+    this.readOnly = true
     this.isDisabled = true;
     this.uploadDisabled = true;
     this.showBtn = false
@@ -131,14 +135,20 @@ export class InvoicesComponent implements OnInit {
     this.invoiceForm.get('tax')?.setValue(data.tax);
     this.invoiceForm.get('grand_total')?.setValue(data.grand_total);
     this.invoiceForm.get('updated_by')?.setValue(this.user_data.user_id);
-    
-    // (this.invoiceForm.get('inventory_details') as UntypedFormArray)?.patchValue(data.inventory_details);
-    let i = 0;
-    let controlArray = this.invoiceForm.get('inventory_details') as UntypedFormArray;
-    for (let c of controlArray.controls) {
-      c[i].patchValue(data.inventory_details[i])
-      i++;
+    this.invoiceForm.get('inventory_details')?.patchValue(data.inventory_details);
+    for(let i = 1; i < inv_D.length;i++){
+      this.inventory_details.push(this.fb.group({
+        item: [inv_D[i].item],
+        quantity: [inv_D[i].quantity],
+        uom: [inv_D[i].uom],
+        price: [inv_D[i].price],
+        taxPercent: [inv_D[i].taxPercent],
+        amt: [inv_D[i].amt],
+        taxAmt: [inv_D[i].taxAmt],
+        total: [inv_D[i].total],
+      }));
     }
+    console.log(this.invoiceForm.value.inventory_details);
     if (data.attachments != null && data.attachments != '') {
       var fileNamesArray = data.attachments.split(',');
       if (fileNamesArray.length > 0) {
@@ -230,17 +240,17 @@ export class InvoicesComponent implements OnInit {
   invoiceFormValidators() {
     this.invoiceForm = this.fb.group({
       vendor_id: [{value:'',disabled:this.isDisabled}, [Validators.required]],
-      invoice_number: [{value:'',disabled:this.isDisabled}],
-      status: [{value:'',disabled:this.isDisabled}, [Validators.required]],
-      remarks: [{value:'',disabled:this.isDisabled}, [Validators.required, Validators.minLength(5), Validators.maxLength(200)]],
+      invoice_number: [''],
+      status: ['', [Validators.required]],
+      remarks: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(200)]],
       amount: ['', [Validators.required]],
       inventory_details: this.fb.array([
         this.fb.group({
-          item: [{value:'',disabled:this.isDisabled}, [Validators.required]],
-          quantity: [{value:null,disabled:this.isDisabled}, [Validators.required]],
-          uom: [{value:null,disabled:this.isDisabled}, [Validators.required]],
-          price: [{value:null,disabled:this.isDisabled}, [Validators.required]],
-          taxPercent: [{value:null,disabled:this.isDisabled}, [Validators.required]],
+          item: ['', [Validators.required]],
+          quantity: [null, [Validators.required]],
+          uom: [null, [Validators.required]],
+          price: [null, [Validators.required]],
+          taxPercent: [null, [Validators.required]],
           amt: [0],
           taxAmt: [0],
           total: [0],

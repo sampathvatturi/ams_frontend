@@ -21,6 +21,49 @@
     </nz-form-item>
     <button nz-button nzType="primary" nz-col nzSpan="2" class="ml-2"><span nz-icon nzType="search" nzTheme="outline"></span>Search</button>        
 </form> -->
+<div class="ds-card grid">
+  <form class="forms" [formGroup]="approvalFilterForm" nz-row nzJustify="space-between" nzAlign="middle">
+    <nz-form-item nz-col nzSpan="4">
+      <nz-form-label>Start Date</nz-form-label>
+      <nz-form-control>
+        <nz-date-picker formControlName="start_date"></nz-date-picker>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item nz-col nzSpan="4">
+      <nz-form-label>End Date</nz-form-label>
+      <nz-form-control>
+        <nz-date-picker formControlName="end_date"></nz-date-picker>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item nz-col nzSpan="4">
+      <nz-form-label>Type</nz-form-label>
+      <nz-form-control nzErrorTip="Please Select Type">
+        <nz-select formControlName="type" nzPlaceHolder="Type" nzShowSearch>
+          <nz-option nzValue="expenses" nzLabel="Expenditure"></nz-option>
+          <nz-option nzValue="invoice" nzLabel="Invoices"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+
+    <nz-form-item nz-col nzSpan="4">
+      <nz-form-label>Status</nz-form-label>
+      <nz-form-control nzErrorTip="Please select account">
+        <nz-select formControlName="status" nzPlaceHolder="Status" nzShowSearch>
+          <nz-option nzValue="open" nzLabel="Open"></nz-option>
+          <nz-option nzValue="cancel" nzLabel="Cancel"></nz-option>
+          <nz-option nzValue="paid" nzLabel="Paid"></nz-option>
+          <nz-option nzValue="reject" nzLabel="Reject"></nz-option>
+        </nz-select>
+      </nz-form-control>
+    </nz-form-item>
+
+    <button nz-button nzType="primary" nz-col nzSpan="4">
+      Submit
+    </button>
+  </form>
+</div>
 <div class="ds-card grid" id="load" #container>
   <dx-data-grid class="p-8 flow" id="gridContainer" [wordWrapEnabled]="true" [dataSource]="invoicesData"
     [remoteOperations]="false" [allowColumnReordering]="true" [rowAlternationEnabled]="true"

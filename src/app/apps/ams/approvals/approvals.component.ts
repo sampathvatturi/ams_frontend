@@ -19,6 +19,7 @@ import { environment } from 'src/environments/environment';
 export class ApprovalsComponent implements OnInit {
 
   validateForm!: UntypedFormGroup;
+  approvalFilterForm!: UntypedFormGroup;
   listOfData: any[] = [];
   invoices: any[] = [];
   invoicesData: any = [];
@@ -46,6 +47,8 @@ export class ApprovalsComponent implements OnInit {
   uploadUrl = this.baseUrl + '/upload/uploadFiles';
   getUploadedFIlesUrl = this.baseUrl + '/upload/getUploadedFiles/';
   status:any;
+  currDate = new Date();
+
 
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
 
@@ -88,6 +91,7 @@ export class ApprovalsComponent implements OnInit {
     this.getVendorInvoices();
     this.getDepartments();
     this.getAccounts();
+    this.approvalsFilterFormValidators();
   }
 
   onToolbarPreparing(e: any) {
@@ -227,6 +231,17 @@ export class ApprovalsComponent implements OnInit {
         this.getVendorInvoices();
       })
     }
+  }
+  approvalsFilterFormValidators(){
+    let endDate = this.currDate.toDateString();
+    let month = new Date(this.currDate.getFullYear(), this.currDate.getMonth(), this.currDate.getDate() - 30);
+    let startDate = month.toDateString();
+    this.approvalFilterForm = this.fb.group({
+      status: ['', [Validators.required]],
+      start_date: [startDate, [Validators.required]],
+      end_date: [endDate, [Validators.required]],
+      type: ['%', [Validators.required]],
+    })
   }
 
 }
