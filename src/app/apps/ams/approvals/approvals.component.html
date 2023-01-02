@@ -165,8 +165,7 @@
     </div>
     <nz-divider nzPlain></nz-divider>      
     <div class="usersTable" *ngIf="currentInvoiceData.status=='open' || currentInvoiceData.status=='reject' || currentInvoiceData.status=='paid' ;else cancel">
-      <nz-table #basicTable [nzData]="userStatusList" nzShowPagination nzShowSizeChanger
-        [nzPageSizeOptions]=[5,10,15,20]>
+      <nz-table #basicTable [nzData]="userStatusList" [nzShowPagination]="fasle"	>
         <thead>
           <tr>
             <th>S.No.</th>

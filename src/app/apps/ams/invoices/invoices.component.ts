@@ -9,6 +9,7 @@ import { VendorsService } from 'src/app/shared/moduleservices/vendors.service';
 import { environment } from 'src/environments/environment';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import Swal from 'sweetalert2'
+import * as Excel from 'exceljs';
 
 @Component({
   selector: 'app-invoices',
@@ -73,6 +74,7 @@ export class InvoicesComponent implements OnInit {
     this.getInvoices();
     this.user_data = sessionStorage.getItem('user_data');
     this.user_data = JSON.parse(this.user_data);
+    
   }
   getInvoices(): void {
     this.invoiceService.getInvoices().subscribe((res) => {
@@ -129,7 +131,14 @@ export class InvoicesComponent implements OnInit {
     this.invoiceForm.get('tax')?.setValue(data.tax);
     this.invoiceForm.get('grand_total')?.setValue(data.grand_total);
     this.invoiceForm.get('updated_by')?.setValue(this.user_data.user_id);
-    this.invoiceForm.get('inventory_details')?.patchValue(data.inventory_details);
+    
+    // (this.invoiceForm.get('inventory_details') as UntypedFormArray)?.patchValue(data.inventory_details);
+    let i = 0;
+    let controlArray = this.invoiceForm.get('inventory_details') as UntypedFormArray;
+    for (let c of controlArray.controls) {
+      c[i].patchValue(data.inventory_details[i])
+      i++;
+    }
     if (data.attachments != null && data.attachments != '') {
       var fileNamesArray = data.attachments.split(',');
       if (fileNamesArray.length > 0) {
@@ -150,9 +159,8 @@ export class InvoicesComponent implements OnInit {
     this.drawerTitle = 'Add New Invoice';
     this.visible = true;
     this.files = [];
-    console.log(this.files)
     this.invoiceFormValidators();
-    this.invoiceForm.get('invoice_number')?.setValue('');
+    this.invoiceForm.get('invoice_number')?.setValue(this.getInvoiceNumber());
     // this.invoiceForm.get('invoice_number')?.setValue(Math.floor(Math.random() * 100000));
     this.invoiceForm.get('status')?.setValue('open');
     this.invoiceForm.get('created_by')?.setValue(this.user_data.user_id);
@@ -325,19 +333,6 @@ export class InvoicesComponent implements OnInit {
     return arr
   }
 
-  // stable() {
-  //   let totalTax = 0;
-  //   let totalAmt = 0;
-  //   for (let i of this.invoiceForm.value.inventory_details) {
-  //     totalTax += i.taxAmt;
-  //     totalAmt += i.amt
-  //   }
-  //   this.invoiceForm.get('tax')?.setValue(totalTax);
-  //   this.invoiceForm.get('amount')?.setValue(totalAmt);
-  //   this.tot = Number(this.invoiceForm.value.amount) + Number(this.invoiceForm.value.tax);
-  //   this.invoiceForm.get('grand_total')?.setValue(this.tot);
-  // }
-
   handleChange(info: NzUploadChangeParam): void {
     if (info.file.status === 'done') {
       this.msg.success(`${info.file.name} file uploaded successfully`);
@@ -373,19 +368,19 @@ export class InvoicesComponent implements OnInit {
       input: 'text',
       inputPlaceholder: 'Reason',
       inputValue: reason,
-      text: 'Are you sure you want to cancel this invoiceService',
+      text: 'Are you sure you want to cancel this Invoice ?',
       inputValidator: (value) => {
         if (!value) {
           return 'Please Mention the Reason'
         }
       }
     }).then((result) => {
-      let postObj={
+      let postdataObj={
         cancel_reason:result.value
       }
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
-        this.invoiceService.cancelInvoicesById(data.invoice_id,postObj).subscribe(res =>{
+        this.invoiceService.cancelInvoicesById(data.invoice_id,postdataObj).subscribe(res =>{
           if(res.status == 'success'){
             Swal.fire(res.message, '','success')
              this.getInvoices();
@@ -395,6 +390,21 @@ export class InvoicesComponent implements OnInit {
         })
       }
     })
+  }
+
+  getInvoiceNumber(){
+    let lastInvNum;
+    let newInvNum;
+    let year;
+    var date_ob = new Date();
+    var curr_year = date_ob.getFullYear();
+    lastInvNum = this.invoice_info[this.invoice_info.length - 1].invoice_number;
+    year = lastInvNum.substring(3, 7);
+    if(year<curr_year && (curr_year-parseInt(year)===1)){
+      year = parseInt(year)+1;
+    }
+    newInvNum  = lastInvNum.substring(0, 3) +year+ (parseInt(lastInvNum.substring(7)) + 1).toString().padStart(4, "0");
+    return newInvNum;
   }
 
 }

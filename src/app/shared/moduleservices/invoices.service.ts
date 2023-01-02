@@ -69,4 +69,12 @@ export class InvoicesService {
     );
   }
 
+  getInvoiceNumber(): Observable<any> {
+    return this.apiService.getCall('/invoice/getInvoiceNumber/').pipe(
+      map((response: any) => {
+        return response;
+      })
+    );
+  }
+
 }
