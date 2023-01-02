@@ -42,7 +42,7 @@ export class FundsComponent implements OnInit {
     { headerName: 'Fund Type', width: '150' ,field:'fund_type', filter: true},
     { headerName: 'Fund Description', width: '300' , filter: true, field:'fund_description'},
     { headerName: 'Transaction Mode', width: '150' , filter: true, field:'transaction_mode'},
-    { headerName: 'amount', width: '150' , filter: true, field:'fund_value',cellTemplate:'fundValue'},
+    { headerName: 'Amount', width: '150' , filter: true, field:'fund_value',cellTemplate:'fundValue'},
     { headerName: 'Date', width: '100' , filter: true, field:'fund_released_date',cellTemplate:'dateTemplate'},
   ]
 
@@ -167,10 +167,11 @@ export class FundsComponent implements OnInit {
     });
   }
   onExporting(e){
+    let count = 1;
     const workbook = new Workbook();
     const worksheet = workbook.addWorksheet('funds');
     worksheet.columns = [
-      { width: 10 }, { width: 25 }, { width: 25 }, { width: 15 }, { width: 25 }, { width: 25 },
+      { width: 10 }, { width: 15 }, { width: 15 }, { width: 15 }, { width: 15 }, { width: 15 },
     ];
     exportDataGrid({
       component: e.component,
@@ -178,11 +179,16 @@ export class FundsComponent implements OnInit {
       keepColumnWidths: false,
       topLeftCell: {row: 1, column:1},
       customizeCell:({gridCell, excelCell}) => {
-        if(gridCell.rowType == 'header' && gridCell.column.dataField == 'fund_released_date'){
-          excelCell.value = 'Date';
-        }
         if(gridCell.column.dataField == 'fund_released_date'){
-          excelCell.value = new Date(gridCell.value).toLocaleDateString();
+          if(gridCell.rowType == 'data'){
+            excelCell.value = new Date(gridCell.value).toLocaleDateString()
+          }
+        }
+        if(gridCell.column.dataField == 'sno'){
+          if(gridCell.rowType == 'data'){
+            excelCell.value = count;
+            count++;
+          }
         }
       }
     }).then(() => {
