@@ -3,6 +3,9 @@ import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms
 import { AccountsService } from 'src/app/shared/moduleservices/accounts.service';
 import { TransactionsService } from 'src/app/shared/moduleservices/transactions.service';
 import config from 'devextreme/core/config';
+import  {Workbook}  from 'exceljs';
+import { saveAs } from 'file-saver-es';
+import { exportDataGrid } from 'devextreme/excel_exporter';
 
 config({
   defaultCurrency: 'INR'
@@ -261,6 +264,51 @@ export class TransactionsComponent implements OnInit {
         console.log(options.value.credit - options.value.debit);
       }
     }
+  }
+  onExporting(e){
+    const workbook = new Workbook();
+    const worksheet = workbook.addWorksheet('transactions');
+    worksheet.columns = [
+      { width: 15 }, { width: 30 }, { width: 15 }, { width: 15 }
+    ];
+    exportDataGrid({
+      component: e.component,
+      worksheet,
+      keepColumnWidths: false,
+      topLeftCell: {row: 1, column:1},
+      customizeCell:({gridCell, excelCell}) => {
+        if(gridCell.column.dataField == 'trsxcn_date'){
+          if(gridCell.rowType == 'data'){
+            excelCell.value = new Date(gridCell.value).toLocaleDateString()
+          }
+        }
+        if(gridCell.column.dataField == 'particulars'){
+          console.log(gridCell);
+         if(gridCell.rowType == 'data'){
+           if(gridCell.value.ref_acc_head == 0){
+            excelCell.value = {
+              richText:[
+                { font:{bold: true}, text: this.accountName[gridCell.value.acc_head]},
+                {font: {italic: true}, text: ` \r\n${gridCell.value.remarks}`}
+              ]
+            }
+          } else{
+            excelCell.value = {
+              richText:[
+                { font:{bold: true}, text: this.accountName[gridCell.value.ref_acc_head]},
+                {font: {italic: true}, text: ` \r\n${gridCell.value.remarks}`}
+              ]
+            }
+          }
+         }
+        }
+      }
+    }).then(() => {
+      workbook.xlsx.writeBuffer().then((buffer: BlobPart) => {
+        saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'transactions.xlsx');
+    });
+    });
+    e.cancel = true;
   }
 
 }

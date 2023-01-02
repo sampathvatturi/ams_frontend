@@ -45,7 +45,7 @@
   <dx-data-grid class="p-8 flow" id="gridContainer" [wordWrapEnabled]="true" [dataSource]="rowData"
     [remoteOperations]="false" [allowColumnReordering]="true" [rowAlternationEnabled]="true"
     [allowColumnResizing]="true" [showColumnLines]="true" [showRowLines]="true" [showBorders]="true" style="width:100%"
-    (onToolbarPreparing)="(permissions.insrt_in==1)?onToolbarPreparing($event):false">
+    (onToolbarPreparing)="(permissions.insrt_in==1)?onToolbarPreparing($event):false" (onExporting)="onExporting($event)" >
     <dxo-paging [pageSize]="10"></dxo-paging>
     <dxo-scrolling [scrollByContent]="true"
     [scrollByThumb]="true"
@@ -61,8 +61,7 @@
     <dxo-grouping [autoExpandAll]="false"></dxo-grouping>
     <dxo-column-chooser [enabled]="true" mode="select">
     </dxo-column-chooser>
-    <dxo-export [enabled]="(permissions.exprt_in==1)?true:false" [allowExportSelectedData]="true"
-      fileName="Change Log"></dxo-export>
+    <dxo-export [enabled]="(permissions.exprt_in==1)?true:false" [allowExportSelectedData]="true"></dxo-export>
     <dxo-filter-row [visible]="false"></dxo-filter-row>
     <dxi-column *ngFor="let f of columnDefs" [visible]="true" [dataField]="f.field" [caption]="f.headerName"
       [width]=f.width [allowResizing]="false" format="f.format" [cellTemplate]="f.cellTemplate">
