@@ -1,10 +1,13 @@
 import { Component, OnInit } from '@angular/core';
-import { UntypedFormArray, UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
+import { UntypedFormGroup, UntypedFormBuilder, Validators } from '@angular/forms';
 import { NzUploadChangeParam, NzUploadFile } from 'ng-zorro-antd/upload';
 import { Observable } from 'rxjs';
 import { NotificationService } from 'src/app/shared/common/notification.service';
+import { Expendituresservice } from 'src/app/shared/moduleservices/expenditures.service';
 import { environment } from 'src/environments/environment';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import Swal from 'sweetalert2'
+
 
 @Component({
   selector: 'app-expenditure',
@@ -17,6 +20,7 @@ export class ExpenditureComponent implements OnInit {
   submit = true;
   expenditureForm!: UntypedFormGroup;
   expenditure_info: any = [];
+  expenditureId:any
   user_data: any = [];
   searchText = '';
   updateBtnDisable: boolean = true;
@@ -30,6 +34,7 @@ export class ExpenditureComponent implements OnInit {
   isLoading: boolean = true;
   isDisabled:boolean = false;
   uploadDisabled:boolean = false;
+  readOnly: boolean = false;
   filesDetails = {
     name : '',
     url:''
@@ -38,19 +43,21 @@ export class ExpenditureComponent implements OnInit {
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
 
   columnDefs = [
-    { headerName: 'Invoice Number', field: 'invoice_number', alignment: 'center', filter: false, width: 150 },
+    { headerName: 'Invoice Number', field: 'exp_inv_number', alignment: 'center', filter: false, width: 150 },
     { headerName: 'Desctiption', field: 'description', alignment: 'center', width: 175 },
     { headerName: 'Category', field: 'category', alignment: 'center', width: 125, },
-    { headerName: 'Amount', field: 'amount', alignment: 'center', width: 175, },
-    { headerName: 'Tax', field: 'tax', alignment: 'center', width: 175, },
-    { headerName: 'Total', field: 'total', alignment: 'center', width: 175, },
+    { headerName: 'Status', field: 'status', alignment: 'center', width: 125, },
+    { headerName: 'Amount', field: 'amount', alignment: 'center', width: 175,cellTemplate:'amount'},
+    { headerName: 'Tax', field: 'tax', alignment: 'center', width: 175,cellTemplate:'tax'},
+    { headerName: 'Total', field: 'total', alignment: 'center', width: 175,cellTemplate:'total'},
   ];
 
 
   constructor(
     private fb: UntypedFormBuilder,
     private notification: NotificationService,
-    private msg: NzMessageService
+    private msg: NzMessageService,
+    private expenditureService:Expendituresservice
   ) {
     
    }
@@ -67,13 +74,13 @@ export class ExpenditureComponent implements OnInit {
 
   getExpenditure():void{
     this.isLoading = true ;
-    // this.expenditureService.getExpenditure().subscribe((res) =>{
-    //   this.expenditure_info = res;
-    //   this.expenditure_info.forEach((elem:any,index:any)=>{
-    //     elem['sno']=index+1;
-    //   })
-    //   this.isLoading = false;
-    // });
+    this.expenditureService.getExpenses().subscribe((res) =>{
+      this.expenditure_info = res;
+      // this.expenditure_info.forEach((elem:any,index:any)=>{
+      //   elem['sno']=index+1;
+      // })
+      this.isLoading = false;
+    });
   }
 
   onToolbarPreparing(e: any) {
@@ -100,7 +107,8 @@ export class ExpenditureComponent implements OnInit {
     this.filesDetails.url='';
     this.files=[];
     this.expenditureFormValidators();
-    this.expenditureForm.get('invoice_number')?.setValue('');
+    this.expenditureForm.get('status').setValue('open')
+    this.expenditureForm.get('exp_inv_number')?.setValue(this.getExpenseNumber());
     // this.expenditureForm.get('amount')?.setValue(0);
     // this.expenditureForm.get('tax')?.setValue(0);
 
@@ -114,11 +122,12 @@ export class ExpenditureComponent implements OnInit {
 
   prepareExpenditurePayload(data:any){
     const payload = {
-      invoice_number:data.invoice_number,
+      exp_inv_number:data.exp_inv_number,
       description:data.description,
       category:data.category,
-      amount:data.amount,
-      tax:data.tax,
+      status:data.status,
+      amount:Number(data.amount),
+      tax:Number(data.tax),
       total:data.total,
       created_by:this.user_data.user_id,
       updated_by:this.user_data?.user_id
@@ -128,44 +137,46 @@ export class ExpenditureComponent implements OnInit {
 
   edit(type:any,data: any) {
     this.submit = false;
-    // this.expenditureId = data?.id;
+    this.expenditureId = data?.id;
     this.visible = true;
  
-    if (type == 'edit'){
-      this.isDisabled = false;
-      this.uploadDisable = false;
-      this.drawerTitle = 'Edit Expenditure Details';
-      this.updateBtnDisable = true;
-      this.expenditureFormValidators();
-          // this.expenditureId = data?.id;
-      this.expenditureForm.get('description')?.setValue(data.description);
-      this.expenditureForm.get('invoice_number')?.setValue(data.invoice_number);
-      this.expenditureForm.get('amount')?.setValue(data.amount);
-      this.expenditureForm.get('total')?.setValue(data.total);
-      this.expenditureForm.get('tax')?.setValue(data.total);
-      this.expenditureForm.get('category')?.setValue(data.category);
-      if(data.attachments != null && data.attachments !=''){
-        var fileNamesArray = data.attachments.split(',');
-        if(fileNamesArray.length > 0){
-          fileNamesArray.forEach((element:any) => {
-            this.filesDetails.name=element;
-            this.filesDetails.url=this.getUploadedFIlesUrl+element;
-            this.files.push(this.filesDetails);
-          });
-        }
-      }
-    }
+    // if (type == 'edit'){
+    //   this.isDisabled = false;
+    //   this.uploadDisable = false;
+    //   this.drawerTitle = 'Edit Expenditure Details';
+    //   this.updateBtnDisable = true;
+    //   this.expenditureFormValidators();
+    //   this.expenditureId = data?.id;
+    //   this.expenditureForm.get('description')?.setValue(data.description);
+    //   this.expenditureForm.get('exp_inv_number')?.setValue(data.exp_inv_number);
+    //   this.expenditureForm.get('amount')?.setValue(data.amount);
+    //   this.expenditureForm.get('total')?.setValue(data.total);
+    //   this.expenditureForm.get('tax')?.setValue(data.total);
+    //   this.expenditureForm.get('category')?.setValue(data.category);
+    //   if(data.attachments != null && data.attachments !=''){
+    //     var fileNamesArray = data.attachments.split(',');
+    //     if(fileNamesArray.length > 0){
+    //       fileNamesArray.forEach((element:any) => {
+    //         this.filesDetails.name=element;
+    //         this.filesDetails.url=this.getUploadedFIlesUrl+element;
+    //         this.files.push(this.filesDetails);
+    //       });
+    //     }
+    //   }
+    // }
     if(type == 'view'){
+      this.readOnly = true;
       this.isDisabled = true;
-      this.uploadDisable = true;
-      this.drawerTitle = 'View Expenditure Details';
+      this.uploadDisabled = true;
+      this.drawerTitle = 'Expenditure Details';
       this.updateBtnDisable = false;
       this.expenditureFormValidators();
       this.expenditureForm.get('description')?.setValue(data.description);
-      this.expenditureForm.get('invoice_number')?.setValue(data.invoice_number);
+      this.expenditureForm.get('exp_inv_number')?.setValue(data.exp_inv_number);
       this.expenditureForm.get('amount')?.setValue(data.amount);
       this.expenditureForm.get('total')?.setValue(data.total);
       this.expenditureForm.get('tax')?.setValue(data.total);
+      this.expenditureForm.get('status')?.setValue(data.status);
       this.expenditureForm.get('category')?.setValue(data.category);
       if(data.attachments != null && data.attachments !=''){
         var fileNamesArray = data.attachments.split(',');
@@ -182,11 +193,11 @@ export class ExpenditureComponent implements OnInit {
 
   onCreateSubmit() {
     if (this.expenditureForm.valid){
-      // this.expenditureService.createExpenditure(this.prepareExpenditurePayload(this.expenditureForm.value)).subscribe((res)=>{
-      //     this.visible = false;
-      //     this.();
-      //     this.notification.createNotification("success", res?.message);
-      // });
+      this.expenditureService.createExpense(this.prepareExpenditurePayload(this.expenditureForm.value)).subscribe((res)=>{
+          this.visible = false;
+          this.getExpenditure()
+          this.notification.createNotification("success", res?.message);
+      });
     }
     else {
       console.log('invalid')
@@ -201,7 +212,7 @@ export class ExpenditureComponent implements OnInit {
 
   prepareUpdatePayload(data:any){
     const payload = {
-      invoice_number:data.invoice_number,
+      exp_inv_number:data.invoice_number,
       description:data.description,
       category:data.category,
       amount:data.amount,
@@ -242,13 +253,27 @@ export class ExpenditureComponent implements OnInit {
     let amount = this.expenditureForm.value.amount;
 
     if (taxAmt !==0 && amount !==0){
-    let total = parseInt(this.expenditureForm.value.amount) + (parseInt(this.expenditureForm.value.amount) * (this.expenditureForm.value.tax / 100));
+    let total = Number(this.expenditureForm.value.amount) + (Number(this.expenditureForm.value.amount) * (this.expenditureForm.value.tax / 100));
     this.expenditureForm.get('total')?.setValue(total);
     console.log(total)
 
     }
   }
 
+  getExpenseNumber(){
+    let lastInvNum;
+    let newInvNum;
+    let year;
+    var date_ob = new Date();
+    var curr_year = date_ob.getFullYear();
+    lastInvNum = this.expenditure_info[this.expenditure_info.length - 1].exp_inv_number;
+    year = lastInvNum.substring(3, 7);
+    if(year<curr_year && (curr_year-parseInt(year)===1)){
+      year = parseInt(year)+1;
+    }
+    newInvNum  = lastInvNum.substring(0, 3) +year+ (parseInt(lastInvNum.substring(7)) + 1).toString().padStart(4, "0");
+    return newInvNum;
+  }
   handleChange(info: NzUploadChangeParam): void {
     if (info.file.status === 'done') {
       this.msg.success(`${info.file.name} file uploaded successfully`);
@@ -274,11 +299,46 @@ export class ExpenditureComponent implements OnInit {
     // this.http.post('http://localhost:8080/upload/deleteFile')
   });
 
+  cancelExpense(type: any, data: any) {
+    let reason;
+    Swal.fire({
+      title: data.exp_inv_number,
+      showCancelButton: true,
+      confirmButtonText: 'Submit',
+      cancelButtonText: 'Close',
+      input: 'text',
+      inputPlaceholder: 'Reason',
+      inputValue: reason,
+      text: 'Are you sure you want to cancel this Expense ?',
+      inputValidator: (value) => {
+        if (!value) {
+          return 'Please Mention the Reason'
+        }
+      }
+    }).then((result) => {
+      let postdataObj={
+        cancel_reason:result.value
+      }
+      /* Read more about isConfirmed, isDenied below */
+      if (result.isConfirmed) {
+        this.expenditureService.cancelExpense(data.invoice_id,postdataObj).subscribe(res =>{
+          if(res.status == 'success'){
+            Swal.fire(res.message, '','success')
+             this.getExpenditure();
+          }else{
+            Swal.fire(res.message, '','error')
+          }
+        })
+      }
+    })
+  }
+
   expenditureFormValidators(){
     this.expenditureForm = this.fb.group({
-      invoice_number: [''],
+      exp_inv_number: [''],
       description:[''],
       category:[''],
+      status:[''],
       amount:[0],
       tax:[0],
       total:[0],

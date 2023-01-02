@@ -24,24 +24,24 @@
       <dxi-column *ngFor="let f of columnDefs" [visible]="true" [dataField]="f.field" [cellTemplate]="f.cellTemplate"
         [caption]="f.headerName" [alignment]="f.alignment" [width]="f.width" [allowResizing]="false">
       </dxi-column>
-      <div *dxTemplate="let d of 'taxAmt'">
+      <div *dxTemplate="let d of 'amount'">
         {{ d.data.tax | currencyIn}}
       </div>
-      <div *dxTemplate="let d of 'Amt'">
+      <div *dxTemplate="let d of 'tax'">
         {{ d.data.amount | currencyIn}}
       </div>
-      <div *dxTemplate="let d of 'grandTotal'">
-        {{ d.data.grand_total | currencyIn}}
+      <div *dxTemplate="let d of 'total'">
+        {{ d.data.total | currencyIn}}
       </div>
       
-      <dxi-column [showInColumnChooser]="false" [visible]="(permissions.updt_in==1)?true:false" type="buttons"
-            [width]="100" cellTemplate="viewTemplate" caption="Actions" [allowExporting]="false">
-            <div *dxTemplate="let data of 'viewTemplate'">
-                <div class="tblEdtBtn" (click)="edit('edit',data.data)">
-                    Edit 
-                </div>
-            </div>
-        </dxi-column>
+      <dxi-column [showInColumnChooser]="false" caption="Actions" [visible]="(permissions.updt_in==1)?true:false"
+      type="buttons" [width]="100" cellTemplate="viewTemplate">
+      <div *dxTemplate="let data of 'viewTemplate'">
+        <div *ngIf="data.data.status=='open'" class="tblEdtBtn" (click)="cancelExpense('cancel',data.data)">
+          Cancel
+        </div>
+      </div>
+    </dxi-column>
         <dxi-column [showInColumnChooser]="false" type="button1" [width]="100" cellTemplate="EditTemplate" caption="Actions">
             <div *dxTemplate="let data of 'EditTemplate'" (click)="edit('view',data.data)" [allowExporting]="false">
                 <div class="cursor-pointer tblEdtBtn">
@@ -64,15 +64,10 @@
   
       <div>
         <nz-form-item>
-          <nz-form-label nz-col nzSpan="5" class="required">Invoice Number</nz-form-label>
-          <nz-form-control nz-col nzSpan="10" [nzErrorTip]="">
-            <input nz-input formControlName="invoice_number" placeholder="Invoice Number" readonly />
-            <ng-template #invoiceErrorTip3 let-control>
-              <!-- <ng-container *ngIf="control.hasError('required')">Please Invoice Number</ng-container> -->
-              <!-- <ng-container *ngIf="control.hasError('pattern')">{{
-                globalConstants.amountError
-                }}</ng-container> -->
-            </ng-template>
+          <nz-form-label nz-col nzSpan="5" class="required">Expense Number</nz-form-label>
+          <nz-form-control nz-col nzSpan="10" >
+            <input nz-input formControlName="exp_inv_number" placeholder="Invoice Number" readonly />
+            
           </nz-form-control>
         </nz-form-item>
       </div>
@@ -81,7 +76,7 @@
         <nz-form-item>
           <nz-form-label nz-col nzSpan="5" class="required" >Amount</nz-form-label>
           <nz-form-control nz-col nzSpan="10" [nzErrorTip]="">
-            <input nz-input formControlName="amount" type="text" nz-input placeholder="Please Enter Amount"  (keyup)="change()" />
+            <input nz-input formControlName="amount" type="text" nz-input placeholder="Please Enter Amount"  (keyup)="change()" [readonly]="readOnly"/>
           </nz-form-control>
         </nz-form-item>
       </div>
@@ -90,7 +85,7 @@
         <nz-form-item>
           <nz-form-label nz-col nzSpan="5" class="required" >Tax</nz-form-label>
           <nz-form-control nz-col nzSpan="10" [nzErrorTip]="">
-            <input nz-input formControlName="tax" type="text" nz-input placeholder="Please Enter Tax"  (keyup)="change()" />
+            <input nz-input formControlName="tax" type="text" nz-input placeholder="Please Enter Tax"  (keyup)="change()" [readonly]="readOnly"/>
           </nz-form-control>
         </nz-form-item>
       </div>
@@ -107,16 +102,29 @@
         <nz-form-item>
           <nz-form-label nz-col nzSpan="5" class="required">Description</nz-form-label>
           <nz-form-control nz-col nzSpan="10" [nzErrorTip]="">
-            <input nz-input formControlName="description" type="text" nz-input placeholder="Please Enter Description" />
+            <input nz-input formControlName="description" type="text" nz-input placeholder="Please Enter Description" [readonly]="readOnly"/>
           </nz-form-control>
         </nz-form-item>
       </div>
 
       <div>
         <nz-form-item>
+          <nz-form-label nz-col nzSpan="5" class="required">Status</nz-form-label>
+          <nz-select formControlName="status" nz-col nzSpan="10" nzPlaceHolder="status" nzShowSearch [readonly]="readOnly">
+            <nz-option nzValue="paid" nzLabel="Paid"></nz-option>
+            <nz-option nzValue="open" nzLabel="Open"></nz-option>
+            <nz-option nzValue="cancel" nzLabel="Cancel"></nz-option>
+            <nz-option nzValue="reject" nzLabel="Reject"></nz-option>
+            
+          </nz-select>
+        </nz-form-item>
+      </div>
+
+      <div>
+        <nz-form-item>
           <nz-form-label nz-col nzSpan="5" class="required">Category</nz-form-label>
-          <nz-select formControlName="category" nz-col nzSpan="10" nzPlaceHolder="Category" nzShowSearch readOnly>
-            <nz-option nzValue="stationery" nzLabel="Stationery"></nz-option>
+          <nz-select formControlName="category" nz-col nzSpan="10" nzPlaceHolder="Category" nzShowSearch>
+            <nz-option nzValue="stationary" nzLabel="Stationary"></nz-option>
             <nz-option nzValue="advertising" nzLabel="Advertising"></nz-option>
             <nz-option nzValue="maintenance and repairs" nzLabel="Maintenance and repairs"></nz-option>
             <nz-option nzValue="telephone" nzLabel="Telephone"></nz-option>
@@ -148,7 +156,7 @@
           <button nz-button *ngIf="updateBtnDisable" style="margin-right: 8px" (click)="close()">
             Cancel
           </button>
-          <button nz-button *ngIf="submit" nzType="primary" (click)="onSubmit()">
+          <button nz-button *ngIf="submit" nzType="primary" (click)="onCreateSubmit()">
             Submit
           </button>
           <button nz-button *ngIf="!submit && updateBtnDisable" nzType="primary" (click)="onUpdate()">
