@@ -138,7 +138,7 @@ export class SideNavComponent{
           this.mainMenuItems[1].children.pop() //temporary
           this.mainMenuItems.forEach((elem:any,index:any) => {
             if(elem.title == "Work Orders"){
-              this.mainMenuItems.splice(index,2);
+              this.mainMenuItems.splice(index,1);
             }            
           });
         })

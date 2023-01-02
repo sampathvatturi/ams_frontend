@@ -1,1 +1,159 @@
-<p>expenditure works!</p>
+<div class="ds-card grid" id="load" #container>
+    <dx-data-grid class="p-8 flow" id="gridContainer" [wordWrapEnabled]="true" [dataSource]="expenditure_info"
+      [remoteOperations]="false" [allowColumnReordering]="true" [rowAlternationEnabled]="true"
+      [allowColumnResizing]="true" [showColumnLines]="true" [showRowLines]="true" [showBorders]="true" style="width:100%"
+      (onToolbarPreparing)="(permissions.insrt_in==1)?onToolbarPreparing($event):false">
+      <dxo-paging [pageSize]="10"></dxo-paging>
+      <dxo-scrolling [scrollByContent]="true"
+      [scrollByThumb]="true"
+      mode="standard"
+      [useNative]="true"
+      showScrollbar="onScroll"></dxo-scrolling>
+      <dxo-pager [visible]="true" [showPageSizeSelector]="true" [allowedPageSizes]="[10, 25, 50, 100]"
+        [showInfo]="true"></dxo-pager>
+      <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+      <dxo-filter-panel [visible]="true"></dxo-filter-panel>
+      <dxo-header-filter [visible]="true"></dxo-header-filter>
+      <dxo-group-panel [visible]="true"></dxo-group-panel>
+      <dxo-grouping [autoExpandAll]="false"></dxo-grouping>
+      <dxo-column-chooser [enabled]="true" mode="select">
+      </dxo-column-chooser>
+      <dxo-export [enabled]="(permissions.exprt_in==1)?true:false" [allowExportSelectedData]="true"
+        fileName="Change Log"></dxo-export>
+      <dxo-filter-row [visible]="true"></dxo-filter-row>
+      <dxi-column *ngFor="let f of columnDefs" [visible]="true" [dataField]="f.field" [cellTemplate]="f.cellTemplate"
+        [caption]="f.headerName" [alignment]="f.alignment" [width]="f.width" [allowResizing]="false">
+      </dxi-column>
+      <div *dxTemplate="let d of 'taxAmt'">
+        {{ d.data.tax | currencyIn}}
+      </div>
+      <div *dxTemplate="let d of 'Amt'">
+        {{ d.data.amount | currencyIn}}
+      </div>
+      <div *dxTemplate="let d of 'grandTotal'">
+        {{ d.data.grand_total | currencyIn}}
+      </div>
+      
+      <dxi-column [showInColumnChooser]="false" [visible]="(permissions.updt_in==1)?true:false" type="buttons"
+            [width]="100" cellTemplate="viewTemplate" caption="Actions" [allowExporting]="false">
+            <div *dxTemplate="let data of 'viewTemplate'">
+                <div class="tblEdtBtn" (click)="edit('edit',data.data)">
+                    Edit 
+                </div>
+            </div>
+        </dxi-column>
+        <dxi-column [showInColumnChooser]="false" type="button1" [width]="100" cellTemplate="EditTemplate" caption="Actions">
+            <div *dxTemplate="let data of 'EditTemplate'" (click)="edit('view',data.data)" [allowExporting]="false">
+                <div class="cursor-pointer tblEdtBtn">
+                    View
+                </div>
+            </div>
+        </dxi-column>
+    </dx-data-grid>
+  </div>
+  <dx-load-panel [container]="container" [visible]="false" [showIndicator]="true" [position]="{ of: '#load' }"
+    [showPane]="true" [shading]="true"></dx-load-panel>
+
+    <nz-drawer [nzBodyStyle]="{ overflow: 'auto' }" [nzMaskClosable]="false" [nzWidth]="720" [nzVisible]="visible"
+    [nzTitle]="drawerTitle" [nzFooter]="footerTpl" (nzOnClose)="close()" [nzClosable]="false" [nzCloseIcon]="icon"
+    [nzExtra]="icon" [nzMaskClosable]="true">
+    <ng-template #icon>
+      <i (click)="close()" class="fa-solid fa-circle-xmark"></i>
+    </ng-template>
+    <form nz-form *nzDrawerContent [formGroup]="expenditureForm" class="drawer-form">
+  
+      <div>
+        <nz-form-item>
+          <nz-form-label nz-col nzSpan="5" class="required">Invoice Number</nz-form-label>
+          <nz-form-control nz-col nzSpan="10" [nzErrorTip]="">
+            <input nz-input formControlName="invoice_number" placeholder="Invoice Number" readonly />
+            <ng-template #invoiceErrorTip3 let-control>
+              <!-- <ng-container *ngIf="control.hasError('required')">Please Invoice Number</ng-container> -->
+              <!-- <ng-container *ngIf="control.hasError('pattern')">{{
+                globalConstants.amountError
+                }}</ng-container> -->
+            </ng-template>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div>
+        <nz-form-item>
+          <nz-form-label nz-col nzSpan="5" class="required" >Amount</nz-form-label>
+          <nz-form-control nz-col nzSpan="10" [nzErrorTip]="">
+            <input nz-input formControlName="amount" type="text" nz-input placeholder="Please Enter Amount"  (keyup)="change()" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div>
+        <nz-form-item>
+          <nz-form-label nz-col nzSpan="5" class="required" >Tax</nz-form-label>
+          <nz-form-control nz-col nzSpan="10" [nzErrorTip]="">
+            <input nz-input formControlName="tax" type="text" nz-input placeholder="Please Enter Tax"  (keyup)="change()" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      <div>
+        <nz-form-item>
+          <nz-form-label nz-col nzSpan="5" class="required">Total</nz-form-label>
+          <nz-form-control nz-col nzSpan="10" [nzErrorTip]="">
+            <input nz-input formControlName="total" type="text" nz-input placeholder="Please Enter Total" readonly />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div>
+        <nz-form-item>
+          <nz-form-label nz-col nzSpan="5" class="required">Description</nz-form-label>
+          <nz-form-control nz-col nzSpan="10" [nzErrorTip]="">
+            <input nz-input formControlName="description" type="text" nz-input placeholder="Please Enter Description" />
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+
+      <div>
+        <nz-form-item>
+          <nz-form-label nz-col nzSpan="5" class="required">Category</nz-form-label>
+          <nz-select formControlName="category" nz-col nzSpan="10" nzPlaceHolder="Category" nzShowSearch readOnly>
+            <nz-option nzValue="stationery" nzLabel="Stationery"></nz-option>
+            <nz-option nzValue="advertising" nzLabel="Advertising"></nz-option>
+            <nz-option nzValue="maintenance and repairs" nzLabel="Maintenance and repairs"></nz-option>
+            <nz-option nzValue="telephone" nzLabel="Telephone"></nz-option>
+            <nz-option nzValue="utilities" nzLabel="Utilities"></nz-option>
+            <nz-option nzValue="rent" nzLabel="Rent"></nz-option>
+            <nz-option nzValue="telephone" nzLabel="Telephone"></nz-option>
+          </nz-select>
+        </nz-form-item>
+      </div>
+
+      <div>
+        <nz-form-item>
+          <nz-form-label nz-col nzSpan="5">Attachments</nz-form-label>
+          <nz-form-control nz-col nzSpan="10">
+            <nz-upload [nzAction]=uploadUrl [nzRemove]="handleRemove" [nzFileList]="files"
+              (nzChange)="handleChange($event)"
+               nzMultiple="true" [nzDisabled]="uploadDisabled">
+              <button nz-button>
+                <span nz-icon nzType="upload"></span>
+                Upload
+              </button>
+            </nz-upload>
+          </nz-form-control>
+        </nz-form-item>
+      </div>
+      </form>
+      <ng-template #footerTpl>
+        <div style="float: right">
+          <button nz-button *ngIf="updateBtnDisable" style="margin-right: 8px" (click)="close()">
+            Cancel
+          </button>
+          <button nz-button *ngIf="submit" nzType="primary" (click)="onSubmit()">
+            Submit
+          </button>
+          <button nz-button *ngIf="!submit && updateBtnDisable" nzType="primary" (click)="onUpdate()">
+            Update
+          </button>
+        </div>
+      </ng-template>
+      </nz-drawer>

@@ -26,7 +26,7 @@
             [caption]="f.headerName" [alignment]="f.alignment" [width]="f.width" [allowResizing]="false">
         </dxi-column>
         <dxi-column [showInColumnChooser]="false" [visible]="(permissions.updt_in==1)?true:false" type="buttons"
-            [width]="100" cellTemplate="viewTemplate" caption="Actions">
+            [width]="100" cellTemplate="viewTemplate" caption="Actions" [allowExporting]="false">
             <div *dxTemplate="let data of 'viewTemplate'">
                 <div class="tblEdtBtn" (click)="edit('edit',data.data)">
                     Edit 
@@ -34,7 +34,7 @@
             </div>
         </dxi-column>
         <dxi-column [showInColumnChooser]="false" type="button1" [width]="100" cellTemplate="EditTemplate" caption="Actions">
-            <div *dxTemplate="let data of 'EditTemplate'" (click)="edit('view',data.data)">
+            <div *dxTemplate="let data of 'EditTemplate'" (click)="edit('view',data.data)" [allowExporting]="false">
                 <div class="cursor-pointer tblEdtBtn">
                     View
                 </div>

@@ -19,21 +19,21 @@
         <dxo-column-chooser [enabled]="true" mode="select">
         </dxo-column-chooser>
         <dxo-export [enabled]="(permissions.exprt_in==1)?true:false" [allowExportSelectedData]="true"
-            fileName="Change Log"></dxo-export>
+            fileName="Uom"></dxo-export>
         <dxo-filter-row [visible]="true"></dxo-filter-row>
         
         <dxi-column *ngFor="let f of columnDefs" [visible]="true" [dataField]="f.field"
-            [caption]="f.headerName" [alignment]="f.alignment" [width]="f.width" [allowResizing]="false">
+            [caption]="f.headerName" [alignment]="f.alignment" [width]="f.width" [allowResizing]="false" [allowExporting]="false">
         </dxi-column>
         <dxi-column [showInColumnChooser]="false" [visible]="(permissions.updt_in==1)?true:false" type="buttons"
-            [width]="100" cellTemplate="viewTemplate" caption="Actions">
+            [width]="100" cellTemplate="viewTemplate" caption="Actions" [allowExporting]="false">
             <div *dxTemplate="let data of 'viewTemplate'">
                 <div class="tblEdtBtn" (click)="edit('edit',data.data)">
                     Edit
                 </div>
             </div>
         </dxi-column>
-        <dxi-column [showInColumnChooser]="false" type="button1" [width]="100" cellTemplate="EditTemplate" caption="Actions">
+        <dxi-column [showInColumnChooser]="false" type="button1" [width]="100" cellTemplate="EditTemplate" caption="Actions" [allowExporting]="false">
             <div *dxTemplate="let data of 'EditTemplate'" (click)="edit('view',data.data)">
                 <div class="cursor-pointer tblEdtBtn">
                     View
