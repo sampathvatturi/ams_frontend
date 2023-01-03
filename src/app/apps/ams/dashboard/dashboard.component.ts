@@ -6,6 +6,7 @@ import { BaseChartDirective } from 'ng2-charts';
 import { FundsService } from 'src/app/shared/moduleservices/funds.service';
 import { TransactionsService } from 'src/app/shared/moduleservices/transactions.service';
 import { ThemeConstantService } from '../../../shared/services/theme-constant.service';
+import { DateService } from 'src/app/shared/moduleservices/date.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -37,7 +38,8 @@ export class DashboardComponent implements OnInit {
     constructor(private colorConfig: ThemeConstantService, private transactionsservice: TransactionsService,
         private fb: FormBuilder,
         private fundService:FundsService,
-        public datepipe:DatePipe
+        public datepipe:DatePipe,
+        public dateService:DateService
     ) { }
 
     ngOnInit(): void {
@@ -48,8 +50,8 @@ export class DashboardComponent implements OnInit {
     }
     getDaysArray = (number: any) => {
         for (let i = 0; i < number; i++) {
-            let x = new Date(this.currDate.getFullYear(), this.currDate.getMonth(), this.currDate.getDate() - i)
-            this.revenueChartLabels.push(x.getDate())    
+            let x = this.dateService.getDateDiffrence(this.currDate,-i,'dd');
+            this.revenueChartLabels.push(x) ;  
         }
         return this.revenueChartLabels.reverse();
     }
@@ -58,10 +60,11 @@ export class DashboardComponent implements OnInit {
             if (res.length > 0) this.transactions = res;
             for(let i = 0; i < 10; i++){
                 let count = 0;
-                let x = new Date(this.currDate.getFullYear(), this.currDate.getMonth(), this.currDate.getDate() - i)
+                let x = this.dateService.getDateDiffrence(this.currDate,-i,'dd-MM-yyyy');
                 this.transactions.forEach((elem:any)=>{
-                    let d = new Date(elem.trsxcn_date);
-                    if(d.toDateString() === x.toDateString()){
+                    let fd = new Date(elem.trsxcn_date);
+                    let d = this.dateService.getDate(fd,'dd-MM-yyyy')
+                    if(d == x){
                         count += 1;
                     }
                 })
@@ -74,9 +77,8 @@ export class DashboardComponent implements OnInit {
     }
 
     transactionsFilterForm() {
-        let endDate = this.datepipe.transform(this.currDate, 'yyyy-MM-dd 23:59:59');
-        let startDate = new Date(this.currDate.getFullYear(), this.currDate.getMonth(), this.currDate.getDate() - 9).toDateString();
-        startDate = this.datepipe.transform(startDate, 'yyyy-MM-dd 00:00:00');
+        let startDate = this.dateService.getDateDiffrence(this.currDate,-9,'yyyy-MM-dd 00:00:00');
+        let endDate = this.dateService.getDate(this.currDate,'yyyy-MM-dd 23:59:59')
         this.transactionForm = this.fb.group({
             acc_head: ['%', [Validators.required]],
             start_date: [startDate, [Validators.required]],

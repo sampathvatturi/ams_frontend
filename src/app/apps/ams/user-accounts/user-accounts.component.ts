@@ -33,7 +33,7 @@ export class UserAccountsComponent implements OnInit {
   userRole: any;
   updateBtnDisable: boolean = true;
   isLoading: boolean;
-  isDisabled:boolean = false;
+  isDisabled: boolean = false;
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
   columnDefs = [
     { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false, width: 100, cellTemplate: 'serialNo' },
@@ -42,7 +42,7 @@ export class UserAccountsComponent implements OnInit {
     { headerName: 'Email', field: 'email', alignment: 'center', width: 175 },
     { headerName: 'Phone No', field: 'phone_number', alignment: 'center', width: 175 },
     { headerName: 'Department', field: 'department_name', alignment: 'center', width: 175 },
-    { headerName: 'Role', field: 'role', alignment: 'center', width: 100,cellTemplate: 'roleTemplate' },]
+    { headerName: 'Role', field: 'role', alignment: 'center', width: 100, cellTemplate: 'roleTemplate' },]
 
   constructor(
     private fb: UntypedFormBuilder,
@@ -115,12 +115,17 @@ export class UserAccountsComponent implements OnInit {
     const userData = this.users.find((item: any) => (item?.email === email || item?.user_name === user_name));
     console.log("==userData==", userData);
     if (this.createUserForm.valid) {
+      this.createUserForm.value.password_md5 = this.md5.passwordEncrypt(this.createUserForm.value.password_md5);
+      
       if (!userData) {
-        this.createUserForm.value.password_md5 = this.md5.passwordEncrypt(this.createUserForm.value.password_md5);
-        this.userService.createUser(this.prepareUserPayload(this.createUserForm.value)).subscribe((data) => {
-          this.visible = false;
-          this.notificationService.createNotification('success', data.message);
-          this.getUsers();
+        this.userService.createUser(this.prepareUserPayload(this.createUserForm.value)).subscribe((res) => {
+          if (res.status === 'ok') {
+            this.visible = false;
+            this.notificationService.createNotification(res.status, res.message);
+            this.getUsers();
+          } else {
+            this.notificationService.createNotification(res.status, res.message);
+          }
         });
       } else {
         this.notificationService.createNotification('error', "UserName or Email already exists");
@@ -186,64 +191,64 @@ export class UserAccountsComponent implements OnInit {
   //   }
   // }
 
-  edit(type:any,data: any) {
+  edit(type: any, data: any) {
     this.submit = false;
     this.visible = true;
- 
-    if (type == 'edit'){
-    this.isDisabled = false;
-    this.updateUserId = data?.user_id;
-    this.userRole = data?.role;
-    this.userFormFieldsConfig();
-    this.getUserById(this.updateUserId);
-    this.drawerTitle = 'Edit User Details';
-    this.createUserForm.get('first_name')?.setValue(data?.first_name);
-    this.createUserForm.get('last_name')?.setValue(data?.last_name);
-    this.createUserForm.get('email')?.setValue(data?.email);
-    this.createUserForm.get('user_name')?.setValue(data?.user_name);
-    this.createUserForm.get('phone_number')?.setValue(data.phone_number);
-    this.createUserForm.get('department_id')?.setValue(data?.department_id?.toString());
-    this.createUserForm.get('address')?.setValue(data?.address);
-    this.createUserForm.get('city')?.setValue(data?.city);
-    this.createUserForm.get('district')?.setValue(data?.district);
-    this.createUserForm.get('role')?.setValue(data?.role);
-    this.createUserForm.get('status')?.setValue(data?.status);
-    this.createUserForm.get('user_name')?.disable();
-    this.createUserForm.get('email')?.disable();
-    if (this.userRole === 'vendor') {
-      this.createUserForm.get('last_name')?.disable();
-      this.createUserForm.get('department_id')?.disable();
+
+    if (type == 'edit') {
+      this.isDisabled = false;
+      this.updateUserId = data?.user_id;
+      this.userRole = data?.role;
+      this.userFormFieldsConfig();
+      this.getUserById(this.updateUserId);
+      this.drawerTitle = 'Edit User Details';
+      this.createUserForm.get('first_name')?.setValue(data?.first_name);
+      this.createUserForm.get('last_name')?.setValue(data?.last_name);
+      this.createUserForm.get('email')?.setValue(data?.email);
+      this.createUserForm.get('user_name')?.setValue(data?.user_name);
+      this.createUserForm.get('phone_number')?.setValue(data.phone_number);
+      this.createUserForm.get('department_id')?.setValue(data?.department_id?.toString());
+      this.createUserForm.get('address')?.setValue(data?.address);
+      this.createUserForm.get('city')?.setValue(data?.city);
+      this.createUserForm.get('district')?.setValue(data?.district);
+      this.createUserForm.get('role')?.setValue(data?.role);
+      this.createUserForm.get('status')?.setValue(data?.status);
+      this.createUserForm.get('user_name')?.disable();
+      this.createUserForm.get('email')?.disable();
+      if (this.userRole === 'vendor') {
+        this.createUserForm.get('last_name')?.disable();
+        this.createUserForm.get('department_id')?.disable();
+      }
+      this.updateBtnDisable = true;
     }
-    this.updateBtnDisable = true;
-    }
-    if(type == 'view'){
+    if (type == 'view') {
       this.isDisabled = true;
       this.drawerTitle = 'View User Details';
       this.updateBtnDisable = false;
 
       this.updateUserId = data?.user_id;
-    this.userRole = data?.role;
-    this.userFormFieldsConfig();
-    this.getUserById(this.updateUserId);
-    this.drawerTitle = 'View User Details';
-    this.createUserForm.get('first_name')?.setValue(data?.first_name);
-    this.createUserForm.get('last_name')?.setValue(data?.last_name);
-    this.createUserForm.get('email')?.setValue(data?.email);
-    this.createUserForm.get('user_name')?.setValue(data?.user_name);
-    this.createUserForm.get('phone_number')?.setValue(data.phone_number);
-    this.createUserForm.get('department_id')?.setValue(data?.department_id?.toString());
-    this.createUserForm.get('address')?.setValue(data?.address);
-    this.createUserForm.get('city')?.setValue(data?.city);
-    this.createUserForm.get('district')?.setValue(data?.district);
-    this.createUserForm.get('role')?.setValue(data?.role);
-    this.createUserForm.get('status')?.setValue(data?.status);
-    this.createUserForm.get('user_name')?.disable();
-    this.createUserForm.get('email')?.disable();
-    if (this.userRole === 'vendor') {
-      this.createUserForm.get('last_name')?.disable();
-      this.createUserForm.get('department_id')?.disable();
-    }
-      
+      this.userRole = data?.role;
+      this.userFormFieldsConfig();
+      this.getUserById(this.updateUserId);
+      this.drawerTitle = 'View User Details';
+      this.createUserForm.get('first_name')?.setValue(data?.first_name);
+      this.createUserForm.get('last_name')?.setValue(data?.last_name);
+      this.createUserForm.get('email')?.setValue(data?.email);
+      this.createUserForm.get('user_name')?.setValue(data?.user_name);
+      this.createUserForm.get('phone_number')?.setValue(data.phone_number);
+      this.createUserForm.get('department_id')?.setValue(data?.department_id?.toString());
+      this.createUserForm.get('address')?.setValue(data?.address);
+      this.createUserForm.get('city')?.setValue(data?.city);
+      this.createUserForm.get('district')?.setValue(data?.district);
+      this.createUserForm.get('role')?.setValue(data?.role);
+      this.createUserForm.get('status')?.setValue(data?.status);
+      this.createUserForm.get('user_name')?.disable();
+      this.createUserForm.get('email')?.disable();
+      if (this.userRole === 'vendor') {
+        this.createUserForm.get('last_name')?.disable();
+        this.createUserForm.get('department_id')?.disable();
+      }
+
     }
   }
 
@@ -291,19 +296,19 @@ export class UserAccountsComponent implements OnInit {
 
   userFormFieldsConfig() {
     this.createUserForm = this.fb.group({
-      first_name: [{value:null,disabled:this.isDisabled},
-        [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(50),
-        ],
+      first_name: [{ value: null, disabled: this.isDisabled },
+      [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(50),
       ],
-      last_name: [{value:null,disabled:this.isDisabled},
-        [
-          Validators.required,
-          Validators.minLength(3),
-          Validators.maxLength(50),
-        ],
+      ],
+      last_name: [{ value: null, disabled: this.isDisabled },
+      [
+        Validators.required,
+        Validators.minLength(3),
+        Validators.maxLength(50),
+      ],
       ],
       email: [null,],
       user_name: [null,
@@ -315,25 +320,25 @@ export class UserAccountsComponent implements OnInit {
       ],
       password_md5: [null, [Validators.required]],
       cnfrm_password_md5: [null, [this.confirmValidator]],
-      phone_number: [{value:null,disabled:this.isDisabled},
-        [
-          Validators.required,
-          Validators.minLength(10),
-          Validators.maxLength(10),
-        ],
+      phone_number: [{ value: null, disabled: this.isDisabled },
+      [
+        Validators.required,
+        Validators.minLength(10),
+        Validators.maxLength(10),
       ],
-      department_id: [{value:null,disabled:this.isDisabled}, [Validators.required]],
-      address: [{value:null,disabled:this.isDisabled},
-        [
-          Validators.required,
-          Validators.minLength(5),
-          Validators.maxLength(150),
-        ],
       ],
-      city: [{value:null,disabled:this.isDisabled}, [Validators.required]],
-      district: [{value:null,disabled:this.isDisabled}, [Validators.required]],
-      role: [{value:'user',disabled:this.isDisabled}, [Validators.required]],
-      status: [{value:'active',disabled:this.isDisabled}, [Validators.required]]
+      department_id: [{ value: null, disabled: this.isDisabled }, [Validators.required]],
+      address: [{ value: null, disabled: this.isDisabled },
+      [
+        Validators.required,
+        Validators.minLength(5),
+        Validators.maxLength(150),
+      ],
+      ],
+      city: [{ value: null, disabled: this.isDisabled }, [Validators.required]],
+      district: [{ value: null, disabled: this.isDisabled }, [Validators.required]],
+      role: [{ value: 'user', disabled: this.isDisabled }, [Validators.required]],
+      status: [{ value: 'active', disabled: this.isDisabled }, [Validators.required]]
     });
   }
 
