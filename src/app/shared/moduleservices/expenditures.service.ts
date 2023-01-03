@@ -37,4 +37,12 @@ export class Expendituresservice {
       })
     );
   }
+
+  expenseApproval(id: any, postDataObj: any): Observable<any> {
+    return this.apiService.patchCall('/expense/expenseApproval/' + id, postDataObj).pipe(
+      map((response: any) => {
+        return response;
+      })
+    );
+  }
 }

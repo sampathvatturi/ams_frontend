@@ -48,7 +48,7 @@ export class ExpenditureComponent implements OnInit {
     { headerName: 'Category', field: 'category', alignment: 'center', width: 125, },
     { headerName: 'Status', field: 'status', alignment: 'center', width: 125, },
     { headerName: 'Amount', field: 'amount', alignment: 'center', width: 175,cellTemplate:'amount'},
-    { headerName: 'Tax', field: 'tax', alignment: 'center', width: 175,cellTemplate:'tax'},
+    { headerName: 'Tax (%)', field: 'tax', alignment: 'center', width: 175,cellTemplate:'tax'},
     { headerName: 'Total', field: 'total', alignment: 'center', width: 175,cellTemplate:'total'},
   ];
 
@@ -177,7 +177,7 @@ export class ExpenditureComponent implements OnInit {
       this.expenditureForm.get('exp_inv_number')?.setValue(data.exp_inv_number);
       this.expenditureForm.get('amount')?.setValue(data.amount);
       this.expenditureForm.get('total')?.setValue(data.total);
-      this.expenditureForm.get('tax')?.setValue(data.total);
+      this.expenditureForm.get('tax')?.setValue(data.tax);
       this.expenditureForm.get('status')?.setValue(data.status);
       this.expenditureForm.get('category')?.setValue(data.category);
       if(data.attachments != null && data.attachments !=''){
@@ -323,7 +323,7 @@ export class ExpenditureComponent implements OnInit {
       }
       /* Read more about isConfirmed, isDenied below */
       if (result.isConfirmed) {
-        this.expenditureService.cancelExpense(data.invoice_id,postdataObj).subscribe(res =>{
+        this.expenditureService.cancelExpense(data.id,postdataObj).subscribe(res =>{
           if(res.status == 'success'){
             Swal.fire(res.message, '','success')
              this.getExpenditure();
@@ -341,9 +341,9 @@ export class ExpenditureComponent implements OnInit {
       description:[''],
       category:[''],
       status:[''],
-      amount:[0],
-      tax:[0],
-      total:[0],
+      amount:[],
+      tax:[],
+      total:[],
       created_by: [''],
       updated_by: ['']
     });

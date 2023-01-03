@@ -1,3 +1,4 @@
+import { DatePipe } from '@angular/common';
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import { ChartConfiguration } from 'chart.js';
@@ -35,7 +36,8 @@ export class DashboardComponent implements OnInit {
 
     constructor(private colorConfig: ThemeConstantService, private transactionsservice: TransactionsService,
         private fb: FormBuilder,
-        private fundService:FundsService
+        private fundService:FundsService,
+        public datepipe:DatePipe
     ) { }
 
     ngOnInit(): void {
@@ -72,8 +74,9 @@ export class DashboardComponent implements OnInit {
     }
 
     transactionsFilterForm() {
-        let endDate = this.currDate;
-        let startDate = new Date(this.currDate.getFullYear(), this.currDate.getMonth(), this.currDate.getDate() - 9)
+        let endDate = this.datepipe.transform(this.currDate, 'yyyy-MM-dd 23:59:59');
+        let startDate = new Date(this.currDate.getFullYear(), this.currDate.getMonth(), this.currDate.getDate() - 9).toDateString();
+        startDate = this.datepipe.transform(startDate, 'yyyy-MM-dd 00:00:00');
         this.transactionForm = this.fb.group({
             acc_head: ['%', [Validators.required]],
             start_date: [startDate, [Validators.required]],

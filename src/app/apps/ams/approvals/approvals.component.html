@@ -41,8 +41,8 @@
       <nz-form-label>Type</nz-form-label>
       <nz-form-control nzErrorTip="Please Select Type">
         <nz-select formControlName="type" nzPlaceHolder="Type" nzShowSearch>
-          <nz-option nzValue="expenses" nzLabel="Expenditure"></nz-option>
-          <nz-option nzValue="invoice" nzLabel="Invoices"></nz-option>
+          <nz-option nzValue="invoice" nzLabel="Invoices" nzSelected></nz-option>
+          <nz-option nzValue="expense" nzLabel="Expenditure"></nz-option>
         </nz-select>
       </nz-form-control>
     </nz-form-item>
@@ -51,6 +51,7 @@
       <nz-form-label>Status</nz-form-label>
       <nz-form-control nzErrorTip="Please select account">
         <nz-select formControlName="status" nzPlaceHolder="Status" nzShowSearch>
+          <nz-option nzValue="%" nzLabel="All" nzSelected></nz-option>
           <nz-option nzValue="open" nzLabel="Open"></nz-option>
           <nz-option nzValue="cancel" nzLabel="Cancel"></nz-option>
           <nz-option nzValue="paid" nzLabel="Paid"></nz-option>
@@ -59,7 +60,7 @@
       </nz-form-control>
     </nz-form-item>
 
-    <button nz-button nzType="primary" nz-col nzSpan="4" (click)="submit()">
+    <button nz-button nzType="primary" nz-col nzSpan="4" (click)="getData()">
       Submit
     </button>
   </form>
@@ -99,30 +100,20 @@
     <div *dxTemplate="let d of 'taxAmt'">
       {{ d.data.tax | currencyIn}}
     </div>
+    <div *dxTemplate="let d of 'tax'">
+      {{ d.data.tax}}
+    </div>
     <div *dxTemplate="let d of 'Amt'">
       {{ d.data.amount | currencyIn}}
     </div>
     <div *dxTemplate="let d of 'grandTotal'">
       {{ d.data.grand_total | currencyIn}}
     </div>
+    <div *dxTemplate="let d of 'total'">
+      {{ d.data.total | currencyIn}}
+    </div>
     <dxi-column [showInColumnChooser]="false" type="buttons" [width]="150" cellTemplate="viewTemplate" caption="Action">
       <div *dxTemplate="let data of 'viewTemplate'">
-        <!-- <div > -->
-          <!-- <button class="approveBtn" (click)="onClickApprove(data.data)">
-            Approve
-          </button>
-        </div>
-        <ng-template #approved>
-          <button class="approvedBtn" (click)="onClickApprove(data.data)">
-            Approved
-          </button>
-        </ng-template>
-        <ng-template #rejected>
-          <button class="approvedBtn" (click)="onClickApprove(data.data)">
-            Approved
-          </button>
-        </ng-template> -->
-
         <ng-container *ngIf="data.data.status==='open';else reject">
           <button class="approveBtn" (click)="onClickApprove(data.data)">
             Approve
@@ -156,7 +147,7 @@
 <dx-load-panel [container]="container" [visible]="isLoading" [showIndicator]="true" [position]="{ of: '#load' }"
   [showPane]="true" [shading]="true"></dx-load-panel>
 
-<nz-modal [(nzVisible)]="isVisible" nzWidth="720px" nzTitle="User Approvals" 
+<nz-modal [(nzVisible)]="isVisible" nzWidth="720px" [nzTitle]="approvalFilterForm.value.type=='invoice'?'Invoice Approvals': 'Expenses Approvals'" 
   (nzOnCancel)="handleCancel()"
   (nzOnOk)="handleOk()" 
   [nzFooter]="modalFooter">
@@ -164,16 +155,26 @@
     <div nz-row>
       <div nz-col nzSpan="12">
         <div nz-row>
-          <div nz-col nzSpan="8" class="name">Invoice No.: </div>
-          <div nz-col nzSpan="8">{{ currentInvoiceData?.invoice_number }}</div>
+          <div nz-col nzSpan="10" class="name">Invoice Number : </div>
+          <div *ngIf="approvalFilterForm.value.type=='invoice';else expense_number" nz-col nzSpan="8">{{ currentInvoiceData?.invoice_number }}</div>
+          <ng-template #expense_number>
+            {{ currentInvoiceData?.exp_inv_number }}
+          </ng-template>
         </div>
         <div nz-row>
-          <div nz-col nzSpan="8" class="name">Date: </div>
+          <div nz-col nzSpan="10" class="name">Date : </div>
           <div nz-col nzSpan="8">{{ currentInvoiceData?.created_date | date : "dd-MM-YYYY" }}</div>
         </div>
-        <div nz-row>
-          <div nz-col nzSpan="8" class="name">Vender Name: </div>
-          <div nz-col nzSpan="8">{{ currentInvoiceData?.vendor_name }}</div>
+        <div nz-row >
+          <ng-container *ngIf="approvalFilterForm.value.type=='invoice';else expense_category">
+            <div nz-col nzSpan="10" class="name">Vender Name : </div>
+            <div nz-col nzSpan="8">{{ currentInvoiceData?.vendor_name }}</div>
+          </ng-container>
+          <ng-template #expense_category>
+            <div nz-col nzSpan="10" class="name">Category : </div>
+            <div nz-col nzSpan="8">{{ currentInvoiceData?.category.charAt(0).toUpperCase()
+              + currentInvoiceData?.category.slice(1) }}</div>
+          </ng-template>
         </div>
       </div>
       <div nz-col nzSpan="12">
@@ -182,12 +183,18 @@
           <div nz-col nzSpan="8">{{ currentInvoiceData?.amount | currencyIn }}</div>
         </div>
         <div nz-row>
-          <div nz-col nzSpan="8" class="name">Tax: </div>
-          <div nz-col nzSpan="14">{{ currentInvoiceData?.tax | currencyIn }}</div>
+          <div nz-col nzSpan="8" class="name">Tax : </div>
+          <div *ngIf="approvalFilterForm.value.type=='invoice';else expense_tax" nz-col nzSpan="14">{{ currentInvoiceData?.tax  | currencyIn }}</div>
+          <ng-template #expense_tax>
+            {{ currentInvoiceData?.tax }}%
+          </ng-template>
         </div>
         <div nz-row>
           <div nz-col nzSpan="8" class="name">Total Amount: </div>
-          <div nz-col nzSpan="14">{{ currentInvoiceData?.grand_total | currencyIn }}</div>
+          <div *ngIf="approvalFilterForm.value.type=='invoice';else expense_total" nz-col nzSpan="14">{{ currentInvoiceData?.grand_total | currencyIn }}</div>
+          <ng-template #expense_total>
+            {{ currentInvoiceData?.total | currencyIn }}
+          </ng-template>
         </div>
       </div>
       <div nz-col nzSpan="12">

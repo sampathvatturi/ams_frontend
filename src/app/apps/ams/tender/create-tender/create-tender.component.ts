@@ -236,9 +236,11 @@ export class CreateTenderComponent implements OnInit {
       this.createTenderForm.value.work_id = this.createTenderForm.value.work_id.toString();
       //service
       this.tendersapi.createTenderDetail(this.createTenderForm.value).subscribe(res=>{
-        if(res.status == 'success')
+        if(res.status == 'success'){
           this.notification.createNotification('success',res.message);
-        else
+          this.visible = false;
+          this.getCreateTender();
+        }else
           this.notification.createNotification('error',res.message);
       })
     }

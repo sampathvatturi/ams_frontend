@@ -25,10 +25,10 @@
         [caption]="f.headerName" [alignment]="f.alignment" [width]="f.width" [allowResizing]="false">
       </dxi-column>
       <div *dxTemplate="let d of 'amount'">
-        {{ d.data.tax | currencyIn}}
+        {{ d.data.amount | currencyIn}}
       </div>
       <div *dxTemplate="let d of 'tax'">
-        {{ d.data.amount | currencyIn}}
+        {{ d.data.tax }}
       </div>
       <div *dxTemplate="let d of 'total'">
         {{ d.data.total | currencyIn}}
@@ -83,7 +83,7 @@
 
       <div>
         <nz-form-item>
-          <nz-form-label nz-col nzSpan="5" class="required" >Tax</nz-form-label>
+          <nz-form-label nz-col nzSpan="5" class="required" >Tax (%)</nz-form-label>
           <nz-form-control nz-col nzSpan="10" [nzErrorTip]="">
             <input nz-input formControlName="tax" type="text" nz-input placeholder="Please Enter Tax"  (keyup)="change()" [readonly]="readOnly"/>
           </nz-form-control>

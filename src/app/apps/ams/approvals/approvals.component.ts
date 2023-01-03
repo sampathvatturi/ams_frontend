@@ -10,6 +10,7 @@ import { DatePipe } from '@angular/common';
 import { DepartmentService } from 'src/app/shared/moduleservices/department.service';
 import { AccountsService } from 'src/app/shared/moduleservices/accounts.service';
 import { environment } from 'src/environments/environment';
+import { Expendituresservice } from 'src/app/shared/moduleservices/expenditures.service';
 
 @Component({
   selector: 'app-approvals',
@@ -70,10 +71,12 @@ export class ApprovalsComponent implements OnInit {
     private datePipe: DatePipe,    
     private departmentService: DepartmentService,    
     private accountHeadService: AccountsService,
+    private expenseService : Expendituresservice
   ) { }
 
+
+  
   ngOnInit(): void {
-    this.isLoading = true;
     this.user_data = sessionStorage.getItem('user_data');
     this.user_data = JSON.parse(this.user_data);
     this.currentUserId = this.user_data?.user_id;
@@ -85,10 +88,10 @@ export class ApprovalsComponent implements OnInit {
       status: ['open', [Validators.required]],
     });
     this.getUsers();
-    this.getVendorInvoices();
     this.getDepartments();
     this.getAccounts();
     this.approvalsFilterFormValidators();
+    this.getData();
   }
 
   onToolbarPreparing(e: any) {
@@ -106,38 +109,46 @@ export class ApprovalsComponent implements OnInit {
     });
   }
 
-  submit(){
-    if (this.approvalFilterForm.value.type === 'expenses'){
-      this.approvalData = this.expenseData;
+  getData(){
+    this.isLoading = true;
+    if (this.approvalFilterForm.value.type === 'expense'){
       this.columnDefs = [
-        { headerName: 'Invoice Number', field: 'invoice_number', alignment: 'center', filter: false, width: 150 },
+        { headerName: 'Invoice Number', field: 'exp_inv_number', alignment: 'center', filter: false, width: 150 },
         { headerName: 'Desctiption', field: 'description', alignment: 'center', width: 175 },
         { headerName: 'Category', field: 'category', alignment: 'center', width: 125, },
-        { headerName: 'Amount', field: 'amount', alignment: 'center', width: 175, },
-        { headerName: 'Tax', field: 'tax', alignment: 'center', width: 175, },
-        { headerName: 'Total', field: 'total', alignment: 'center', width: 175, },
+        { headerName: 'Date', field: 'created_date', alignment: 'center', width: 125, cellTemplate: 'createDate' },
+        { headerName: 'Amount', field: 'amount', alignment: 'center', width: 175, cellTemplate: 'Amt' },
+        { headerName: 'Tax (%)', field: 'tax', alignment: 'center', width: 175, cellTemplate: 'tax' },
+        { headerName: 'Total', field: 'total', alignment: 'center', width: 175, cellTemplate: 'total'},
       ];
+      this.getExpenses();
     }
 
     if (this.approvalFilterForm.value.type === 'invoice'){
-      this.approvalData = this.invoicesData
       this.columnDefs = [
         { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false, width: 100, cellTemplate: 'snoTempelate' },
         { headerName: 'Inv No.', field: 'invoice_number', alignment: 'center', filter: false, width: 100 },
         { headerName: 'Vendor', field: 'vendor_name', alignment: 'center', width: 175 },
         { headerName: 'Date', field: 'created_date', alignment: 'center', width: 125, cellTemplate: 'createDate' },
         { headerName: 'Amount', field: 'amount', alignment: 'center', width: 175, cellTemplate: 'Amt' },
-        { headerName: 'Tax', field: 'tax', alignment: 'center', width: 175, cellTemplate: 'taxAmt' },
+        { headerName: 'Tax amount', field: 'tax', alignment: 'center', width: 175, cellTemplate: 'taxAmt' },
         { headerName: 'Total', field: 'grand_total', alignment: 'center', width: 175, cellTemplate: 'grandTotal' }
       ];
+      this.getInvoices();
     }
   }
 
-  getVendorInvoices(action?: any): void {
-    this.invoicesService.getVendorInvoices().subscribe((res) => {
-      this.invoices = res;
-      this.getInvoicesData();
-      this.isLoading = false;
+
+
+  getInvoices(): void {
+    this.invoicesService.getInvoices().subscribe((res) => {
+      if(res !='' && res.length){
+        this.approvalData = this.invoices = res;
+        this.isLoading = false;
+      }else{
+        this.isLoading = false;
+      }
+      
     })
   }
 
@@ -159,32 +170,32 @@ export class ApprovalsComponent implements OnInit {
     });
   }
 
-  submitForm(): void {
-    this.isLoading = true;
-    console.log(this.validateForm.value);
-    this.noDataShow = true;
-    if (this.validateForm.value.type === 'tenders') {
-      this.getInvoicesData();
-    }
-    this.isLoading = false;
+  getExpenses(){
+    this.expenseService.getExpenses().subscribe(res=>{
+      this.approvalData = this.expenseData = res;
+      this.isLoading = false;
+    })
   }
 
-  getInvoicesData(): void {
-    // this.invoicesData = this.invoices.filter((item) => item.status === 'open');
-    this.invoicesData = this.invoices;
-  }
 
   onClickApprove(data: any): void {
     console.log("==onClickApprove==", data);
     this.currentInvoiceData = data;
-    this.attachments = data.attachments.split(',');
+    if(data.attachments === null) this.attachments=[];
+    else  this.attachments = data.attachments.split(',');
     this.userApprovalList(data);
   }
 
   userApprovalList(item: any): void {
-    console.log(item.invoice_user_status)
-    this.userStatusList = item?.invoice_user_status;
-    this.currentInvoiceId = item?.invoice_id;
+    console.log(item)
+    if(this.approvalFilterForm.value.type==='invoice'){
+      this.userStatusList = item?.invoice_user_status;
+      this.currentInvoiceId = item?.invoice_id;
+    }else if(this.approvalFilterForm.value.type==='expense'){
+      this.userStatusList = item?.approval_user_status;
+      this.currentInvoiceId = item?.id;
+    }
+    
     console.log(this.userStatusList);
     this.departments.forEach((dept: any) => {
       this.userStatusList.map((item: any) => {
@@ -230,16 +241,27 @@ export class ApprovalsComponent implements OnInit {
     const vendor_acct = this.accounts.find((item) => item?.ref_id === this.currentInvoiceData?.vendor_id);
     const main_acct = this.accounts.find((item) => item?.main_acc === 1);
     console.log("====allUsersApprovedStatus====", this.allUsersApprovedStatus, allUsersRejectStatus, vendor_acct, main_acct);
-
-    const payload = {
-      invoice_user_status: this.invoiceUserStatusList,
-      amount: this.currentInvoiceData?.grand_total,
-      vendor_id: this.currentInvoiceData?.vendor_id,
-      vendor_acct_id: vendor_acct?.id,
-      vendor_name: vendor_acct?.name,
-      main_acct_id: main_acct?.id,
-      updated_by: this.user_data?.user_id,
-      status: this.allUsersApprovedStatus ? 'paid' : allUsersRejectStatus ? 'reject' : mainStatus ? 'reject' : this.currentInvoiceData?.status
+    let payload;
+    if(this.approvalFilterForm.value.type==='invoice'){
+      payload = {
+        invoice_user_status: this.invoiceUserStatusList,
+        amount: this.currentInvoiceData?.grand_total,
+        vendor_id: this.currentInvoiceData?.vendor_id,
+        vendor_acct_id: vendor_acct?.id,
+        vendor_name: vendor_acct?.name,
+        main_acct_id: main_acct?.id,
+        updated_by: this.user_data?.user_id,
+        status: this.allUsersApprovedStatus ? 'paid' : allUsersRejectStatus ? 'reject' : mainStatus ? 'reject' : this.currentInvoiceData?.status
+      }
+    }else if(this.approvalFilterForm.value.type==='expense'){
+      payload = {
+        approval_user_status: this.invoiceUserStatusList,
+        amount: this.currentInvoiceData?.total,
+        category: this.currentInvoiceData?.category,
+        exp_inv_number: this.currentInvoiceData?.exp_inv_number,
+        updated_by: this.user_data?.user_id,
+        status: this.allUsersApprovedStatus ? 'paid' : allUsersRejectStatus ? 'reject' : mainStatus ? 'reject' : this.currentInvoiceData?.status
+      }
     }
     return payload;
   }
@@ -249,11 +271,19 @@ export class ApprovalsComponent implements OnInit {
       this.notification.createNotification('error', 'Please enter a reson');
     }
     else {
-      this.invoicesService.updateInvoiceUserStatus(this.currentInvoiceId, this.prepareUpdatePayload()).subscribe((res) => {
-        this.notification.createNotification("success", res?.message);
-        this.isVisible = false;
-        this.getVendorInvoices();
-      })
+        if(this.approvalFilterForm.value.type==='invoice'){
+          this.invoicesService.updateInvoiceUserStatus(this.currentInvoiceId, this.prepareUpdatePayload()).subscribe((res) => {
+            this.notification.createNotification("success", res?.message);
+            this.isVisible = false;
+            this.getInvoices();
+          })
+        }else if(this.approvalFilterForm.value.type==='expense'){
+          this.expenseService.expenseApproval(this.currentInvoiceId, this.prepareUpdatePayload()).subscribe((res) => {
+            this.notification.createNotification("success", res?.message);
+            this.isVisible = false;
+            this.getExpenses();
+          })
+       }
     }
   }
   approvalsFilterFormValidators(){
@@ -261,10 +291,10 @@ export class ApprovalsComponent implements OnInit {
     let month = new Date(this.currDate.getFullYear(), this.currDate.getMonth(), this.currDate.getDate() - 30);
     let startDate = month.toDateString();
     this.approvalFilterForm = this.fb.group({
-      status: ['', [Validators.required]],
+      status: ['%', [Validators.required]],
       start_date: [startDate, [Validators.required]],
       end_date: [endDate, [Validators.required]],
-      type: ['%', [Validators.required]],
+      type: ['invoice', [Validators.required]],
     })
   }
 

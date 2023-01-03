@@ -53,7 +53,7 @@ export class InvoicesComponent implements OnInit {
     { headerName: 'Vendor', field: 'vendor_name', alignment: 'center', width: 175 },
     { headerName: 'Date', field: 'created_date', alignment: 'center', width: 125, cellTemplate: 'endDate' },
     { headerName: 'Amount', field: 'amount', alignment: 'center', width: 175, cellTemplate: 'Amt' },
-    { headerName: 'Tax', field: 'tax', alignment: 'center', width: 175, cellTemplate: 'taxAmt' },
+    { headerName: 'Tax amount', field: 'tax', alignment: 'center', width: 175, cellTemplate: 'taxAmt' },
     { headerName: 'Total', field: 'grand_total', alignment: 'center', width: 175, cellTemplate: 'grandTotal' },
     { headerName: 'Remarks', field: 'remarks', alignment: 'center', width: 175 },
     { headerName: 'Status', field: 'status', alignment: 'center', width: 100 },
