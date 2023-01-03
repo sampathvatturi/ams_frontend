@@ -45,4 +45,12 @@ export class Expendituresservice {
       })
     );
   }
+
+  getExpensesbyDate(postDataObj:any): Observable<any>{
+    return this.apiService.postCall('/expense/getExpensesbyDate/', postDataObj).pipe(
+      map((response: any) => {
+        return response;
+      })
+    );
+  }
 }

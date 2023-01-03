@@ -31,7 +31,7 @@ export class ExpenditureComponent implements OnInit {
   uploadUrl = this.baseUrl + '/upload/uploadFiles';
   getUploadedFIlesUrl = this.baseUrl + '/upload/getUploadedFiles/';
   invoiceId: any;
-  isLoading: boolean = true;
+  isLoading: boolean = false;
   isDisabled:boolean = false;
   uploadDisabled:boolean = false;
   readOnly: boolean = false;
@@ -65,7 +65,6 @@ export class ExpenditureComponent implements OnInit {
   
 
   ngOnInit(): void {
-    this.isLoading = true;
     this.expenditureFormValidators();
     this.user_data = sessionStorage.getItem('user_data');
     this.user_data = JSON.parse(this.user_data);
@@ -340,7 +339,7 @@ export class ExpenditureComponent implements OnInit {
       exp_inv_number: [''],
       description:[''],
       category:[''],
-      status:[''],
+      status:['open'],
       amount:[],
       tax:[],
       total:[],

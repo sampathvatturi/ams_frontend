@@ -141,7 +141,7 @@ export class ApprovalsComponent implements OnInit {
 
 
   getInvoices(): void {
-    this.invoicesService.getInvoices().subscribe((res) => {
+    this.invoicesService.getInvoicesbyDate(this.approvalFilterForm.value).subscribe((res) => {
       if(res !='' && res.length){
         this.approvalData = this.invoices = res;
         this.isLoading = false;
@@ -171,10 +171,12 @@ export class ApprovalsComponent implements OnInit {
   }
 
   getExpenses(){
-    this.expenseService.getExpenses().subscribe(res=>{
-      this.approvalData = this.expenseData = res;
-      this.isLoading = false;
-    })
+    if(this.approvalFilterForm.valid){
+      this.expenseService.getExpensesbyDate(this.approvalFilterForm.value).subscribe(res=>{
+        this.approvalData = this.expenseData = res;
+        this.isLoading = false;
+      })
+    }
   }
 
 
@@ -287,9 +289,9 @@ export class ApprovalsComponent implements OnInit {
     }
   }
   approvalsFilterFormValidators(){
-    let endDate = this.currDate.toDateString();
+    let endDate = this.currDate.getFullYear()+'-'+String(this.currDate.getMonth()+1)+'-'+this.currDate.getDate()+' 23:59:59';
     let month = new Date(this.currDate.getFullYear(), this.currDate.getMonth(), this.currDate.getDate() - 30);
-    let startDate = month.toDateString();
+    let startDate = month.toISOString();
     this.approvalFilterForm = this.fb.group({
       status: ['%', [Validators.required]],
       start_date: [startDate, [Validators.required]],

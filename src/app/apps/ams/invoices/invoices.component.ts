@@ -241,7 +241,7 @@ export class InvoicesComponent implements OnInit {
     this.invoiceForm = this.fb.group({
       vendor_id: [{value:'',disabled:this.isDisabled}, [Validators.required]],
       invoice_number: [''],
-      status: ['', [Validators.required]],
+      status: ['open', [Validators.required]],
       remarks: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(200)]],
       amount: ['', [Validators.required]],
       inventory_details: this.fb.array([

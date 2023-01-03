@@ -77,4 +77,11 @@ export class InvoicesService {
     );
   }
 
+  getInvoicesbyDate(postDataObj: any): Observable<any> {
+    return this.apiService.postCall('/invoice/getInvoicesbyDate', postDataObj).pipe(
+      map((response: any) => {
+        return response;
+      })
+    );
+  }
 }
