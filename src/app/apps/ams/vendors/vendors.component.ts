@@ -162,9 +162,13 @@ export class VendorsComponent implements OnInit {
     if (this.vendorForm.valid) {
       this.vendorForm.value.password_md5 = this.md5hashService.passwordEncrypt(this.vendorForm.value.password_md5);
       this.vendorService.createVendor(this.prepareVendorPayload(this.vendorForm.value)).subscribe((res) => {
-        this.visible = false;
-        this.getVendors();
-        this.notification.createNotification("success", res?.message);
+       if (res.status === 'success') {
+         this.visible = false;
+         this.getVendors();
+         this.notification.createNotification("success", res?.message);
+       } else {
+        this.notification.createNotification(res.status, res.message);
+       }
       });
     } else {
       console.log('invalid');

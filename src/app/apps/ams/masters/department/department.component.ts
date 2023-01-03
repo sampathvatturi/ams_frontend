@@ -3,6 +3,7 @@ import { UntypedFormGroup, PatternValidator, UntypedFormBuilder, Validators } fr
 import { DepartmentService } from 'src/app/shared/moduleservices/department.service';
 import { NotificationService } from 'src/app/shared/common/notification.service';
 import { GlobalConstants } from 'src/app/shared/common/global_constants';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-department',
@@ -22,7 +23,7 @@ export class DepartmentComponent implements OnInit {
   departmentId: any;
   updateBtnDisable:boolean = true;
   isLoading:boolean = false;
-
+  showStatus:boolean;
   columnDefs = [
     { headerName: 'S.No', field: 'sno', alignment: 'center',width:'100', filter: false},
     { headerName: 'Department Name', field: 'department_name', alignment: 'left'},
@@ -85,6 +86,7 @@ export class DepartmentComponent implements OnInit {
     this.submit = true;
     this.drawerTitle = 'Add Department';
     this.visible = true;
+    this.showStatus = false;
     this.departmentFormValidators();
     this.departmentForm.get('status')?.setValue('active');
   }
@@ -93,6 +95,7 @@ export class DepartmentComponent implements OnInit {
     this.submit = false;
     this.drawerTitle = 'Edit Department Details';
     this.visible = true;
+    this.showStatus = true;
     this.departmentId = data?.department_id
     this.departmentFormValidators();
     this.departmentForm.get('department_id')?.setValue(data.department_id);
@@ -148,10 +151,24 @@ export class DepartmentComponent implements OnInit {
     return payload;
   }
   delete(data:any){
-    // console.log(data.department_id)
-    this.departmentService.deleteDepartment(data.department_id).subscribe((res) => {
-      this.notification.createNotification(res.status, res?.message);
-      this.getDepartment()
+    console.log(data);
+    Swal.fire({
+      title: data.department_name,
+      showCancelButton: true,
+      confirmButtonText: 'Submit',
+      cancelButtonText: 'Close',
+      text: 'Are you sure you want to Delete this Department ?'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.departmentService.deleteDepartment(data.department_id,data).subscribe(res =>{
+          if(res.status == 'success'){
+            Swal.fire(res.message, '','success')
+            this.getDepartment()
+          }else{
+            Swal.fire(res.message, '','error')
+          }
+        })
+      }
     })
   }
 

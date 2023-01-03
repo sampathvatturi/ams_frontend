@@ -10,14 +10,20 @@ export class DateService {
 
   constructor() { }
 
-  dateFormatDays(date:Date,dateFormat:string,difference?:number){
-    difference = difference || 0;
-    let updatedDate = format(addDays(date,difference),dateFormat)
+  getDate(date,dateFormate?){
+    dateFormate = dateFormate || 'dd-MM-yyyy hh:mm:ss';
+    return format(date,dateFormate);
+  }
+
+  getDateDiffrence(date:Date,difference:number,dateFormate?:string){
+    dateFormate = dateFormate || 'dd-MM-yyyy hh:mm:ss';
+    let updatedDate = format(addDays(date,difference),dateFormate)
     return updatedDate;
   }
-  dateFormatYears(date:Date,dateFormat:string,difference?:number){
-    difference = difference || 0;
-    let updatedDate = format(addYears(date,difference),dateFormat)
+
+  getYearDifference(date:Date,difference:number,dateFormate:string){
+    dateFormate = dateFormate || 'dd-MM-yyyy hh:mm:ss';
+    let updatedDate = format(addYears(date,difference),dateFormate)
     return updatedDate;
   }
 

@@ -41,8 +41,8 @@ export class DepartmentService {
       })
     );
   }
-  deleteDepartment(id:any):Observable<any>{
-    return this.apiService.deleteCall('/dept/deleteDept/' + id).pipe(
+  deleteDepartment(id:any, postDataObj):Observable<any>{
+    return this.apiService.patchCall('/dept/deleteDept/' + id, postDataObj).pipe(
       map((response: any) => {
         return response;
       })
