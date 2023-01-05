@@ -20,6 +20,7 @@ import { InnerLoadingComponent } from './components/inner-loading/inner-loading.
 import { PgHeaderComponent } from './components/pg-header/pg-header.component';
 import { GlobalTablesearchPipe } from './pipes/global-tablesearch.pipe';
 import { CurrencyPipe } from './pipes/currency.pipe';
+import { EllipsisPipe } from './pipes/ellipsis.pipe';
 
 @NgModule({
     exports: [
@@ -34,7 +35,8 @@ import { CurrencyPipe } from './pipes/currency.pipe';
         LoadingComponent,InnerLoadingComponent,PgHeaderComponent,
         NzToolTipModule,
         CurrencyPipe,
-        GlobalTablesearchPipe
+        GlobalTablesearchPipe,
+        EllipsisPipe
     ],
     imports: [
         RouterModule,
@@ -51,7 +53,8 @@ import { CurrencyPipe } from './pipes/currency.pipe';
         InnerLoadingComponent,
         PgHeaderComponent,
         GlobalTablesearchPipe,
-        CurrencyPipe
+        CurrencyPipe,
+        EllipsisPipe
     ],
     providers: [
         ThemeConstantService,

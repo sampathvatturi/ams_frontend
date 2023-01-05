@@ -34,17 +34,19 @@ export class SurveyReportComponent implements OnInit {
   getUploadedFIlesUrl = this.baseUrl + '/upload/getUploadedFiles/';
   isDisabled: boolean = false;
   upload:boolean = false;
-
+  styles = {
+    width: 100
+  }
 
   permissions = { "slct_in": 1, "insrt_in": 1, "updt_in": 1, "dlte_in": 1, "exprt_in": 1 };
 
   columnDefs = [
     { headerName: 'S.No.', field: 'sno', alignment: 'center', filter: false, width: '100', cellTemplate: 'serialNo' },
     { headerName: 'Name', alignment: 'left', field: 'name' },
-    { headerName: 'Description', alignment: 'left', field: 'description' },
-    { headerName: 'Status', alignment: 'left', field: 'status', cellTemplate: 'statusTemplate' },
-    { headerName: 'Start Date', alignment: 'left', field: 'start_date', width: '175', cellTemplate: 'startDate' },
-    { headerName: 'End Date', alignment: 'left', field: 'end_date', width: '175', cellTemplate: 'endDate' }
+    { headerName: 'Description', alignment: 'left', field: 'description', cellTemplate: 'description' },
+    { headerName: 'Status', alignment: 'left', field: 'status', cellTemplate: 'statusTemplate' , width: '100'},
+    { headerName: 'Start Date', alignment: 'left', field: 'start_date', width: '100', cellTemplate: 'startDate' },
+    { headerName: 'End Date', alignment: 'left', field: 'end_date', width: '100', cellTemplate: 'endDate' }
 
   ]
   constructor(

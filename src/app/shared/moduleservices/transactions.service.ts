@@ -29,4 +29,12 @@ export class TransactionsService {
       })
     );
   }
+
+  getTransactionCount(postDataObj:any): Observable<any> {
+    return this.apiService.postCall('/transaction/getTransactionsCount', postDataObj).pipe(
+      map((response: any) => {
+        return response;
+      })
+    );
+  }
 }

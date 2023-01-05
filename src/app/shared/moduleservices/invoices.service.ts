@@ -84,4 +84,12 @@ export class InvoicesService {
       })
     );
   }
+
+  getInvoiceStatus(): Observable<any> {
+    return this.apiService.getCall('/invoice/getInvoicesstatus').pipe(
+      map((response: any) => {
+        return response;
+      })
+    );
+  }
 }

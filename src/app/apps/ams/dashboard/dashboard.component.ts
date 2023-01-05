@@ -7,6 +7,7 @@ import { FundsService } from 'src/app/shared/moduleservices/funds.service';
 import { TransactionsService } from 'src/app/shared/moduleservices/transactions.service';
 import { ThemeConstantService } from '../../../shared/services/theme-constant.service';
 import { DateService } from 'src/app/shared/moduleservices/date.service';
+import { InvoicesService } from 'src/app/shared/moduleservices/invoices.service';
 
 @Component({
     selector: 'app-dashboard',
@@ -16,6 +17,21 @@ import { DateService } from 'src/app/shared/moduleservices/date.service';
 
 
 export class DashboardComponent implements OnInit {
+    constructor(private colorConfig: ThemeConstantService, private transactionsservice: TransactionsService,
+        private fb: FormBuilder,
+        private fundService:FundsService,
+        public datepipe:DatePipe,
+        public dateService:DateService,
+        private invoiceService:InvoicesService
+    ) { }
+    ngOnInit(): void {
+        this.transactionsFilterForm();
+        this.getTransactions();
+        this.getDaysArray(10);
+        this.getFunds();
+        this.getPiedata();
+    }
+//graph
     currDate = new Date();
     revenueChartLabels: Array<any> = [];
     revenueChartData: Array<any> = [{
@@ -24,7 +40,7 @@ export class DashboardComponent implements OnInit {
     }];
     transactionForm!: UntypedFormGroup;
     transactions = [];
-    isSpinning: boolean = true;
+    loadGraph: boolean = true;
     totalFunds:any = 0;
     fund_info:any = [];
 
@@ -34,20 +50,6 @@ export class DashboardComponent implements OnInit {
     updateChart() {
         this.chart.chart.update();
     }
-
-    constructor(private colorConfig: ThemeConstantService, private transactionsservice: TransactionsService,
-        private fb: FormBuilder,
-        private fundService:FundsService,
-        public datepipe:DatePipe,
-        public dateService:DateService
-    ) { }
-
-    ngOnInit(): void {
-        this.transactionsFilterForm();
-        this.getTransactions();
-        this.getDaysArray(10);
-        this.getFunds();
-    }
     getDaysArray = (number: any) => {
         for (let i = 0; i < number; i++) {
             let x = this.dateService.getDateDiffrence(this.currDate,-i,'dd');
@@ -56,23 +58,22 @@ export class DashboardComponent implements OnInit {
         return this.revenueChartLabels.reverse();
     }
     getTransactions() {
-        this.transactionsservice.getTransactions(this.transactionForm.value).subscribe((res) => {
-            if (res.length > 0) this.transactions = res;
-            for(let i = 0; i < 10; i++){
+        this.transactionsservice.getTransactionCount(this.transactionForm.value).subscribe((res:any)=>{
+            this.transactions = res;
+            for(var i=0; i<10; i++){
                 let count = 0;
-                let x = this.dateService.getDateDiffrence(this.currDate,-i,'dd-MM-yyyy');
+                let dates = this.dateService.getDateDiffrence(this.currDate,-i,'dd-MM-yyyy');
                 this.transactions.forEach((elem:any)=>{
-                    let fd = new Date(elem.trsxcn_date);
-                    let d = this.dateService.getDate(fd,'dd-MM-yyyy')
-                    if(d == x){
-                        count += 1;
+                    let transDate = this.dateService.getDate(new Date(elem.date),'dd-MM-yyyy');
+                    if( transDate == dates){
+                        count = elem.count
                     }
                 })
                 this.revenueChartData[0].data.push(count);
             }
             this.revenueChartData[0].data.reverse();
             this.updateChart();
-            this.isSpinning = false;
+            this.loadGraph = false;
         })
     }
 
@@ -80,10 +81,8 @@ export class DashboardComponent implements OnInit {
         let startDate = this.dateService.getDateDiffrence(this.currDate,-9,'yyyy-MM-dd 00:00:00');
         let endDate = this.dateService.getDate(this.currDate,'yyyy-MM-dd 23:59:59')
         this.transactionForm = this.fb.group({
-            acc_head: ['%', [Validators.required]],
             start_date: [startDate, [Validators.required]],
             end_date: [endDate, [Validators.required]],
-            type: ['%', [Validators.required]],
         })
     }
     getFunds(): void {
@@ -107,8 +106,6 @@ export class DashboardComponent implements OnInit {
     red = this.themeColors.red;
     taskListIndex: number = 0;
     revenueChartFormat: string = 'revenueMonth';
-
-   
     currentrevenueChartLabelsIdx = 1;
     revenueChartOptions: any = {
         maintainAspectRatio: false,
@@ -163,23 +160,30 @@ export class DashboardComponent implements OnInit {
     ];
     revenueChartType = 'line';
 
-    //doughnut
-    customersChartLabels: string[] = ['New', 'Returning', 'Others'];
-    //   customersChartData: number[] = [350, 450, 100];
+//doughnut
+    customersChartLabels: string[] = [];
     customersChartData: ChartConfiguration<'doughnut'>['data']['datasets'] = [
-        { data: [350, 450, 100], label: 'Series A' },
+        { data: [], label: 'Count' },
     ];
-    customersChartColors: Array<any> = [{
-        backgroundColor: [this.cyan, this.purple, this.gold],
-        pointBackgroundColor: [this.cyan, this.purple, this.gold]
-    }];
+    pieData:any = [];
+    loadPie:boolean = true;
     customersChartOptions: any = {
-        cutoutPercentage: 75,
-        maintainAspectRatio: false
+        cutout: '70%',
+        backgroundColor:[this.cyan, this.purple, this.gold, this.red]
     }
     customersChartType = 'doughnut';
+    getPiedata(){
+        this.invoiceService.getInvoiceStatus().subscribe((res:any) => {
+            this.pieData = res;
+            this.pieData.forEach((elem:any) => {
+                this.customersChartLabels.push(elem.status.charAt(0).toUpperCase() + elem.status.slice(1));
+                this.customersChartData[0].data.push(elem.count);
+            });
+        this.loadPie = false;
+        })
+    }
 
-    //Bar Chart
+//Bar Chart
     avgProfitChartOptions: any = {
         scaleShowVerticalLines: false,
         responsive: true,
