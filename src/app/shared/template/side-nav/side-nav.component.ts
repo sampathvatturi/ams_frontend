@@ -17,136 +17,35 @@ export class SideNavComponent{
     isFolded : boolean;
     isSideNavDark : boolean;
     isExpand : boolean;
-
     loader: boolean = true;
     clntDtls: any;
-    // mainMenuItems = {
-    //   "mainMenu": [
-    //     {
-    //       "title": "Dashboard",
-    //       "route": "modules/dashboard",
-    //       "icon": "fa-solid fa-house"
-    //     },
-    //     {
-    //       "title": "Tender",
-    //       "icon": "fa-solid fa-circle-info",
-    //       "children":[
-    //         {"title":"Tender Details",
-    //           "route":"modules/create-tender",
-    //           "icon": "fa-solid fa-file-circle-plus"
-    //         },
-    //         {
-    //           "title":"Assign Tender",
-    //           "route":"modules/assign-tender",
-    //           "icon": "fa-solid fa-file-circle-exclamation"
-    //         }
-    //       ]
-    //     },
-    //     {
-    //       "title": "Survey Report",
-    //       "route": "modules/survey-report",
-    //       "icon": "fa-solid fa-file-contract"
-    //     },
-    //     {
-    //       "title": "Work Orders",
-    //       "route": "modules/work-orders",
-    //       "icon": "fa-solid fa-folder-open"
-    //     },
-    //     {
-    //       "title": "Expenditure",
-    //       "route": "modules/expenditure",
-    //       "icon": "fa-solid fa-hand-holding-dollar"
-    //     },
-    //     {
-    //       "title": "Invoices",
-    //       "route": "modules/invoices",
-    //       "icon": "fa-solid fa-file-invoice-dollar"
-    //     },
-    //     {
-    //       "title": "Vendors",
-    //       "route": "modules/vendors",
-    //       "icon": "fa-solid fa-user-tie"
-    //     },
-    //     {
-    //       "title": "Accouting",
-    //       "icon": "fa-solid fa-building-columns",
-    //       "children": [        
-    //         {
-    //           "title": "Funds",
-    //           "route": "modules/funds",
-    //           "icon": "fa-solid fa-dollar-sign"
-    //         },
-    //         {
-    //           "title": "Accounts",
-    //           "route": "modules/accounts",
-    //           "icon": "fa-solid fa-calculator"
-    //         },
-    //         {
-    //           "title": "Transactions",
-    //           "route": "modules/transactions",
-    //           "icon": "fa-solid fa-hands"
-    //         }
-    //       ]
-    //     },
-    //     {
-    //       "title": "User Accounts",
-    //       "route": "modules/user-accounts",
-    //       "icon": "fa-solid fa-users"
-    //     },
-    //     {
-    //       "title": "Approvals",
-    //       "route": "modules/approvals",
-    //       "icon": "fa-solid fa-thumbs-up"
-    //     },
-    //     {
-    //       "title": "Masters",
-    //       "icon": "fa-solid fa fa-cogs",
-    //       "children": [        
-    //         {
-    //           "title": "Department",
-    //           "route": "modules/department",
-    //           "icon": "fa-solid fa-building"
-    //         }, 
-    //         {
-    //           "title": "Works",
-    //           "route": "modules/works",
-    //           "icon": "fa-solid fa-person-digging"
-    //         },
-    //         {
-    //           "title": "Inventory",
-    //           "route": "modules/inventory-items",
-    //           "icon": "fa-solid fa-warehouse"
-    //         },      
-    //         {
-    //           "title": "UOM",
-    //           "route": "modules/uom",
-    //           "icon": "fa-solid fa-flask"
-    //         }
-    //       ]
-    //     }
-    //   ]
-    // };
     mainMenuItems:any ;
+    user_data: any;
+    currentUserId: any;
+    currentUserRole: any;
 
     constructor( private themeService: ThemeConstantService,public apiSrv: AppsService, private ApiService:ApiService) {}
 
     ngOnInit(): void {
-        // this.menuItems = ROUTES.filter(menuItem => menuItem);
-        // this.menuItems = this.mainMenuItems?.mainMenu;
+      this.user_data = sessionStorage.getItem('user_data');
+      this.user_data = JSON.parse(this.user_data);
+      this.currentUserId = this.user_data?.user_id;
+      this.currentUserRole = this.user_data?.role;
+      console.log("Role", this.currentUserRole);
         this.ApiService.getCall('/menu/getMenu').subscribe(res =>{
           this.mainMenuItems = res;
           this.mainMenuItems[1].children.pop() //temporary
-          this.mainMenuItems.forEach((elem:any,index:any) => {
-            if(elem.title == "Work Orders"){
-              this.mainMenuItems.splice(index,1);
-            }            
+          this.mainMenuItems.map((elem:any, index:any) => {
+            if(elem.title !== "Invoices" && this.currentUserRole === 'vendor'){
+              elem.status = false;
+            }         
           });
+          console.log("==this.mainMenuItems==",this.mainMenuItems);
         })
         this.themeService.isMenuFoldedChanges.subscribe(isFolded => this.isFolded = isFolded);
         this.themeService.isExpandChanges.subscribe(isExpand => this.isExpand = isExpand);
         this.themeService.isSideNavDarkChanges.subscribe(isDark => this.isSideNavDark = isDark);
         this.clntDtls = JSON.parse(localStorage.getItem('clients'));
-      //  this.gstMnuItmsLst();
     }
  
     closeMobileMenu(): void {

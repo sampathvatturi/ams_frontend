@@ -56,7 +56,7 @@ export class InvoicesComponent implements OnInit {
     { headerName: 'Tax amount', field: 'tax', alignment: 'center', width: 175, cellTemplate: 'taxAmt' },
     { headerName: 'Total', field: 'grand_total', alignment: 'center', width: 175, cellTemplate: 'grandTotal' },
     { headerName: 'Remarks', field: 'remarks', alignment: 'center', width: 175 },
-    { headerName: 'Status', field: 'status', alignment: 'center', width: 100 },
+    { headerName: 'Status', field: 'status', alignment: 'center', width: 100, cellTemplate: 'invoiceStatus'},
   ];
 
   constructor(
@@ -68,19 +68,21 @@ export class InvoicesComponent implements OnInit {
     private msg: NzMessageService
   ) { }
 
-  ngOnInit(): void {
+  ngOnInit(): void {    
+    this.user_data = sessionStorage.getItem('user_data');
+    this.user_data = JSON.parse(this.user_data);  
     this.isLoading = true;
     this.invoiceFormValidators();
     this.getVendors();
-    this.getInvoices();
-    this.user_data = sessionStorage.getItem('user_data');
-    this.user_data = JSON.parse(this.user_data);
-    
+    this.getInvoices(); 
   }
   getInvoices(): void {
     this.invoiceService.getInvoices().subscribe((res) => {
       this.invoice_info = res;
       this.isLoading = false;
+      if(this.user_data?.vendor_id){        
+        this.invoice_info = this.invoice_info.filter((item) => (item.vendor_id ===this.user_data?.vendor_id));
+      }
     })
   }
   getVendors(): void {
@@ -89,7 +91,6 @@ export class InvoicesComponent implements OnInit {
       for (let x of this.vendor_array) {
         this.v_name[x.vendor_id] = x.vendor_name;
       }
-      // this.getInvoices();
     });
   }
   getInventory(): void {
@@ -178,6 +179,12 @@ export class InvoicesComponent implements OnInit {
     this.invoiceForm.get('grand_total')?.setValue(0);
     this.invoiceForm.get('amount')?.setValue(0);
     this.invoiceForm.get('tax')?.setValue(0);
+    if(this.user_data?.vendor_id) {   
+      console.log("this.currentVendorId", this.user_data?.vendor_id);
+      this.isDisabled = true;
+      this.invoiceForm.get('vendor_id')?.setValue(this.user_data?.vendor_id.toString());
+      // this.invoiceForm.get('vendor_id').disable();
+    }   
   }
 
   close(): void {
@@ -197,7 +204,7 @@ export class InvoicesComponent implements OnInit {
         this.notification.createNotification(res.status, res.message);
         if (res.status === 'success') {
           this.visible = false;
-          this.invoiceService.getInvoices().subscribe((res) => (this.invoice_info = res));
+          this.getInvoices();
         }
       });
     } else {
@@ -239,7 +246,7 @@ export class InvoicesComponent implements OnInit {
   }
   invoiceFormValidators() {
     this.invoiceForm = this.fb.group({
-      vendor_id: [{value:'',disabled:this.isDisabled}, [Validators.required]],
+      vendor_id: [{value:'', disabled:this.isDisabled}, [Validators.required]],
       invoice_number: [''],
       status: ['open', [Validators.required]],
       remarks: ['', [Validators.required, Validators.minLength(5), Validators.maxLength(200)]],
@@ -416,5 +423,5 @@ export class InvoicesComponent implements OnInit {
     newInvNum  = lastInvNum.substring(0, 3) +year+ (parseInt(lastInvNum.substring(7)) + 1).toString().padStart(4, "0");
     return newInvNum;
   }
-
+  
 }

@@ -80,19 +80,14 @@ export class HeaderComponent {
             this.department = res;
             // this.department = this.department.map((current:any) =>  console.log(JSON.parse(current)))
         this.user_department = this.department.find((item: any)=> (item?.department_id === this.user_data?.department_id));
-        this.user_department = this.user_department.department_name
+        this.user_department = this.user_department?.department_name
         })
 
         this.user_data = JSON.parse(sessionStorage.getItem('user_data'));
-        this.first_name = this.user_data.first_name.slice(0, 1).toUpperCase();
-        this.last_name = this.user_data.last_name.slice(0, 1).toUpperCase();
-        this.full_name = this.user_data.first_name + ' ' + this.user_data.last_name;
-        this.role = this.user_data.role;
-        
-        
-
-
-        
+        this.first_name = this.user_data?.first_name?.slice(0, 1).toUpperCase();
+        this.last_name = this.user_data?.last_name?.slice(0, 1).toUpperCase();
+        this.full_name = this.user_data?.first_name + ' ' + this.user_data?.last_name ?? '';
+        this.role = this.user_data?.role;
         console.log(this.user_department)
     //    console.log(this.user_data)
 
@@ -144,7 +139,6 @@ export class HeaderComponent {
         //          }
         //     }, (err) => {
         //     })
-
         localStorage.clear();
         sessionStorage.clear();
         this.router.navigateByUrl('/internal/auth');

@@ -83,7 +83,10 @@ export class LoginComponent implements OnInit {
       localStorage.setItem('token', response?.token);
       localStorage.setItem('role', 'admin');
       sessionStorage.setItem('user_data',JSON.stringify(response?.user_data));
-      this.route.navigate(['/internal/ams/dashboard']);
+      if(response?.user_data?.role === 'vendor')
+        this.route.navigate(['/internal/ams/invoices']);
+      else
+        this.route.navigate(['/internal/ams/dashboard']);
     }, (error) => {      
       this.loader = false;
       if (error?.error?.message) {

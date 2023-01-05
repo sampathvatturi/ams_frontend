@@ -36,6 +36,17 @@
     <div *dxTemplate="let d of 'grandTotal'">
       {{ d.data.grand_total | currencyIn}}
     </div>
+    <div *dxTemplate="let d of 'invoiceStatus'">
+      <div *ngIf="d.data?.status==='paid'" class="paidSt">        
+        {{ d.data?.status | titlecase }}
+      </div>
+      <div *ngIf="d.data?.status==='cancel'" class="cancelSt">        
+        {{ d.data?.status | titlecase }}
+      </div>
+      <div *ngIf="d.data?.status==='open'" class="openSt">        
+        {{ d.data?.status | titlecase }}
+      </div>
+    </div>
     <dxi-column [showInColumnChooser]="false" caption="Actions" [visible]="(permissions.updt_in==1)?true:false"
       type="buttons" [width]="100" cellTemplate="viewTemplate">
       <div *dxTemplate="let data of 'viewTemplate'">
