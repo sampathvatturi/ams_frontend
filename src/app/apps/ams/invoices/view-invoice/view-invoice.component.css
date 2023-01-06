@@ -1,36 +1,45 @@
-nz-content, .container{
+nz-content,
+.container {
     background-color: white;
     padding: 15px;
+    padding-top: 0px;
     position: relative;
 }
 
-.lastrow td{
+.lastrow td {
     font-weight: bold;
     text-align: left;
 }
 
-h3{
+h3 {
     font-weight: bold;
     margin-top: 15px;
 }
 
-/* .detailsTable .ant-table-tbody > tr > td {
+.ant-table-tbody>.lastrow>td {
     border: none
-  } */
-  .ant-table-tbody > .lastrow > td{
-    border: none
-  }
-
-::ng-deep .details .ant-table-cell{
-    padding: 3px;
 }
-::ng-deep .lastrow .ant-table-cell{
+
+::ng-deep .details .ant-table-cell {
     padding: 3px;
 }
 
-.detailsTable{
-    width: 300px;
+::ng-deep .lastrow .ant-table-cell {
+    padding: 3px;
 }
-.ant-divider-horizontal.ant-divider-with-text{
+
+.detailsTable {
+    width: 350px;
+}
+
+.detailsTable .label {
+    width: 150px;
+}
+
+.ant-divider-horizontal.ant-divider-with-text {
     margin-top: 3px;
+}
+
+.backButton {
+    padding: 3px;
 }

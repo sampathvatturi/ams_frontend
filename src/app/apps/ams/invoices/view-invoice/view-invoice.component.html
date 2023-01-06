@@ -1,22 +1,23 @@
 <nz-content>
+  <button class="backButton" (click)="back()">Back</button>
 <div class="container">
     <nz-divider nzText="Invoice"></nz-divider>
     <nz-table class="detailsTable" [nzData]="['']" nzShowPagination="false">
         <tbody class="details">
             <tr>
-                <td>Invoice Number : </td>
+                <td class="label">Invoice Number : </td>
                 <td><b>{{invoiceData.invoice_number}}</b></td>
             </tr>
             <tr>
-                <td>Vendor Name : </td>
+                <td class="label">Vendor Name : </td>
                 <td><b>{{invoiceData.vendor_name}}</b></td>
             </tr>
             <tr>
-                <td>Remarks :  </td>
+                <td class="label">Remarks :  </td>
                 <td><b>{{invoiceData.remarks}}</b></td>
             </tr>
             <tr>
-                <td>Attachment : </td>
+                <td class="label">Attachment : </td>
                 <td><b>{{invoiceData.attachments}}</b></td>
             </tr>
         </tbody>

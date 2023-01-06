@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationService } from 'src/app/shared/common/notification.service';
 import { InvoicesService } from 'src/app/shared/moduleservices/invoices.service';
 import { VendorsService } from 'src/app/shared/moduleservices/vendors.service';
@@ -27,6 +27,7 @@ export class ViewInvoiceComponent implements OnInit {
     private notification: NotificationService,
     private invoiceService: InvoicesService,
     private vendors: VendorsService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -51,5 +52,8 @@ export class ViewInvoiceComponent implements OnInit {
       }
     });
   }
-
+  back(){
+    console.log('back');
+    this.router.navigateByUrl('internal/ams/invoices')
+  }
 }
