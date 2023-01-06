@@ -19,6 +19,7 @@ import { NgChartsModule } from 'ng2-charts';
 import { NgAntdModule } from 'src/app/shared/common/ng-antd.module';
 import { DxDataGridModule, DxLoadPanelModule } from 'devextreme-angular';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { ViewInvoiceComponent } from './invoices/view-invoice/view-invoice.component';
 
 
 
@@ -33,6 +34,7 @@ import { SharedModule } from 'src/app/shared/shared.module';
     VendorsComponent,
     UserAccountsComponent,
     ApprovalsComponent,
+    ViewInvoiceComponent,
   ],
   imports: [
     CommonModule,

@@ -10,6 +10,7 @@ import { environment } from 'src/environments/environment';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import Swal from 'sweetalert2'
 import * as Excel from 'exceljs';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-invoices',
@@ -65,7 +66,8 @@ export class InvoicesComponent implements OnInit {
     private invoiceService: InvoicesService,
     private vendors: VendorsService,
     private inventory: InventoryItemsService,
-    private msg: NzMessageService
+    private msg: NzMessageService,
+    public router: Router,
   ) { }
 
   ngOnInit(): void {    
@@ -99,7 +101,6 @@ export class InvoicesComponent implements OnInit {
       this.updated_inventory = [...res];
     })
   }
-
   onToolbarPreparing(e: any) {
     e.toolbarOptions.items.unshift({
       location: 'after',
@@ -114,7 +115,11 @@ export class InvoicesComponent implements OnInit {
       }
     });
   }
-
+  viewInvoice(id: any): void{
+    const urlPath = 'internal/ams/view-invoice/' + id;    
+    console.log("Invoice Id", id, urlPath);
+    this.router.navigateByUrl(urlPath);  
+  }
   view(type: any, data: any) {
     console.log(data.inventory_details);
     let inv_D = data.inventory_details;

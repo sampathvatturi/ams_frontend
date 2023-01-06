@@ -57,7 +57,7 @@
     </dxi-column>
     <dxi-column [showInColumnChooser]="false" caption="Actions" type="button1" [width]="100"
       cellTemplate="EditTemplate">
-      <div *dxTemplate="let data of 'EditTemplate'" (click)="view('view',data.data)">
+      <div *dxTemplate="let data of 'EditTemplate'" (click)="viewInvoice(data?.data?.invoice_id)">
         <div class="cursor-pointer tblEdtBtn">
           View
         </div>

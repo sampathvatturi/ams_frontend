@@ -38,7 +38,7 @@ export class InvoicesService {
   }
 
   getInvoicesById(id: any): Observable<any> {
-    return this.apiService.getCall('/invoice/getInvoicesById/' + id).pipe(
+    return this.apiService.getCall('/invoice/getInvoice/' + id).pipe(
       map((response: any) => {
         return response;
       })

@@ -5,6 +5,7 @@ import { ApprovalsComponent } from './approvals/approvals.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ExpenditureComponent } from './expenditure/expenditure.component';
 import { InvoicesComponent } from './invoices/invoices.component';
+import { ViewInvoiceComponent } from './invoices/view-invoice/view-invoice.component';
 import { WorksComponent } from './masters/works/works.component';
 import { SurveyReportComponent } from './survey-report/survey-report.component';
 import { UserAccountsComponent } from './user-accounts/user-accounts.component';
@@ -27,7 +28,8 @@ const routes: Routes = [
   {path:'vendors', component:VendorsComponent},
   {path:'user-accounts', component:UserAccountsComponent},
   {path:'approvals', component:ApprovalsComponent},
-  { path: '**', redirectTo: 'dashboard' }
+  {path:'view-invoice/:invoiceId', component:ViewInvoiceComponent},
+  {path: '**', redirectTo: 'dashboard' }
 ];
 
 @NgModule({
