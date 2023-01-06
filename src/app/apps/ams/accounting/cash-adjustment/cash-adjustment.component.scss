@@ -1,0 +1,24 @@
+.ds-card.grid {
+    max-width: 100%;
+    min-width: 100%;
+    border-radius: 8px;
+    border: 0px solid;
+    padding: 10px;
+    background: #fff;
+    border-color: rgb(240 240 240) !important;
+    border-radius: 8px;
+    border: 1px solid;
+    margin-top: 12px;
+    // background: #fffcf7!important;
+  }
+.ant-form-item{
+    margin-bottom: 10px;
+}
+.ds-card.grid button{
+    display: block;
+    margin: auto;
+    margin-top: 5px;
+}
+nz-form-label{
+    text-align: left;
+}

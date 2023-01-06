@@ -1,0 +1,72 @@
+<div class="ds-card grid">
+    <nz-divider nzText="Cash Adjustment"></nz-divider>
+    <form [formGroup]="cashAdjustmentForm" nz-col nzJustify="space-between">
+        <div>
+            <nz-form-item>
+                <nz-form-label nz-col nzSpan="4" nzOffset="8" class="required">From</nz-form-label>
+                <nz-form-control nz-col nzSpan="6" nzErrorTip="Select From A/C">
+                    <nz-select formControlName="acc_head" nzPlaceHolder="From" nzShowSearch>
+                        <nz-option *ngFor="let a of acconts_heads" nzValue="{{ a.id }}"
+                            nzLabel="{{ a.name }}"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+
+            <nz-form-item>
+                <nz-form-label nz-col nzSpan="4" nzOffset="8" class="required">Transaction Date</nz-form-label>
+                <nz-form-control nz-col nzSpan="6">
+                    <nz-date-picker formControlName="trsxcn_date"></nz-date-picker>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+
+        <div>
+
+            <nz-form-item>
+                <nz-form-label nz-col nzSpan="4" nzOffset="8" class="required">Type</nz-form-label>
+                <nz-form-control nz-col nzSpan="6" nzErrorTip="Please Select Type">
+                    <nz-select formControlName="type" nzPlaceHolder="Type" nzShowSearch>
+                        <!-- <nz-option nzValue="%" nzLabel="All" nzSelected></nz-option> -->
+                        <nz-option nzValue="debit" nzLabel="Debit"></nz-option>
+                        <nz-option nzValue="credit" nzLabel="Credit"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+        <div>
+            <nz-form-item>
+                <nz-form-label nz-col nzSpan="4" nzOffset="8" class="required">Transaction Mode</nz-form-label>
+                <nz-form-control nz-col nzSpan="6" nzErrorTip="Please Select Transaction Mode">
+                    <nz-select formControlName="mode" nzPlaceHolder="Transaction Mode" nzShowSearch>
+                        <nz-option nzValue="banking" nzLabel="Banking"></nz-option>
+                        <nz-option nzValue="cash" nzLabel="Cash"></nz-option>
+                        <nz-option nzValue="cheque" nzLabel="Cheque"></nz-option>
+                        <nz-option nzValue="card" nzLabel="Card"></nz-option>
+                        <nz-option nzValue="upi" nzLabel="UPI"></nz-option>
+                    </nz-select>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+        <div>
+            <nz-form-item>
+                <nz-form-label nz-col nzSpan="4" nzOffset="8" class="required">Amount</nz-form-label>
+                <nz-form-control nz-col nzSpan="6" nzErrorTip="Please Enter Amount">
+                    <input nz-input formControlName="amount" type="number" nz-input placeholder="Please Enter Amount" />
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+
+        <div>
+            <nz-form-item>
+                <nz-form-label nz-col nzSpan="4" nzOffset="8" class="required" >Remarks</nz-form-label>
+                <nz-form-control nz-col nzSpan="6">
+                    <textarea formControlName="remarks" nz-input rows="2" placeholder="Remarks"></textarea>
+                </nz-form-control>
+            </nz-form-item>
+        </div>
+
+        <button nz-button nzType="primary" (click)="getTransactions()">
+            Submit
+        </button>
+    </form>
+</div>
