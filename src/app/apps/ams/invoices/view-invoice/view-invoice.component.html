@@ -1,1 +1,87 @@
-<p>view-invoice works!</p>
+<nz-content>
+<div class="container">
+    <nz-divider nzText="Invoice"></nz-divider>
+    <nz-table class="detailsTable" [nzData]="['']" nzShowPagination="false">
+        <tbody class="details">
+            <tr>
+                <td>Invoice Number : </td>
+                <td><b>{{invoiceData.invoice_number}}</b></td>
+            </tr>
+            <tr>
+                <td>Vendor Name : </td>
+                <td><b>{{invoiceData.vendor_name}}</b></td>
+            </tr>
+            <tr>
+                <td>Remarks :  </td>
+                <td><b>{{invoiceData.remarks}}</b></td>
+            </tr>
+            <tr>
+                <td>Attachment : </td>
+                <td><b>{{invoiceData.attachments}}</b></td>
+            </tr>
+        </tbody>
+    </nz-table>
+    <!-- <p>Invoice Number : <b>{{invoiceData.invoice_number}}</b> </p>
+    <p>Vendor Name : <b>{{invoiceData.vendor_name}}</b> </p>
+    <p>Remarks : <b>{{invoiceData.remarks}}</b> </p>
+    <p>Attachment : <b>{{invoiceData.attachments}}</b> </p> -->
+    
+    <h3>Item Details:</h3>
+    <nz-table #nzTable [nzData]="invoiceData.inventory_details" nzShowPagination="false">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Quantity</th>
+          <th>UOM</th>
+          <th>Price</th>
+          <th>Tax</th>
+          <th>Amount</th>
+          <th>Tax Amount</th>
+          <th>Total</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let i of nzTable.data">
+          <td>{{i.item}}</td>
+          <td>{{i.quantity}}</td>
+          <td>{{i.uom}}</td>
+          <td>{{i.price}}</td>
+          <td>{{i.taxPercent}}</td>
+          <td>{{i.amt}}</td>
+          <td>{{i.taxAmt}}</td>
+          <td>{{i.total}}</td>
+        </tr>
+        <tr class="lastrow">
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>Amount</td>
+            <td>{{invoiceData.amount | currencyIn}}</td>
+        </tr>
+        <tr class="lastrow">
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>Tax</td>
+            <td>{{invoiceData.tax | currencyIn}}</td>
+        </tr>
+        <tr class="lastrow">
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>Grand Total</td>
+            <td>{{invoiceData.grand_total | currencyIn}}</td>
+        </tr>
+      </tbody>
+    </nz-table>
+</div>
+</nz-content>

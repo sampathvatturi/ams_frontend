@@ -37,4 +37,12 @@ export class TransactionsService {
       })
     );
   }
+
+  getTrailBalance(): Observable<any> {
+    return this.apiService.getCall('/transaction/getTrailBalance').pipe(
+      map((response: any) => {
+        return response;
+      })
+    )
+  }
 }

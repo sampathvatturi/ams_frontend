@@ -12,7 +12,16 @@ import { VendorsService } from 'src/app/shared/moduleservices/vendors.service';
 export class ViewInvoiceComponent implements OnInit {
 
   currentInvoiceId: any;
-  invoiceData: any[]=[];
+  invoiceData: any = {
+    invoice_number: '',
+    vendor_name: '',
+    remarks: '',
+    attachments: '',
+    inventory_details: [],
+    amount: '',
+    tax: '',
+    grand_total: ''
+  };
   constructor(
     private route: ActivatedRoute,
     private notification: NotificationService,
@@ -28,8 +37,17 @@ export class ViewInvoiceComponent implements OnInit {
 
   getInvoiceDetails(): void {
     this.invoiceService.getInvoicesById(this.currentInvoiceId).subscribe((res) => {
-      if(res?.length > 0){        
-        this.invoiceData = res;
+      if (res?.length > 0) {
+        this.invoiceData = {
+          invoice_number: res[0].invoice_number,
+          vendor_name: res[0].vendor_name,
+          remarks: res[0].remarks,
+          attachments: res[0].attachments,
+          inventory_details: res[0].inventory_details,
+          amount: res[0].amount,
+          tax: res[0].tax,
+          grand_total: res[0].grand_total
+        }
       }
     });
   }

@@ -10,13 +10,17 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { NgAntdModule } from 'src/app/shared/common/ng-antd.module';
 import dxLoadPanel from 'devextreme/ui/load_panel';
 import { SharedModule } from 'src/app/shared/shared.module';
+import { CashAdjustmentComponent } from './cash-adjustment/cash-adjustment.component';
+import { TrailBalanceComponent } from './trail-balance/trail-balance.component';
 
 
 @NgModule({
   declarations: [
     FundsComponent,
     AccountsComponent,
-    TransactionsComponent
+    TransactionsComponent,
+    CashAdjustmentComponent,
+    TrailBalanceComponent
   ],
   imports: [
     CommonModule,

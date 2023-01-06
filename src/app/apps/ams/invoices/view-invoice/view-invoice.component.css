@@ -1,0 +1,36 @@
+nz-content, .container{
+    background-color: white;
+    padding: 15px;
+    position: relative;
+}
+
+.lastrow td{
+    font-weight: bold;
+    text-align: left;
+}
+
+h3{
+    font-weight: bold;
+    margin-top: 15px;
+}
+
+/* .detailsTable .ant-table-tbody > tr > td {
+    border: none
+  } */
+  .ant-table-tbody > .lastrow > td{
+    border: none
+  }
+
+::ng-deep .details .ant-table-cell{
+    padding: 3px;
+}
+::ng-deep .lastrow .ant-table-cell{
+    padding: 3px;
+}
+
+.detailsTable{
+    width: 300px;
+}
+.ant-divider-horizontal.ant-divider-with-text{
+    margin-top: 3px;
+}
