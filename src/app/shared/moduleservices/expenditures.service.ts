@@ -53,4 +53,12 @@ export class Expendituresservice {
       })
     );
   }
+  
+  getExpenseById(id: any): Observable<any> {
+    return this.apiService.getCall('/expense/getExpense/'+id).pipe(
+      map((response: any) => {
+        return response;
+      })
+    );
+  }
 }

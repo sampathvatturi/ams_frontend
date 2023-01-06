@@ -43,7 +43,7 @@
       </div>
     </dxi-column>
         <dxi-column [showInColumnChooser]="false" type="button1" [width]="100" cellTemplate="EditTemplate" caption="Actions">
-            <div *dxTemplate="let data of 'EditTemplate'" (click)="edit('view',data.data)" [allowExporting]="false">
+            <div *dxTemplate="let data of 'EditTemplate'" (click)="viewVendor(data?.data?.id)" [allowExporting]="false">
                 <div class="cursor-pointer tblEdtBtn">
                     View
                 </div>

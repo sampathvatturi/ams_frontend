@@ -3,6 +3,7 @@ import { UntypedFormGroup, UntypedFormBuilder, UntypedFormControl, Validators } 
 import { VendorsService } from 'src/app/shared/moduleservices/vendors.service';
 import { NotificationService } from 'src/app/shared/common/notification.service';
 import { Md5hashService } from 'src/app/shared/services/auth/md5hash.service';
+import { Router } from '@angular/router';
 // import { ApiService } from 'src/app/services/api.service';
 // import { GlobalConstants } from 'src/app/shared/global_constants';
 
@@ -34,7 +35,8 @@ export class VendorsComponent implements OnInit {
     // private api: ApiService,
     private notification: NotificationService,
     private vendorService: VendorsService,
-    private md5hashService: Md5hashService
+    private md5hashService: Md5hashService,
+    public router: Router,
   ) { }
 
   ngOnInit(): void {
@@ -78,6 +80,12 @@ export class VendorsComponent implements OnInit {
       this.vendor_info = res;
       this.isLoading = false;
     });
+  }
+
+  viewVendor(id: any): void {
+    const urlPath = 'internal/ams/view-vendor/' + id;    
+    console.log("Vendor Id", id, urlPath);
+    this.router.navigateByUrl(urlPath); 
   }
 
   edit(type: any, data: any) {

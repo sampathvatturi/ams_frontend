@@ -7,6 +7,7 @@ import { Expendituresservice } from 'src/app/shared/moduleservices/expenditures.
 import { environment } from 'src/environments/environment';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import Swal from 'sweetalert2'
+import { Router } from '@angular/router';
 
 
 @Component({
@@ -57,12 +58,9 @@ export class ExpenditureComponent implements OnInit {
     private fb: UntypedFormBuilder,
     private notification: NotificationService,
     private msg: NzMessageService,
-    private expenditureService:Expendituresservice
-  ) {
-    
-   }
-
-  
+    private expenditureService:Expendituresservice,    
+    public router: Router,
+  ) { }
 
   ngOnInit(): void {
     this.expenditureFormValidators();
@@ -80,6 +78,12 @@ export class ExpenditureComponent implements OnInit {
       // })
       this.isLoading = false;
     });
+  }
+
+  viewVendor(id: any): void {
+    const urlPath = 'internal/ams/view-expenditure/' + id;    
+    console.log("Expenditure Id", id, urlPath);
+    this.router.navigateByUrl(urlPath); 
   }
 
   onToolbarPreparing(e: any) {
@@ -346,6 +350,6 @@ export class ExpenditureComponent implements OnInit {
       created_by: [''],
       updated_by: ['']
     });
-  }
+  } 
 
 }

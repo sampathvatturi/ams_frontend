@@ -39,7 +39,7 @@ export class VendorsService {
   }
 
   getVendorById(id: any): Observable<any>{
-    return this.apiService.getCall('/vendor/getVendorById'+id).pipe(
+    return this.apiService.getCall('/vendor/getVendorById/'+id).pipe(
       map((response: any) => {
         return response;
       })

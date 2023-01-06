@@ -4,12 +4,14 @@ import { RouteGuardService } from 'src/app/shared/services/auth/route-guard.serv
 import { ApprovalsComponent } from './approvals/approvals.component';
 import { DashboardComponent } from './dashboard/dashboard.component';
 import { ExpenditureComponent } from './expenditure/expenditure.component';
+import { ViewExpenditureComponent } from './expenditure/view-expenditure/view-expenditure.component';
 import { InvoicesComponent } from './invoices/invoices.component';
 import { ViewInvoiceComponent } from './invoices/view-invoice/view-invoice.component';
 import { WorksComponent } from './masters/works/works.component';
 import { SurveyReportComponent } from './survey-report/survey-report.component';
 import { UserAccountsComponent } from './user-accounts/user-accounts.component';
 import { VendorsComponent } from './vendors/vendors.component';
+import { ViewVendorComponent } from './vendors/view-vendor/view-vendor.component';
 
 const routes: Routes = [
   { 
@@ -29,6 +31,8 @@ const routes: Routes = [
   {path:'user-accounts', component:UserAccountsComponent},
   {path:'approvals', component:ApprovalsComponent},
   {path:'view-invoice/:invoiceId', component:ViewInvoiceComponent},
+  {path:'view-vendor/:vendorId', component:ViewVendorComponent},
+  {path:'view-expenditure/:expId', component:ViewExpenditureComponent},
   {path: '**', redirectTo: 'dashboard' }
 ];
 

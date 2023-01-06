@@ -20,6 +20,8 @@ import { NgAntdModule } from 'src/app/shared/common/ng-antd.module';
 import { DxDataGridModule, DxLoadPanelModule } from 'devextreme-angular';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { ViewInvoiceComponent } from './invoices/view-invoice/view-invoice.component';
+import { ViewVendorComponent } from './vendors/view-vendor/view-vendor.component';
+import { ViewExpenditureComponent } from './expenditure/view-expenditure/view-expenditure.component';
 
 
 
@@ -35,6 +37,8 @@ import { ViewInvoiceComponent } from './invoices/view-invoice/view-invoice.compo
     UserAccountsComponent,
     ApprovalsComponent,
     ViewInvoiceComponent,
+    ViewVendorComponent,
+    ViewExpenditureComponent,
   ],
   imports: [
     CommonModule,
