@@ -1,0 +1,114 @@
+<div class="ds-card grid">
+    <form class="forms" [formGroup]="trailBalanceFilterForm" nz-row nzJustify="space-between" nzAlign="middle">
+      <nz-form-item nz-col nzSpan="4">
+        <nz-form-label>Start Date</nz-form-label>
+        <nz-form-control>
+          <nz-date-picker formControlName="start_date"></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+  
+      <nz-form-item nz-col nzSpan="4">
+        <nz-form-label>End Date</nz-form-label>
+        <nz-form-control>
+          <nz-date-picker formControlName="end_date"></nz-date-picker>
+        </nz-form-control>
+      </nz-form-item>
+  
+      <nz-form-item nz-col nzSpan="4">
+        <nz-form-label>Type</nz-form-label>
+        <nz-form-control nzErrorTip="Please Select Type">
+          <nz-select formControlName="type" nzPlaceHolder="Type" nzShowSearch>
+            <nz-option nzValue="%" nzLabel="All" nzSelected></nz-option>
+            <nz-option nzValue="debit" nzLabel="Debit"></nz-option>
+            <nz-option nzValue="credit" nzLabel="Credit"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+  
+      <nz-form-item nz-col nzSpan="4">
+        <nz-form-label>Account</nz-form-label>
+        <nz-form-control nzErrorTip="Please select account">
+          <nz-select formControlName="acc_head" nzPlaceHolder="Account" nzShowSearch>
+            <nz-option nzValue="%" nzLabel="All" nzSelected></nz-option>
+            <nz-option *ngFor="let a of accounts_info" nzValue="{{ a.id }}" nzLabel="{{ a.name }}"></nz-option>
+          </nz-select>
+        </nz-form-control>
+      </nz-form-item>
+  
+      <button nz-button nzType="primary" (click)="getTransactions()" nz-col nzSpan="4">
+        Submit
+      </button>
+    </form>
+  </div>
+
+  <div class="ds-card grid" id="load" #container>
+    <dx-data-grid class="p-8 flow" id="gridContainer" [wordWrapEnabled]="true" [dataSource]="rowData"
+      [remoteOperations]="false" [allowColumnReordering]="true" [rowAlternationEnabled]="true"
+      [allowColumnResizing]="true" [showColumnLines]="true" [showRowLines]="true" [showBorders]="true" style="width:100%"
+      >
+      <dxo-paging [pageSize]="10"></dxo-paging>
+      <dxo-scrolling [scrollByContent]="true"
+      [scrollByThumb]="true"
+      mode="standard"
+      [useNative]="true"
+      showScrollbar="onScroll"></dxo-scrolling>
+      <dxo-pager [visible]="true" [showPageSizeSelector]="true" [allowedPageSizes]="[10, 25, 50, 100]"
+        [showInfo]="true"></dxo-pager>
+      <dxo-search-panel [visible]="true" [highlightCaseSensitive]="true"></dxo-search-panel>
+      <dxo-filter-panel [visible]="false"></dxo-filter-panel>
+      <dxo-header-filter [visible]="true"></dxo-header-filter>
+      <dxo-group-panel [visible]="true"></dxo-group-panel>
+      <dxo-grouping [autoExpandAll]="false"></dxo-grouping>
+      <dxo-column-chooser [enabled]="true" mode="select">
+      </dxo-column-chooser>
+      <dxo-export [enabled]="(permissions.exprt_in==1)?true:false" [allowExportSelectedData]="true"></dxo-export>
+      <dxo-filter-row [visible]="false"></dxo-filter-row>
+      <dxi-column *ngFor="let f of columnDefs" [visible]="true" [dataField]="f.field" [caption]="f.headerName"
+        [width]=f.width [allowResizing]="false" format="f.format" [cellTemplate]="f.cellTemplate">
+      </dxi-column>
+  
+      <!-- <div *dxTemplate="let d of 'dateTemplate'">
+        {{ d.data.trsxcn_date | date : "dd-MM-YYYY"}}
+      </div>
+      <div *dxTemplate="let d of 'particularTemplate'">
+        <div *ngIf="d.data.particulars.ref_acc_head===0;else show">
+          <b>{{ accountName[d.data.particulars.acc_head] }}</b><br><i>{{ d.data.particulars.remarks }}</i>
+        </div>
+        <ng-template #show>
+          <b>{{ accountName[d.data.particulars.ref_acc_head] }}</b><br><i>{{ d.data.particulars.remarks }}</i>
+        </ng-template>
+        
+      </div> -->
+      <div *dxTemplate="let d of 'creditTemplate'">
+        <div class='creditColor text-center' >{{ d.data.credit || 0 }}</div>
+      </div>
+      <div *dxTemplate="let d of 'debitTemplate'">
+        <div class='debitColor text-center' >{{ d.data.debit || 0 }}</div>
+      </div>
+    
+      <dxo-summary [calculateCustomSummary]="difference">
+        <dxi-total-item cssClass="debitColor" alignment="center" column="debit" summaryType="sum" displayFormat="{0}"
+        valueFormat="currency">
+        </dxi-total-item> 
+        <dxi-total-item alignment="center" column="credit" summaryType="sum" displayFormat="{0}"
+        valueFormat="currency">
+        </dxi-total-item>
+        <dxi-total-item
+        alignment="right"
+        summaryType="custom"
+        displayFormat="Balance"
+        showInColumn="credit"
+      >
+      </dxi-total-item>
+        <dxi-total-item
+        alignment="center"
+        name="diff"
+        summaryType="custom"
+        valueFormat="currency"
+        displayFormat="{0}"
+        showInColumn="debit"
+      >
+      </dxi-total-item>
+      </dxo-summary>
+    </dx-data-grid>
+  </div>
