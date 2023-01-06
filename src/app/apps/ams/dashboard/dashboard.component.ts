@@ -17,6 +17,17 @@ import { InvoicesService } from 'src/app/shared/moduleservices/invoices.service'
 
 
 export class DashboardComponent implements OnInit {
+
+    themeColors = this.colorConfig.get().colors;
+    blue = this.themeColors.blue;
+    blueLight = this.themeColors.blueLight;
+    cyan = this.themeColors.cyan;
+    cyanLight = this.themeColors.cyanLight;
+    gold = this.themeColors.gold;
+    purple = this.themeColors.purple;
+    purpleLight = this.themeColors.purpleLight;
+    red = this.themeColors.red;
+
     constructor(private colorConfig: ThemeConstantService, private transactionsservice: TransactionsService,
         private fb: FormBuilder,
         private fundService:FundsService,
@@ -36,7 +47,10 @@ export class DashboardComponent implements OnInit {
     revenueChartLabels: Array<any> = [];
     revenueChartData: Array<any> = [{
         data: [],
-        label: 'Series A'
+        label: 'No. of Transactions',
+        tension: 0.4,
+        borderCapStyle:'square',
+        borderJoinStyle:'round'
     }];
     transactionForm!: UntypedFormGroup;
     transactions = [];
@@ -52,7 +66,7 @@ export class DashboardComponent implements OnInit {
     }
     getDaysArray = (number: any) => {
         for (let i = 0; i < number; i++) {
-            let x = this.dateService.getDateDiffrence(this.currDate,-i,'dd');
+            let x = this.dateService.getDateDiffrence(this.currDate,-i,'do');
             this.revenueChartLabels.push(x) ;  
         }
         return this.revenueChartLabels.reverse();
@@ -95,15 +109,7 @@ export class DashboardComponent implements OnInit {
         })
       }
 
-    themeColors = this.colorConfig.get().colors;
-    blue = this.themeColors.blue;
-    blueLight = this.themeColors.blueLight;
-    cyan = this.themeColors.cyan;
-    cyanLight = this.themeColors.cyanLight;
-    gold = this.themeColors.gold;
-    purple = this.themeColors.purple;
-    purpleLight = this.themeColors.purpleLight;
-    red = this.themeColors.red;
+  
     taskListIndex: number = 0;
     revenueChartFormat: string = 'revenueMonth';
     currentrevenueChartLabelsIdx = 1;
