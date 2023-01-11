@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { NotificationService } from 'src/app/shared/common/notification.service';
 import { Expendituresservice } from 'src/app/shared/moduleservices/expenditures.service';
 
@@ -11,12 +11,24 @@ import { Expendituresservice } from 'src/app/shared/moduleservices/expenditures.
 export class ViewExpenditureComponent implements OnInit {
 
   currentExpId: any;
-  vendorData: any[]=[];
+  vendorData: any = {
+    exp_inv_number: '',
+    description: '',
+    category: '',
+    status: '',
+    attachments: '',
+    approval_user_status: [],
+    amount: '',
+    tax: '',
+    total: ''
+  };
+  isLoading = true;
 
   constructor(
     private route: ActivatedRoute,
     private notification: NotificationService,
     private expendituresservice: Expendituresservice,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -28,9 +40,23 @@ export class ViewExpenditureComponent implements OnInit {
   getVendorDetails(): void {
     this.expendituresservice.getExpenseById(this.currentExpId).subscribe((res) => {
       if(res?.length > 0){        
-        this.vendorData = res;
+        this.vendorData = {
+          exp_inv_number: res[0].exp_inv_number,
+          description: res[0].description,
+          category: res[0].category,
+          status: res[0].status,
+          attachments: res[0].attachments,
+          approval_user_status: res[0].approval_user_status,
+          amount: res[0].amount,
+          tax: res[0].tax,
+          total: res[0].total
+        };
+        this.isLoading = false;
       }
     });
+  }
+  back(){
+    this.router.navigateByUrl('internal/ams/expenditure')
   }
 
 }

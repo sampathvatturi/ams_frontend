@@ -1,1 +1,67 @@
-<p>view-expenditure works!</p>
+<nz-content>
+    <nz-spin nzTip="Loading..." [nzSpinning]="isLoading">
+    <button class="backButton" (click)="back()">Back</button>
+  <div class="container">
+      <nz-divider nzText="Expenditure Invoice"></nz-divider>
+      <nz-table class="detailsTable" [nzData]="['']" nzShowPagination="false">
+          <tbody class="details">
+              <tr>
+                  <td class="label">Expenditure Invoice Number : </td>
+                  <td><b>{{vendorData.exp_inv_number}}</b></td>
+              </tr>
+              <tr>
+                  <td class="label">Description : </td>
+                  <td><b>{{vendorData.description}}</b></td>
+              </tr>
+              <tr>
+                  <td class="label">Category :  </td>
+                  <td><b>{{vendorData.category}}</b></td>
+              </tr>
+              <tr>
+                  <td class="label">Status : </td>
+                  <td><b>{{vendorData.status}}</b></td>
+              </tr>
+              <tr *ngIf="vendorData.cancel_reason">
+                  <td class="label">Cancel Reason : </td>
+                  <td><b>{{vendorData.cancel_reason}}</b></td>
+              </tr>
+              <tr>
+                  <td class="label">Amount : </td>
+                  <td><b>{{vendorData.amount}}</b></td>
+              </tr>
+              <tr>
+                  <td class="label">Tax : </td>
+                  <td><b>{{vendorData.tax}}</b></td>
+              </tr>
+              <tr>
+                  <td class="label">Total : </td>
+                  <td><b>{{vendorData.total}}</b></td>
+              </tr>
+              <tr>
+                  <td class="label">Attachments : </td>
+                  <td><b>{{vendorData.attachments || 'No Attachments'}}</b></td>
+              </tr>
+          </tbody>
+      </nz-table>
+      
+      <h3>Approval User Status:</h3>
+      <nz-table #nzTable [nzData]="vendorData.approval_user_status" nzShowPagination="false">
+        <thead>
+          <tr>
+            <th>User</th>
+            <th>Reason</th>
+            <th>Status</th>
+           
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let i of nzTable.data">
+            <td>{{i.user_name}}</td>
+            <td>{{i.reason}}</td>
+            <td>{{i.status}}</td>
+          </tr>
+        </tbody>
+      </nz-table>
+  </div>
+</nz-spin>
+  </nz-content>
