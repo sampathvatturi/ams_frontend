@@ -1,1 +1,48 @@
-<p>view-vendor works!</p>
+<nz-content>
+    <nz-spin nzTip="Loading..." [nzSpinning]="isLoading">
+    <button class="backButton" (click)="back()">Back</button>
+  <div class="container">
+      <nz-divider nzText="Vendor Details"></nz-divider>
+      <nz-table [nzData]="['']" nzShowPagination="false">
+          <tbody>
+              <tr>
+                  <td>Name : </td>
+                  <td><b>{{vendorData.vendor_name}}</b></td>
+              </tr>
+              <tr>
+                  <td>Status : </td>
+                  <td><b>{{vendorData.status}}</b></td>
+              </tr>
+              <tr>
+                  <td>Phone Number :  </td>
+                  <td><b>{{vendorData.phone_number}}</b></td>
+              </tr>
+              <tr>
+                  <td>Email : </td>
+                  <td><b>{{vendorData.email}}</b></td>
+              </tr>
+              <tr>
+                  <td>Address : </td>
+                  <td><b>{{vendorData.address}}</b></td>
+              </tr>
+              <tr>
+                  <td>City : </td>
+                  <td><b>{{vendorData.city}}</b></td>
+              </tr>
+              <tr>
+                  <td>District : </td>
+                  <td><b>{{vendorData.district}}</b></td>
+              </tr>
+              <tr>
+                  <td>State : </td>
+                  <td><b>{{vendorData.state}}</b></td>
+              </tr>
+              <tr>
+                  <td>GST IN : </td>
+                  <td><b>{{vendorData.gst_num}}</b></td>
+              </tr>
+          </tbody>
+      </nz-table>
+  </div>
+</nz-spin>
+  </nz-content>

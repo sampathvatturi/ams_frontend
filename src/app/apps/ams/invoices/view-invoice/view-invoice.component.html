@@ -1,4 +1,5 @@
 <nz-content>
+  <nz-spin nzTip="Loading..." [nzSpinning]="isLoading">
   <button class="backButton" (click)="back()">Back</button>
 <div class="container">
     <nz-divider nzText="Invoice"></nz-divider>
@@ -22,10 +23,6 @@
             </tr>
         </tbody>
     </nz-table>
-    <!-- <p>Invoice Number : <b>{{invoiceData.invoice_number}}</b> </p>
-    <p>Vendor Name : <b>{{invoiceData.vendor_name}}</b> </p>
-    <p>Remarks : <b>{{invoiceData.remarks}}</b> </p>
-    <p>Attachment : <b>{{invoiceData.attachments}}</b> </p> -->
     
     <h3>Item Details:</h3>
     <nz-table #nzTable [nzData]="invoiceData.inventory_details" nzShowPagination="false">
@@ -85,4 +82,5 @@
       </tbody>
     </nz-table>
 </div>
+</nz-spin>
 </nz-content>

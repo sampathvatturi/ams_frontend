@@ -22,6 +22,7 @@ export class ViewInvoiceComponent implements OnInit {
     tax: '',
     grand_total: ''
   };
+  isLoading: boolean = true;
   constructor(
     private route: ActivatedRoute,
     private notification: NotificationService,
@@ -50,6 +51,7 @@ export class ViewInvoiceComponent implements OnInit {
           grand_total: res[0].grand_total
         }
       }
+      this.isLoading = false;
     });
   }
   back(){
