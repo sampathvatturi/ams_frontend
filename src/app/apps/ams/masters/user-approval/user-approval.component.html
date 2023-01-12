@@ -1,13 +1,15 @@
 <div class="ds-card">
-    <nz-list nzBordered [nzHeader]="header" *ngFor="let item of Object.keys(groupedData)">
-        <nz-list-item *ngFor="let subItem of groupedData[item]">
-            {{ subItem.user_name }}
-        </nz-list-item>
-        <ng-template #header>
-            <label nz-checkbox (change)="selected(item)"><b>{{item}}</b></label>
-        </ng-template>
-    </nz-list>
-    <button nz-button nzType="primary" (click)="submit()" nz-col >
-        Submit
-      </button>
+    <nz-spin nzTip="Loading..." [nzSpinning]="isLoading">
+        <nz-list nzBordered [nzHeader]="header" *ngFor="let item of Object.keys(groupedData)">
+            <nz-list-item *ngFor="let subItem of groupedData[item]">
+                {{ subItem.user_name }}
+            </nz-list-item>
+            <ng-template #header>
+                <label nz-checkbox (change)="selected(item)"><b>{{item}}</b></label>
+            </ng-template>
+        </nz-list>
+        <button nz-button nzType="primary" (click)="submit()" nz-col>
+            Submit
+        </button>
+    </nz-spin>
 </div>
